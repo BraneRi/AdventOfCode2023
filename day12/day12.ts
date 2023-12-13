@@ -20,7 +20,7 @@ async function processFile(filePath: string): Promise<void> {
       lineParts[1].split(",").map((element) => Number(element))
     );
     solutionsCache.clear();
-    break;
+    // break;
   }
 
   console.log(sum);
@@ -44,8 +44,21 @@ function calculateLineArrangements(
   currentGroupSizeIndex: number,
   groupSizes: number[]
 ): number {
+  if (
+    areArraysEqual(
+      mergeDots(springs.replace(/\?/g, "."))
+        .replace(/^\.+|\.+$/g, "")
+        .split(".")
+        .map((springGroup) => springGroup.length),
+      groupSizes
+    ) &&
+    !solutionsCache.has(springs)
+  ) {
+    solutionsCache.add(springs);
+    return 1;
+  }
   // console.log(springs);
-  if (!springs.includes("?")) {
+  else if (!springs.includes("?")) {
     // console.log(springs);
     if (
       !areArraysEqual(

@@ -72,7 +72,7 @@ function processFile(filePath) {
                     lineParts = line.split(" ");
                     sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
                     solutionsCache.clear();
-                    return [3 /*break*/, 5];
+                    _e.label = 4;
                 case 4:
                     _d = true;
                     return [3 /*break*/, 2];
@@ -109,8 +109,16 @@ function areArraysEqual(arr1, arr2) {
 }
 var solutionsCache = new Set();
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
+    if (areArraysEqual(mergeDots(springs.replace(/\?/g, "."))
+        .replace(/^\.+|\.+$/g, "")
+        .split(".")
+        .map(function (springGroup) { return springGroup.length; }), groupSizes) &&
+        !solutionsCache.has(springs)) {
+        solutionsCache.add(springs);
+        return 1;
+    }
     // console.log(springs);
-    if (!springs.includes("?")) {
+    else if (!springs.includes("?")) {
         // console.log(springs);
         if (!areArraysEqual(mergeDots(springs)
             .replace(/^\.+|\.+$/g, "")
