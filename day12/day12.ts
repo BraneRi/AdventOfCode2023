@@ -76,10 +76,11 @@ function canTake(islandBucket: IslandBucket, newGroupSize: number): boolean {
     return true
   }
 
+  // If island already parsed input, begin after last subisland
   const lastDotIndex = tempIsland.lastIndexOf('.');
-    if (lastDotIndex !== -1) {
-      tempIsland = tempIsland.substring(lastDotIndex + 1);
-    } 
+  if (lastDotIndex !== -1) {
+    tempIsland = tempIsland.substring(lastDotIndex + 1);
+  } 
 
   // 1. find first # group that has equal or less size than newGroupSize
   // 2. if has equal size - add dot left and right and return adjusted string
