@@ -71,7 +71,7 @@ function processFile(filePath) {
                     line = _c;
                     lineParts = line.split(" ");
                     sum += calculateLineArrangements(lineParts[0], lineParts[1].split(",").map(function (element) { return Number(element); }));
-                    return [3 /*break*/, 5];
+                    _e.label = 4;
                 case 4:
                     _d = true;
                     return [3 /*break*/, 2];
@@ -99,11 +99,39 @@ function processFile(filePath) {
         });
     });
 }
-function calculateLineArrangements(springRow, groupSizes) {
+function calculateLineArrangements(springs, groupSizes) {
+    var springsWithMergedDots = mergeConsecutiveDots(springs);
+    var islands = springsWithMergedDots.split(".");
+    process.stdout.write(islands.toString());
+    process.stdout.write("  ");
+    process.stdout.write(groupSizes.toString());
+    console.log();
+    //   islands.forEach((island, index) => {
+    //     groupSizes.forEach(groupSize => {
+    //     if (canTake(island, groupSize)) {
+    //       addToIsland(island, groupSize)
+    //     }
+    //   });
+    // })
     var count = 0;
-    console.log(springRow);
-    console.log(groupSizes);
     return count;
+}
+function canTake(island, groupSize) {
+    if (groupSize > island.length)
+        return false;
+    var springGroupLength = 0;
+    for (var i = 0; i < island.length; i++) {
+        if (island.charAt(i) == "#") {
+            springGroupLength++;
+        }
+    }
+    if (springGroupLength > groupSize)
+        return false;
+    return true;
+}
+function mergeConsecutiveDots(inputString) {
+    var result = inputString.replace(/\.{2,}/g, '.');
+    return result.replace(/^\.+|\.+$/g, '');
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
