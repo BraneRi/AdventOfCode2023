@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, e_1_1;
+        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, partTwoInput, partTwoGroupSizes, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -70,7 +70,11 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
+                    partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
+                    console.log(partTwoInput);
+                    console.log(partTwoGroupSizes);
+                    sum += calculateLineArrangements(partTwoInput, 0, partTwoGroupSizes.split(",").map(function (element) { return Number(element); }));
                     solutionsCache.clear();
                     _e.label = 4;
                 case 4:
