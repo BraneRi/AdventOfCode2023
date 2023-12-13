@@ -70,8 +70,9 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    sum += calculateLineArrangements(lineParts[0], lineParts[1].split(",").map(function (element) { return Number(element); }));
-                    _e.label = 4;
+                    sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    solutionsCache.clear();
+                    return [3 /*break*/, 5];
                 case 4:
                     _d = true;
                     return [3 /*break*/, 2];
@@ -99,39 +100,61 @@ function processFile(filePath) {
         });
     });
 }
-function calculateLineArrangements(springs, groupSizes) {
-    var springsWithMergedDots = mergeConsecutiveDots(springs);
-    var islands = springsWithMergedDots.split(".");
-    process.stdout.write(islands.toString());
-    process.stdout.write("  ");
-    process.stdout.write(groupSizes.toString());
-    console.log();
-    //   islands.forEach((island, index) => {
-    //     groupSizes.forEach(groupSize => {
-    //     if (canTake(island, groupSize)) {
-    //       addToIsland(island, groupSize)
-    //     }
-    //   });
-    // })
-    var count = 0;
-    return count;
+function mergeDots(inputString) {
+    return inputString.replace(/\.{2,}/g, ".");
 }
-function canTake(island, groupSize) {
-    if (groupSize > island.length)
-        return false;
-    var springGroupLength = 0;
-    for (var i = 0; i < island.length; i++) {
-        if (island.charAt(i) == "#") {
-            springGroupLength++;
+function areArraysEqual(arr1, arr2) {
+    return (arr1.length === arr2.length &&
+        arr1.every(function (value, index) { return value === arr2[index]; }));
+}
+var solutionsCache = new Set();
+function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
+    // console.log(springs);
+    if (!springs.includes("?")) {
+        // console.log(springs);
+        if (!areArraysEqual(mergeDots(springs)
+            .replace(/^\.+|\.+$/g, "")
+            .split(".")
+            .map(function (springGroup) { return springGroup.length; }), groupSizes) ||
+            solutionsCache.has(springs)) {
+            return 0;
+        }
+        // console.log(springs);
+        solutionsCache.add(springs);
+        return 1;
+    }
+    var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
+    if (solutions.length == 0)
+        return 0;
+    // console.log("Count");
+    // console.log(groupSizes[currentGroupSizeIndex]);
+    // console.log("Solutions");
+    // console.log(solutions);
+    return solutions
+        .map(function (solution) {
+        return calculateLineArrangements(solution, currentGroupSizeIndex + 1, groupSizes);
+    })
+        .reduce(function (acc, result) { return acc + result; });
+}
+function combinationsForGroupSize(springs, groupSize) {
+    var combinations = [];
+    var currentChar;
+    for (var i = 0; i < springs.length - groupSize + 1; i++) {
+        var currentSolution = springs;
+        currentChar = springs[i];
+        var nextChar = currentSolution.charAt(i + groupSize);
+        var previousChar = currentSolution.charAt(i - 1);
+        if (currentChar != ".") {
+            if (!currentSolution.substring(i, i + groupSize).includes(".") &&
+                nextChar != "#" &&
+                previousChar != "#") {
+                combinations.push(currentSolution.substring(0, i).replace(/\?/g, ".") +
+                    "#".repeat(groupSize) +
+                    currentSolution.substring(i + groupSize));
+            }
         }
     }
-    if (springGroupLength > groupSize)
-        return false;
-    return true;
-}
-function mergeConsecutiveDots(inputString) {
-    var result = inputString.replace(/\.{2,}/g, '.');
-    return result.replace(/^\.+|\.+$/g, '');
+    return combinations;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);

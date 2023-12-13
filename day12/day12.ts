@@ -16,98 +16,105 @@ async function processFile(filePath: string): Promise<void> {
     const lineParts = line.split(" ");
     sum += calculateLineArrangements(
       lineParts[0],
+      0,
       lineParts[1].split(",").map((element) => Number(element))
     );
+    solutionsCache.clear();
     break;
   }
 
   console.log(sum);
 }
 
-interface IslandBucket {
-  island: string;
-  groups: number[];
+function mergeDots(inputString: string): string {
+  return inputString.replace(/\.{2,}/g, ".");
 }
+
+function areArraysEqual(arr1: number[], arr2: number[]): boolean {
+  return (
+    arr1.length === arr2.length &&
+    arr1.every((value, index) => value === arr2[index])
+  );
+}
+
+const solutionsCache = new Set<string>();
 
 function calculateLineArrangements(
   springs: string,
+  currentGroupSizeIndex: number,
   groupSizes: number[]
 ): number {
-  
-  const springsWithMergedDots = mergeConsecutiveDots(springs)
-  const islands: IslandBucket[] = springsWithMergedDots.split(".").map(island => {
-    return {island: island, groups: []}
-  })
-
-  // process.stdout.write(islands.toString())
-  // process.stdout.write("  ")
-  // process.stdout.write(groupSizes.toString())
-  // console.log()
-
-
-  var currentGroupIndex = 0
-  var islandBucket: IslandBucket
-  for (let i = 0; i < islands.length; i++) {
-    islandBucket = islands[i]
-    for (let j = currentGroupIndex; j < groupSizes.length; j++) {
-        if (canTake(islandBucket, groupSizes[j])) {
-          // on next island continue from next untaken group
-          currentGroupIndex = j+1
-          break;
-        } 
-      }
-    };
-
-  console.log(islands)
-  var count = 0;
-  return count;
-}
-
-function canTake(islandBucket: IslandBucket, newGroupSize: number): boolean {
-  var tempIsland = islandBucket.island
-  if (newGroupSize > tempIsland.length) return false
-  if (!tempIsland.includes("#")) {
-    const newPrefix = "#".repeat(newGroupSize)
-    if (tempIsland.length > newGroupSize) {
-      islandBucket.island = newPrefix + "." + tempIsland.slice(newGroupSize)
-    } else {
-      islandBucket.island = newPrefix
+  // console.log(springs);
+  if (!springs.includes("?")) {
+    // console.log(springs);
+    if (
+      !areArraysEqual(
+        mergeDots(springs)
+          .replace(/^\.+|\.+$/g, "")
+          .split(".")
+          .map((springGroup) => springGroup.length),
+        groupSizes
+      ) ||
+      solutionsCache.has(springs)
+    ) {
+      return 0;
     }
-    return true
+    // console.log(springs);
+    solutionsCache.add(springs);
+    return 1;
   }
 
-  // If island already parsed input, begin after last subisland
-  const lastDotIndex = tempIsland.lastIndexOf('.');
-  if (lastDotIndex !== -1) {
-    tempIsland = tempIsland.substring(lastDotIndex + 1);
-  } 
+  const solutions = combinationsForGroupSize(
+    springs,
+    groupSizes[currentGroupSizeIndex]
+  );
 
-  // 1. find first # group that has equal or less size than newGroupSize
-  // 2. if has equal size - add dot left and right and return adjusted string
-  // 3. if has less size - try filling remaining items on the left, then right, then add dots outside
-  // 4. return true if any condition was satisfied, false otherwise
-  var springGroupLength = 0
-  for (let i=0;i<tempIsland.length;i++) {
-    const nextChar = i+1 < tempIsland.length ? tempIsland.charAt(i+1) : "x"
+  if (solutions.length == 0) return 0;
 
-      if (tempIsland.charAt(i) == "#") { 
-        springGroupLength++
-      } else {
-        springGroupLength = 0
-      }
+  // console.log("Count");
+  // console.log(groupSizes[currentGroupSizeIndex]);
+  // console.log("Solutions");
+  // console.log(solutions);
 
-      if (springGroupLength == groupSize && nextChar != "#") {
-        
-      }
-      
-    }  
-
-  return false
+  return solutions
+    .map((solution) => {
+      return calculateLineArrangements(
+        solution,
+        currentGroupSizeIndex + 1,
+        groupSizes
+      );
+    })
+    .reduce((acc, result) => acc + result);
 }
 
-function mergeConsecutiveDots(inputString: string): string {
-  const result = inputString.replace(/\.{2,}/g, '.');
-  return result.replace(/^\.+|\.+$/g, '');
+function combinationsForGroupSize(
+  springs: string,
+  groupSize: number
+): string[] {
+  var combinations: string[] = [];
+
+  var currentChar: string;
+  for (let i = 0; i < springs.length - groupSize + 1; i++) {
+    var currentSolution = springs;
+    currentChar = springs[i];
+
+    var nextChar = currentSolution.charAt(i + groupSize);
+    var previousChar = currentSolution.charAt(i - 1);
+    if (currentChar != ".") {
+      if (
+        !currentSolution.substring(i, i + groupSize).includes(".") &&
+        nextChar != "#" &&
+        previousChar != "#"
+      ) {
+        combinations.push(
+          currentSolution.substring(0, i).replace(/\?/g, ".") +
+            "#".repeat(groupSize) +
+            currentSolution.substring(i + groupSize)
+        );
+      }
+    }
+  }
+  return combinations;
 }
 
 // Usage: node build/your-script.js your-text-file.txt
