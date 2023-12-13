@@ -44,21 +44,8 @@ function calculateLineArrangements(
   currentGroupSizeIndex: number,
   groupSizes: number[]
 ): number {
-  if (
-    areArraysEqual(
-      mergeDots(springs.replace(/\?/g, "."))
-        .replace(/^\.+|\.+$/g, "")
-        .split(".")
-        .map((springGroup) => springGroup.length),
-      groupSizes
-    ) &&
-    !solutionsCache.has(springs)
-  ) {
-    solutionsCache.add(springs);
-    return 1;
-  }
   // console.log(springs);
-  else if (!springs.includes("?")) {
+  if (!springs.includes("?")) {
     // console.log(springs);
     if (
       !areArraysEqual(
@@ -75,6 +62,24 @@ function calculateLineArrangements(
     // console.log(springs);
     solutionsCache.add(springs);
     return 1;
+  } else {
+    // check if "?" are only after last "#"
+    if (!springs.substring(0, springs.lastIndexOf("#")).includes("?")) {
+      if (
+        areArraysEqual(
+          mergeDots(springs.replace(/\?/g, "."))
+            .replace(/^\.+|\.+$/g, "")
+            .split(".")
+            .map((springGroup) => springGroup.length),
+          groupSizes
+        ) &&
+        !solutionsCache.has(springs)
+      ) {
+        console.log(springs);
+        solutionsCache.add(springs);
+        return 1;
+      }
+    }
   }
 
   const solutions = combinationsForGroupSize(

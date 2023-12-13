@@ -109,16 +109,8 @@ function areArraysEqual(arr1, arr2) {
 }
 var solutionsCache = new Set();
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
-    if (areArraysEqual(mergeDots(springs.replace(/\?/g, "."))
-        .replace(/^\.+|\.+$/g, "")
-        .split(".")
-        .map(function (springGroup) { return springGroup.length; }), groupSizes) &&
-        !solutionsCache.has(springs)) {
-        solutionsCache.add(springs);
-        return 1;
-    }
     // console.log(springs);
-    else if (!springs.includes("?")) {
+    if (!springs.includes("?")) {
         // console.log(springs);
         if (!areArraysEqual(mergeDots(springs)
             .replace(/^\.+|\.+$/g, "")
@@ -130,6 +122,20 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
         // console.log(springs);
         solutionsCache.add(springs);
         return 1;
+    }
+    else {
+        // check if "?" are only after last "#"
+        if (!springs.substring(0, springs.lastIndexOf("#")).includes("?")) {
+            if (areArraysEqual(mergeDots(springs.replace(/\?/g, "."))
+                .replace(/^\.+|\.+$/g, "")
+                .split(".")
+                .map(function (springGroup) { return springGroup.length; }), groupSizes) &&
+                !solutionsCache.has(springs)) {
+                console.log(springs);
+                solutionsCache.add(springs);
+                return 1;
+            }
+        }
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
     if (solutions.length == 0)
