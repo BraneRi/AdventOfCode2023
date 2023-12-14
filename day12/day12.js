@@ -70,6 +70,10 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
+                    // const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
+                    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
+                    // console.log(partTwoSprings)
+                    // console.log(partTwoGroupSizes)
                     sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
                     solutionsCache.clear();
                     _e.label = 4;
@@ -108,36 +112,33 @@ function areArraysEqual(arr1, arr2) {
         arr1.every(function (value, index) { return value === arr2[index]; }));
 }
 var solutionsCache = new Set();
-function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
-    if (areArraysEqual(mergeDots(springs.replace(/\?/g, "."))
+function springsGroupSizes(springs) {
+    return mergeDots(springs.replace(/\?/g, "."))
         .replace(/^\.+|\.+$/g, "")
         .split(".")
-        .map(function (springGroup) { return springGroup.length; }), groupSizes) &&
+        .map(function (springGroup) { return springGroup.length; });
+}
+function hasUnknownsBeforeLastSpring(springs) {
+    return springs.substring(0, springs.lastIndexOf("#")).includes("?");
+}
+function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
+    if (areArraysEqual(springsGroupSizes(springs), groupSizes) &&
+        !hasUnknownsBeforeLastSpring(springs) &&
         !solutionsCache.has(springs)) {
         solutionsCache.add(springs);
         return 1;
     }
-    // console.log(springs);
     else if (!springs.includes("?")) {
-        // console.log(springs);
-        if (!areArraysEqual(mergeDots(springs)
-            .replace(/^\.+|\.+$/g, "")
-            .split(".")
-            .map(function (springGroup) { return springGroup.length; }), groupSizes) ||
+        if (!areArraysEqual(springsGroupSizes(springs), groupSizes) ||
             solutionsCache.has(springs)) {
             return 0;
         }
-        // console.log(springs);
         solutionsCache.add(springs);
         return 1;
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
     if (solutions.length == 0)
         return 0;
-    // console.log("Count");
-    // console.log(groupSizes[currentGroupSizeIndex]);
-    // console.log("Solutions");
-    // console.log(solutions);
     return solutions
         .map(function (solution) {
         return calculateLineArrangements(solution, currentGroupSizeIndex + 1, groupSizes);

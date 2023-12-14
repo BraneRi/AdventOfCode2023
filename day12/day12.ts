@@ -14,6 +14,11 @@ async function processFile(filePath: string): Promise<void> {
   var sum = 0;
   for await (const line of rl) {
     const lineParts = line.split(" ");
+    // const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
+    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
+    // console.log(partTwoSprings)
+    // console.log(partTwoGroupSizes)
+
     sum += calculateLineArrangements(
       lineParts[0],
       0,
@@ -39,40 +44,36 @@ function areArraysEqual(arr1: number[], arr2: number[]): boolean {
 
 const solutionsCache = new Set<string>();
 
+function springsGroupSizes(springs: string): number[] {
+  return mergeDots(springs.replace(/\?/g, "."))
+    .replace(/^\.+|\.+$/g, "")
+    .split(".")
+    .map((springGroup) => springGroup.length);
+}
+
+function hasUnknownsBeforeLastSpring(springs: string): boolean {
+  return springs.substring(0, springs.lastIndexOf("#")).includes("?")
+}
+
 function calculateLineArrangements(
   springs: string,
   currentGroupSizeIndex: number,
   groupSizes: number[]
 ): number {
   if (
-    areArraysEqual(
-      mergeDots(springs.replace(/\?/g, "."))
-        .replace(/^\.+|\.+$/g, "")
-        .split(".")
-        .map((springGroup) => springGroup.length),
-      groupSizes
-    ) &&
+    areArraysEqual(springsGroupSizes(springs), groupSizes) &&
+    !hasUnknownsBeforeLastSpring(springs) &&
     !solutionsCache.has(springs)
   ) {
     solutionsCache.add(springs);
     return 1;
-  }
-  // console.log(springs);
-  else if (!springs.includes("?")) {
-    // console.log(springs);
+  } else if (!springs.includes("?")) {
     if (
-      !areArraysEqual(
-        mergeDots(springs)
-          .replace(/^\.+|\.+$/g, "")
-          .split(".")
-          .map((springGroup) => springGroup.length),
-        groupSizes
-      ) ||
+      !areArraysEqual(springsGroupSizes(springs), groupSizes) ||
       solutionsCache.has(springs)
     ) {
       return 0;
     }
-    // console.log(springs);
     solutionsCache.add(springs);
     return 1;
   }
@@ -83,11 +84,6 @@ function calculateLineArrangements(
   );
 
   if (solutions.length == 0) return 0;
-
-  // console.log("Count");
-  // console.log(groupSizes[currentGroupSizeIndex]);
-  // console.log("Solutions");
-  // console.log(solutions);
 
   return solutions
     .map((solution) => {
