@@ -117,15 +117,14 @@ function areArraysEqual(arr1, arr2) {
     return (arr1.length === arr2.length &&
         arr1.every(function (value, index) { return value === arr2[index]; }));
 }
-var solutionsCache = new Set();
-function springsGroupSizes(springs) {
-    return mergeDots(springs.replace(/\?/g, "."))
-        .replace(/^\.+|\.+$/g, "")
-        .split(".")
-        .map(function (springGroup) { return springGroup.length; });
-}
+var unknownBeforeLastSpringCache = new Map();
 function hasUnknownsBeforeLastSpring(springs) {
-    return springs.substring(0, springs.lastIndexOf("#")).includes("?");
+    var cache = unknownBeforeLastSpringCache.get(springs);
+    if (cache)
+        return cache;
+    var result = springs.substring(0, springs.lastIndexOf("#")).includes("?");
+    unknownBeforeLastSpringCache.set(springs, result);
+    return result;
 }
 function allBeforeUnknown(inputString) {
     var result = [];
@@ -143,6 +142,12 @@ function allBeforeUnknown(inputString) {
 function trimSurroundingDots(inputString) {
     return inputString.replace(/^\.+|\.+$/g, "");
 }
+function springsGroupSizes(springs) {
+    return mergeDots(springs.replace(/\?/g, "."))
+        .replace(/^\.+|\.+$/g, "")
+        .split(".")
+        .map(function (springGroup) { return springGroup.length; });
+}
 function filterSolutions(solutions, groupSizes) {
     return solutions.filter(function (solution) {
         var temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
@@ -156,6 +161,7 @@ function toUniqueKey(springs, index) {
     return springs + " " + index;
 }
 var combinations = new Set();
+var solutionsCache = new Set();
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
     if (combinations.has(toUniqueKey(springs, currentGroupSizeIndex))) {
         return 0;

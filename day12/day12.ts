@@ -48,17 +48,14 @@ function areArraysEqual(arr1: number[], arr2: number[]): boolean {
   );
 }
 
-const solutionsCache = new Set<string>();
-
-function springsGroupSizes(springs: string): number[] {
-  return mergeDots(springs.replace(/\?/g, "."))
-    .replace(/^\.+|\.+$/g, "")
-    .split(".")
-    .map((springGroup) => springGroup.length);
-}
-
+const unknownBeforeLastSpringCache = new Map<string, boolean>()
 function hasUnknownsBeforeLastSpring(springs: string): boolean {
-  return springs.substring(0, springs.lastIndexOf("#")).includes("?");
+  const cache = unknownBeforeLastSpringCache.get(springs)
+  if (cache) return cache
+
+  const result = springs.substring(0, springs.lastIndexOf("#")).includes("?");
+  unknownBeforeLastSpringCache.set(springs, result)
+  return result
 }
 
 function allBeforeUnknown(inputString: string): string[] {
@@ -80,6 +77,13 @@ function trimSurroundingDots(inputString: string): string {
   return inputString.replace(/^\.+|\.+$/g, "");
 }
 
+function springsGroupSizes(springs: string): number[] {
+  return mergeDots(springs.replace(/\?/g, "."))
+    .replace(/^\.+|\.+$/g, "")
+    .split(".")
+    .map((springGroup) => springGroup.length);
+}
+
 function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
   return solutions.filter((solution) => {
     const temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
@@ -95,7 +99,7 @@ function toUniqueKey(springs: string, index: number): string {
   return springs + " " + index
 }
 const combinations = new Set<string>();
-
+const solutionsCache = new Set<string>();
 function calculateLineArrangements(
   springs: string,
   currentGroupSizeIndex: number,
