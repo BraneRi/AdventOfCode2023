@@ -122,11 +122,29 @@ function hasUnknownsBeforeLastSpring(springs) {
     return springs.substring(0, springs.lastIndexOf("#")).includes("?");
 }
 function allBeforeUnknown(inputString) {
-    var indexOfQuestionMark = inputString.indexOf('?');
-    return indexOfQuestionMark !== -1 ? inputString.substring(0, indexOfQuestionMark) : inputString;
+    var result = [];
+    var split = inputString.split(".");
+    for (var i = 0; i < split.length; i++) {
+        if (split[i].includes("?")) {
+            break;
+        }
+        else {
+            result.push(split[i]);
+        }
+    }
+    return result;
 }
 function trimSurroundingDots(inputString) {
-    return inputString.replace(/^\.+|\.+$/g, '');
+    return inputString.replace(/^\.+|\.+$/g, "");
+}
+function filterSolutions(solutions, groupSizes) {
+    return solutions.filter(function (solution) {
+        var temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
+        var springGroups = temp.map(function (group) { return group.length; });
+        var result = springGroups.length == 0 ||
+            areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+        return result;
+    });
 }
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
     if (areArraysEqual(springsGroupSizes(springs), groupSizes) &&
@@ -144,19 +162,12 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
         return 1;
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
-    // console.log(solutions)
+    // console.log(solutions);
     // remove invalid solutions
-    solutions = solutions.filter(function (solution) {
-        var temp = trimSurroundingDots(mergeDots(allBeforeUnknown(solution))).split(".");
-        var springGroups = temp
-            .slice(0, temp.length - 1)
-            .map(function (group) { return group.length; });
-        var result = springGroups.length == 0 ||
-            areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
-        return result;
-    });
-    // console.log("Poslije")
-    // console.log(solutions)
+    solutions = filterSolutions(solutions, groupSizes);
+    // console.log("Filtrirano");
+    // console.log(solutions);
+    // console.log("--");
     if (solutions.length == 0)
         return 0;
     return solutions

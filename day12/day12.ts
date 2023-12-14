@@ -55,13 +55,34 @@ function hasUnknownsBeforeLastSpring(springs: string): boolean {
   return springs.substring(0, springs.lastIndexOf("#")).includes("?");
 }
 
-function allBeforeUnknown(inputString: string): string {
-  const indexOfQuestionMark = inputString.indexOf('?');
-  return indexOfQuestionMark !== -1 ? inputString.substring(0, indexOfQuestionMark) : inputString;
+function allBeforeUnknown(inputString: string): string[] {
+  const result: string[] = [];
+  const split = inputString.split(".");
+
+  for (let i = 0; i < split.length; i++) {
+    if (split[i].includes("?")) {
+      break;
+    } else {
+      result.push(split[i]);
+    }
+  }
+
+  return result;
 }
 
 function trimSurroundingDots(inputString: string): string {
-  return inputString.replace(/^\.+|\.+$/g, '');
+  return inputString.replace(/^\.+|\.+$/g, "");
+}
+
+function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
+  return solutions.filter((solution) => {
+    const temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
+    const springGroups = temp.map((group) => group.length);
+    const result =
+      springGroups.length == 0 ||
+      areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+    return result;
+  });
 }
 
 function calculateLineArrangements(
@@ -92,22 +113,12 @@ function calculateLineArrangements(
     groupSizes[currentGroupSizeIndex]
   );
 
-  // console.log(solutions)
+  // console.log(solutions);
   // remove invalid solutions
-  solutions = solutions.filter((solution) => {
-    const temp = trimSurroundingDots(
-      mergeDots(allBeforeUnknown(solution))
-    ).split(".");
-    const springGroups = temp
-      .slice(0, temp.length - 1)
-      .map((group) => group.length);
-    const result =
-      springGroups.length == 0 ||
-      areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
-    return result;
-  });
-  // console.log("Poslije")
-  // console.log(solutions)
+  solutions = filterSolutions(solutions, groupSizes);
+  // console.log("Filtrirano");
+  // console.log(solutions);
+  // console.log("--");
 
   if (solutions.length == 0) return 0;
 
