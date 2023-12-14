@@ -74,6 +74,7 @@ function processFile(filePath) {
                     // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
                     // console.log(partTwoSprings)
                     // console.log(partTwoGroupSizes)
+                    console.log(lineParts);
                     sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
                     solutionsCache.clear();
                     _e.label = 4;

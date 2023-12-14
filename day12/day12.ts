@@ -119,9 +119,9 @@ function calculateLineArrangements(
   } else {
     combinations.add(toUniqueKey(springs, currentGroupSizeIndex))
   }
+
   // process.stdout.write(springs + "   " + groupSizes + "  index:" + currentGroupSizeIndex);
   // console.log()
-
 
   const springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), groupSizes)
   if (
@@ -149,7 +149,6 @@ function calculateLineArrangements(
 
   // remove invalid solutions
   solutions = filterSolutions(solutions, groupSizes);
-
   if (solutions.length == 0) return 0;
 
   return solutions
