@@ -96,10 +96,18 @@ function calculateLineArrangements(
     .reduce((acc, result) => acc + result);
 }
 
+function toCacheKey(key1: string, key2: number) {
+  return key1 + " " + key2
+}
+const combinationsForGroupSizeCache = new Map<string, string[]>();
+
 function combinationsForGroupSize(
   springs: string,
   groupSize: number
 ): string[] {
+  const cached = combinationsForGroupSizeCache.get(toCacheKey(springs, groupSize))
+  if (cached) return cached
+
   var combinations: string[] = [];
 
   var currentChar: string;
@@ -123,6 +131,8 @@ function combinationsForGroupSize(
       }
     }
   }
+
+  combinationsForGroupSizeCache.set(toCacheKey(springs, groupSize), combinations)
   return combinations;
 }
 

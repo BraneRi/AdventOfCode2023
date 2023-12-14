@@ -145,7 +145,14 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
     })
         .reduce(function (acc, result) { return acc + result; });
 }
+function toCacheKey(key1, key2) {
+    return key1 + " " + key2;
+}
+var combinationsForGroupSizeCache = new Map();
 function combinationsForGroupSize(springs, groupSize) {
+    var cached = combinationsForGroupSizeCache.get(toCacheKey(springs, groupSize));
+    if (cached)
+        return cached;
     var combinations = [];
     var currentChar;
     for (var i = 0; i < springs.length - groupSize + 1; i++) {
@@ -163,6 +170,7 @@ function combinationsForGroupSize(springs, groupSize) {
             }
         }
     }
+    combinationsForGroupSizeCache.set(toCacheKey(springs, groupSize), combinations);
     return combinations;
 }
 // Usage: node build/your-script.js your-text-file.txt
