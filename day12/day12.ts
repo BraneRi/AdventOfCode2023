@@ -14,15 +14,15 @@ async function processFile(filePath: string): Promise<void> {
   var sum = 0;
   for await (const line of rl) {
     const lineParts = line.split(" ");
-    // const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
-    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
+    const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
+    const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
     // console.log(partTwoSprings)
     // console.log(partTwoGroupSizes)
 
     sum += calculateLineArrangements(
-      lineParts[0],
+      partTwoSprings,
       0,
-      lineParts[1].split(",").map((element) => Number(element))
+      partTwoGroupSizes.split(",").map((element) => Number(element))
     );
     solutionsCache.clear();
     // break;
@@ -85,11 +85,24 @@ function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
   });
 }
 
+function toUniqueKey(springs: string, index: number): string {
+  return springs + " " + index
+}
+const combinations = new Set<string>();
+
 function calculateLineArrangements(
   springs: string,
   currentGroupSizeIndex: number,
   groupSizes: number[]
 ): number {
+  if (combinations.has(toUniqueKey(springs, currentGroupSizeIndex))) {
+    return 0;
+  } else {
+    combinations.add(toUniqueKey(springs, currentGroupSizeIndex))
+  }
+  // process.stdout.write(springs + "   " + groupSizes + "  index:" + currentGroupSizeIndex);
+  // console.log()
+
   if (
     areArraysEqual(springsGroupSizes(springs), groupSizes) &&
     !hasUnknownsBeforeLastSpring(springs) &&
@@ -113,12 +126,8 @@ function calculateLineArrangements(
     groupSizes[currentGroupSizeIndex]
   );
 
-  // console.log(solutions);
   // remove invalid solutions
   solutions = filterSolutions(solutions, groupSizes);
-  // console.log("Filtrirano");
-  // console.log(solutions);
-  // console.log("--");
 
   if (solutions.length == 0) return 0;
 

@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, e_1_1;
+        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, partTwoSprings, partTwoGroupSizes, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -70,11 +70,11 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    // const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
-                    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
+                    partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1);
+                    partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
                     // console.log(partTwoSprings)
                     // console.log(partTwoGroupSizes)
-                    sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    sum += calculateLineArrangements(partTwoSprings, 0, partTwoGroupSizes.split(",").map(function (element) { return Number(element); }));
                     solutionsCache.clear();
                     _e.label = 4;
                 case 4:
@@ -146,7 +146,19 @@ function filterSolutions(solutions, groupSizes) {
         return result;
     });
 }
+function toUniqueKey(springs, index) {
+    return springs + " " + index;
+}
+var combinations = new Set();
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
+    if (combinations.has(toUniqueKey(springs, currentGroupSizeIndex))) {
+        return 0;
+    }
+    else {
+        combinations.add(toUniqueKey(springs, currentGroupSizeIndex));
+    }
+    // process.stdout.write(springs + "   " + groupSizes + "  index:" + currentGroupSizeIndex);
+    // console.log()
     if (areArraysEqual(springsGroupSizes(springs), groupSizes) &&
         !hasUnknownsBeforeLastSpring(springs) &&
         !solutionsCache.has(springs)) {
@@ -162,12 +174,8 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
         return 1;
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
-    // console.log(solutions);
     // remove invalid solutions
     solutions = filterSolutions(solutions, groupSizes);
-    // console.log("Filtrirano");
-    // console.log(solutions);
-    // console.log("--");
     if (solutions.length == 0)
         return 0;
     return solutions
