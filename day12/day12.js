@@ -121,6 +121,13 @@ function springsGroupSizes(springs) {
 function hasUnknownsBeforeLastSpring(springs) {
     return springs.substring(0, springs.lastIndexOf("#")).includes("?");
 }
+function allBeforeUnknown(inputString) {
+    var indexOfQuestionMark = inputString.indexOf('?');
+    return indexOfQuestionMark !== -1 ? inputString.substring(0, indexOfQuestionMark) : inputString;
+}
+function trimSurroundingDots(inputString) {
+    return inputString.replace(/^\.+|\.+$/g, '');
+}
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
     if (areArraysEqual(springsGroupSizes(springs), groupSizes) &&
         !hasUnknownsBeforeLastSpring(springs) &&
@@ -137,6 +144,19 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
         return 1;
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
+    // console.log(solutions)
+    // remove invalid solutions
+    solutions = solutions.filter(function (solution) {
+        var temp = trimSurroundingDots(mergeDots(allBeforeUnknown(solution))).split(".");
+        var springGroups = temp
+            .slice(0, temp.length - 1)
+            .map(function (group) { return group.length; });
+        var result = springGroups.length == 0 ||
+            areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+        return result;
+    });
+    // console.log("Poslije")
+    // console.log(solutions)
     if (solutions.length == 0)
         return 0;
     return solutions

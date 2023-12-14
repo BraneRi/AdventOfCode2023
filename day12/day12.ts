@@ -52,7 +52,16 @@ function springsGroupSizes(springs: string): number[] {
 }
 
 function hasUnknownsBeforeLastSpring(springs: string): boolean {
-  return springs.substring(0, springs.lastIndexOf("#")).includes("?")
+  return springs.substring(0, springs.lastIndexOf("#")).includes("?");
+}
+
+function allBeforeUnknown(inputString: string): string {
+  const indexOfQuestionMark = inputString.indexOf('?');
+  return indexOfQuestionMark !== -1 ? inputString.substring(0, indexOfQuestionMark) : inputString;
+}
+
+function trimSurroundingDots(inputString: string): string {
+  return inputString.replace(/^\.+|\.+$/g, '');
 }
 
 function calculateLineArrangements(
@@ -78,10 +87,27 @@ function calculateLineArrangements(
     return 1;
   }
 
-  const solutions = combinationsForGroupSize(
+  var solutions = combinationsForGroupSize(
     springs,
     groupSizes[currentGroupSizeIndex]
   );
+
+  // console.log(solutions)
+  // remove invalid solutions
+  solutions = solutions.filter((solution) => {
+    const temp = trimSurroundingDots(
+      mergeDots(allBeforeUnknown(solution))
+    ).split(".");
+    const springGroups = temp
+      .slice(0, temp.length - 1)
+      .map((group) => group.length);
+    const result =
+      springGroups.length == 0 ||
+      areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+    return result;
+  });
+  // console.log("Poslije")
+  // console.log(solutions)
 
   if (solutions.length == 0) return 0;
 
@@ -97,7 +123,7 @@ function calculateLineArrangements(
 }
 
 function toCacheKey(key1: string, key2: number) {
-  return key1 + " " + key2
+  return key1 + " " + key2;
 }
 const combinationsForGroupSizeCache = new Map<string, string[]>();
 
@@ -105,8 +131,10 @@ function combinationsForGroupSize(
   springs: string,
   groupSize: number
 ): string[] {
-  const cached = combinationsForGroupSizeCache.get(toCacheKey(springs, groupSize))
-  if (cached) return cached
+  const cached = combinationsForGroupSizeCache.get(
+    toCacheKey(springs, groupSize)
+  );
+  if (cached) return cached;
 
   var combinations: string[] = [];
 
@@ -132,7 +160,10 @@ function combinationsForGroupSize(
     }
   }
 
-  combinationsForGroupSizeCache.set(toCacheKey(springs, groupSize), combinations)
+  combinationsForGroupSizeCache.set(
+    toCacheKey(springs, groupSize),
+    combinations
+  );
   return combinations;
 }
 
