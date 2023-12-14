@@ -104,8 +104,14 @@ function processFile(filePath) {
         });
     });
 }
+var mergeDotsCache = new Map();
 function mergeDots(inputString) {
-    return inputString.replace(/\.{2,}/g, ".");
+    var cache = mergeDotsCache.get(inputString);
+    if (cache)
+        return cache;
+    var result = inputString.replace(/\.{2,}/g, ".");
+    mergeDotsCache.set(inputString, result);
+    return result;
 }
 function areArraysEqual(arr1, arr2) {
     return (arr1.length === arr2.length &&

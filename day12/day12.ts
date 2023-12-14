@@ -31,8 +31,14 @@ async function processFile(filePath: string): Promise<void> {
   console.log(sum);
 }
 
+const mergeDotsCache = new Map<string, string>()
 function mergeDots(inputString: string): string {
-  return inputString.replace(/\.{2,}/g, ".");
+  const cache = mergeDotsCache.get(inputString)
+  if (cache) return cache
+
+  const result = inputString.replace(/\.{2,}/g, ".");
+  mergeDotsCache.set(inputString, result)
+  return result
 }
 
 function areArraysEqual(arr1: number[], arr2: number[]): boolean {
