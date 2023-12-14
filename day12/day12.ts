@@ -14,15 +14,15 @@ async function processFile(filePath: string): Promise<void> {
   var sum = 0;
   for await (const line of rl) {
     const lineParts = line.split(" ");
-    const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
-    const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
+    // const partTwoSprings = (lineParts[0] + "?").repeat(5).slice(0, -1)
+    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1)
     // console.log(partTwoSprings)
     // console.log(partTwoGroupSizes)
 
     sum += calculateLineArrangements(
-      partTwoSprings,
+      lineParts[0],
       0,
-      partTwoGroupSizes.split(",").map((element) => Number(element))
+      lineParts[1].split(",").map((element) => Number(element))
     );
     solutionsCache.clear();
     // break;
