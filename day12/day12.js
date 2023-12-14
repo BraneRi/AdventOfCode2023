@@ -126,7 +126,11 @@ function hasUnknownsBeforeLastSpring(springs) {
     unknownBeforeLastSpringCache.set(springs, result);
     return result;
 }
-function allBeforeUnknown(inputString) {
+var groupsBeforeUnknownCache = new Map();
+function groupsBeforeUnknown(inputString) {
+    var cache = groupsBeforeUnknownCache.get(inputString);
+    if (cache)
+        return cache;
     var result = [];
     var split = inputString.split(".");
     for (var i = 0; i < split.length; i++) {
@@ -137,6 +141,7 @@ function allBeforeUnknown(inputString) {
             result.push(split[i]);
         }
     }
+    groupsBeforeUnknownCache.set(inputString, result);
     return result;
 }
 function trimSurroundingDots(inputString) {
@@ -148,13 +153,16 @@ function springsGroupSizes(springs) {
         .split(".")
         .map(function (springGroup) { return springGroup.length; });
 }
+function isValidSolution(solution, groupSizes) {
+    var temp = groupsBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
+    var springGroups = temp.map(function (group) { return group.length; });
+    var result = springGroups.length == 0 ||
+        areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+    return result;
+}
 function filterSolutions(solutions, groupSizes) {
     return solutions.filter(function (solution) {
-        var temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
-        var springGroups = temp.map(function (group) { return group.length; });
-        var result = springGroups.length == 0 ||
-            areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
-        return result;
+        return isValidSolution(solution, groupSizes);
     });
 }
 function toUniqueKey(springs, index) {
@@ -171,14 +179,15 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
     }
     // process.stdout.write(springs + "   " + groupSizes + "  index:" + currentGroupSizeIndex);
     // console.log()
-    if (areArraysEqual(springsGroupSizes(springs), groupSizes) &&
-        !hasUnknownsBeforeLastSpring(springs) &&
+    var springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), groupSizes);
+    if (!hasUnknownsBeforeLastSpring(springs) &&
+        springGroupSizesMatchInputSizes &&
         !solutionsCache.has(springs)) {
         solutionsCache.add(springs);
         return 1;
     }
     else if (!springs.includes("?")) {
-        if (!areArraysEqual(springsGroupSizes(springs), groupSizes) ||
+        if (!springGroupSizesMatchInputSizes ||
             solutionsCache.has(springs)) {
             return 0;
         }

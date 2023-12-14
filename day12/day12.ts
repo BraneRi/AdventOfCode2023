@@ -58,7 +58,11 @@ function hasUnknownsBeforeLastSpring(springs: string): boolean {
   return result
 }
 
-function allBeforeUnknown(inputString: string): string[] {
+const groupsBeforeUnknownCache = new Map<string, string[]>()
+function groupsBeforeUnknown(inputString: string): string[] {
+  const cache = groupsBeforeUnknownCache.get(inputString)
+  if (cache) return cache
+
   const result: string[] = [];
   const split = inputString.split(".");
 
@@ -70,6 +74,7 @@ function allBeforeUnknown(inputString: string): string[] {
     }
   }
 
+  groupsBeforeUnknownCache.set(inputString, result)
   return result;
 }
 
@@ -84,14 +89,18 @@ function springsGroupSizes(springs: string): number[] {
     .map((springGroup) => springGroup.length);
 }
 
-function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
-  return solutions.filter((solution) => {
-    const temp = allBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
+function isValidSolution(solution: string, groupSizes: number[]): boolean {
+  const temp = groupsBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
     const springGroups = temp.map((group) => group.length);
     const result =
       springGroups.length == 0 ||
       areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
     return result;
+}
+
+function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
+  return solutions.filter((solution) => {
+    return isValidSolution(solution, groupSizes)
   });
 }
 
@@ -113,16 +122,18 @@ function calculateLineArrangements(
   // process.stdout.write(springs + "   " + groupSizes + "  index:" + currentGroupSizeIndex);
   // console.log()
 
+
+  const springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), groupSizes)
   if (
-    areArraysEqual(springsGroupSizes(springs), groupSizes) &&
     !hasUnknownsBeforeLastSpring(springs) &&
+    springGroupSizesMatchInputSizes &&
     !solutionsCache.has(springs)
   ) {
     solutionsCache.add(springs);
     return 1;
   } else if (!springs.includes("?")) {
     if (
-      !areArraysEqual(springsGroupSizes(springs), groupSizes) ||
+      !springGroupSizesMatchInputSizes ||
       solutionsCache.has(springs)
     ) {
       return 0;
