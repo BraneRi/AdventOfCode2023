@@ -7,6 +7,7 @@ const arrangementsCache = new Map<string, number>();
 const combinationsForGroupSizeCache = new Map<string, string[]>();
 
 async function processFile(filePath: string): Promise<void> {
+  // console.time("processFile");
   // Create a readable stream from the file
   const fileStream = fs.createReadStream(filePath);
 
@@ -22,133 +23,245 @@ async function processFile(filePath: string): Promise<void> {
     const partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
     const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
 
+    // console.time("calculateLineArrangements");
     const result = calculateLineArrangements(
       partTwoInput,
       partTwoGroupSizes.split(",").map((element) => Number(element))
     );
+    // console.timeEnd("calculateLineArrangements");
     sum += result;
-    console.log(line);
-    console.log(result);
-    console.log("---------");
-    combinationsForGroupSizeCache.clear();
-    arrangementsCache.clear();
+    // console.log(line);
+    // console.log(result);
+    // console.log("---------");
+    // combinationsForGroupSizeCache.clear();
+    // arrangementsCache.clear();
   }
 
   console.log(sum);
+  // console.timeEnd("processFile");
 }
 
+const mergeDotsCache = new Map<string, string>();
 function mergeDots(inputString: string): string {
-  return inputString.replace(/\.{2,}/g, ".");
+  const cached = mergeDotsCache.get(inputString);
+  if (cached) return cached;
+
+  const result = inputString.replace(/\.{2,}/g, ".");
+  mergeDotsCache.set(inputString, result);
+  return result;
 }
 
+const arraysEqualCache = new Map<string, boolean>();
 function areArraysEqual(arr1: number[], arr2: number[]): boolean {
-  return (
+  const cachedKey = arr1.join(",") + ";" + arr2.join(",");
+  const cached = arraysEqualCache.get(cachedKey);
+  if (cached) return cached;
+
+  const result =
     arr1.length === arr2.length &&
-    arr1.every((value, index) => value === arr2[index])
-  );
+    arr1.every((value, index) => value === arr2[index]);
+  arraysEqualCache.set(cachedKey, result);
+  return result;
 }
 
+const hasUnknownsCache = new Map<string, boolean>();
 function hasUnknownsBeforeLastSpring(springs: string): boolean {
-  return springs.substring(0, springs.lastIndexOf("#")).includes("?");
+  const cached = hasUnknownsCache.get(springs);
+  if (cached) return cached;
+
+  const result = cachedSubstring(springs, 0, springs.lastIndexOf("#")).includes(
+    "?"
+  );
+  hasUnknownsCache.set(springs, result);
+  return result;
 }
 
+const springsGroupSizesCache = new Map<string, number[]>();
 function springsGroupSizes(springs: string): number[] {
-  return mergeDots(springs.replace(/\?/g, "."))
+  const cached = springsGroupSizesCache.get(springs);
+  if (cached) return cached;
+
+  const result = mergeDots(springs.replace(/\?/g, "."))
     .replace(/^\.+|\.+$/g, "")
     .split(".")
     .map((springGroup) => springGroup.length);
+
+  springsGroupSizesCache.set(springs, result);
+  return result;
 }
 
+const onlyUnknownsAndDotsCache = new Map<string, boolean>();
 function onlyUnknownsAndDots(str: string): boolean {
-  return /^[\?\.]+$/.test(str);
+  const cached = onlyUnknownsAndDotsCache.get(str);
+  if (cached) return cached;
+
+  const result = /^[\?\.]+$/.test(str);
+  onlyUnknownsAndDotsCache.set(str, result);
+  return result;
 }
 
+const onlySpringsCache = new Map<string, boolean>();
 function onlySprings(str: string): boolean {
-  return /^#+$/.test(str);
+  const cached = onlySpringsCache.get(str);
+  if (cached) return cached;
+  const result = /^#+$/.test(str);
+
+  onlySpringsCache.set(str, result);
+  return result;
+}
+
+const matchCache = new Map<string, boolean>();
+function doesSpringGroupSizesMatchInputSizes(
+  springs: string,
+  remainingGroupSizes: number[]
+): boolean {
+  const cachedKey = springs + ";" + remainingGroupSizes.join(",");
+  const cached = matchCache.get(cachedKey);
+  if (cached) return cached;
+
+  const result = areArraysEqual(
+    springsGroupSizes(springs),
+    remainingGroupSizes
+  );
+  matchCache.set(cachedKey, result);
+  return result;
 }
 
 function calculateLineArrangements(
   springs: string,
   remainingGroupSizes: number[]
 ): number {
+  const cachedKey = springs + ";" + remainingGroupSizes.join(",");
+  const cached = arrangementsCache.get(cachedKey);
+  if (cached) {
+    return cached;
+  }
+
   if (remainingGroupSizes.length == 0) {
     if (springs.length == 0 || onlyUnknownsAndDots(springs)) {
+      arrangementsCache.set(cachedKey, 1);
       return 1;
     }
   }
 
-  const springGroupSizesMatchInputSizes = areArraysEqual(
-    springsGroupSizes(springs),
-    remainingGroupSizes
-  );
+  const springGroupSizesMatchInputSizes: boolean =
+    doesSpringGroupSizesMatchInputSizes(springs, remainingGroupSizes);
+
   if (
     !hasUnknownsBeforeLastSpring(springs) &&
     springGroupSizesMatchInputSizes
   ) {
+    arrangementsCache.set(cachedKey, 1);
     return 1;
   }
 
   var solutions = combinationsForGroupSize(springs, remainingGroupSizes[0]);
 
-  // remove invalid solutions
-  // solutions = filterSolutions(solutions, remainingGroupSizes);
-  if (solutions.length == 0) return 0;
+  if (solutions.length == 0) {
+    arrangementsCache.set(cachedKey, 0);
+    return 0;
+  }
 
-  const nextGroupSize = remainingGroupSizes.slice(1);
+  const nextGroupSizes = remainingGroupSizes.slice(1);
   const result = solutions
     .map((solution) => {
-      return calculateLineArrangements(solution, nextGroupSize);
+      return calculateLineArrangements(solution, nextGroupSizes);
     })
     .reduce((acc, result) => acc + result);
 
+  arrangementsCache.set(cachedKey, result);
   return result;
 }
 
-function toCacheKey(key1: string, key2: number) {
+function toCacheKey(key1: string, key2: number): string {
   return key1 + " " + key2;
+}
+
+const includesDotCache = new Map<string, boolean>();
+function includesDot(
+  currentSolution: string,
+  startIndex: number,
+  endIndex: number
+): boolean {
+  const cacheKey = currentSolution + ";" + startIndex + ";" + endIndex;
+  const cache = includesDotCache.get(cacheKey);
+  if (cache) return cache;
+
+  const result = cachedSubstring(
+    currentSolution,
+    startIndex,
+    endIndex
+  ).includes(".");
+  includesDotCache.set(cacheKey, result);
+  return result;
+}
+
+const solutionSubstringCache = new Map<string, string>();
+function cachedSubstring(
+  solution: string,
+  startIndex: number,
+  endIndex: number = solution.length
+) {
+  const cacheKey = solution + ";" + startIndex + ";" + endIndex;
+  const cache = solutionSubstringCache.get(cacheKey);
+  if (cache) return cache;
+
+  const result = solution.substring(startIndex, endIndex);
+  solutionSubstringCache.set(cacheKey, result);
+  return result;
+}
+
+function isValidCase(
+  currentSolution: string,
+  i: number,
+  groupSize: number
+): boolean {
+  var nextChar = currentSolution.charAt(i + groupSize);
+  var previousChar = currentSolution.charAt(i - 1);
+
+  if (
+    !includesDot(currentSolution, i, i + groupSize) &&
+    nextChar != "#" &&
+    previousChar != "#"
+  ) {
+    if (!cachedSubstring(currentSolution, 0, i).includes("#")) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function combinationsForGroupSize(
   springs: string,
   groupSize: number
 ): string[] {
+  // console.time("combinationsForGroupSize");
   const cached = combinationsForGroupSizeCache.get(
     toCacheKey(springs, groupSize)
   );
-  // if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
 
   var combinations: string[] = [];
 
   var currentChar: string;
 
-  // if here is exactly springs as a grou size (surrounded by dots)
+  // if here is exactly springs as a group size (surrounded by dots)
   var foundUniqueMatch = false;
   for (let i = 0; i < springs.length - groupSize + 1; i++) {
     if (foundUniqueMatch) break;
     var currentSolution = springs;
     currentChar = springs[i];
 
-    var nextChar = currentSolution.charAt(i + groupSize);
-    var previousChar = currentSolution.charAt(i - 1);
     if (currentChar != ".") {
-      if (
-        !currentSolution.substring(i, i + groupSize).includes(".") &&
-        nextChar != "#" &&
-        previousChar != "#"
-      ) {
-        if (!currentSolution.substring(0, i).includes("#")) {
-          // console.log(groupSize);
-          // console.log(
-          //   currentSolution.substring(0, i).replace(/\?/g, ".") +
-          //     "#".repeat(groupSize) +
-          //     currentSolution.substring(i + groupSize)
-          // );
-          combinations.push(currentSolution.substring(i + 1 + groupSize));
-        }
+      if (isValidCase(currentSolution, i, groupSize)) {
+        combinations.push(cachedSubstring(currentSolution, i + 1 + groupSize));
       }
 
       if (
-        onlySprings(currentSolution.substring(i, i + groupSize)) &&
+        onlySprings(cachedSubstring(currentSolution, i + groupSize)) &&
         (currentSolution.charAt(i + groupSize) == "." ||
           currentSolution.charAt(i + groupSize) == "?")
       ) {
@@ -161,6 +274,7 @@ function combinationsForGroupSize(
     toCacheKey(springs, groupSize),
     combinations
   );
+  // console.timeEnd("combinationsForGroupSize");
   return combinations;
 }
 
