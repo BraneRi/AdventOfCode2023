@@ -45,10 +45,13 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
+// key - "Unknown" part of input hot springs string + group size
+// value - count of arrangements
+var arrangementsCache = new Map();
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, partTwoInput, partTwoGroupSizes, e_1_1;
+        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -70,11 +73,12 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
-                    partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
-                    console.log(partTwoInput);
-                    console.log(partTwoGroupSizes);
-                    sum += calculateLineArrangements(partTwoInput, 0, partTwoGroupSizes.split(",").map(function (element) { return Number(element); }));
+                    // const partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
+                    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
+                    // console.log(partTwoInput);
+                    // console.log(partTwoGroupSizes);
+                    sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    arrangementsCache.clear();
                     solutionsCache.clear();
                     _e.label = 4;
                 case 4:
@@ -104,26 +108,80 @@ function processFile(filePath) {
         });
     });
 }
+var mergeDotsCache = new Map();
 function mergeDots(inputString) {
-    return inputString.replace(/\.{2,}/g, ".");
+    var cache = mergeDotsCache.get(inputString);
+    if (cache)
+        return cache;
+    var result = inputString.replace(/\.{2,}/g, ".");
+    mergeDotsCache.set(inputString, result);
+    return result;
 }
 function areArraysEqual(arr1, arr2) {
     return (arr1.length === arr2.length &&
         arr1.every(function (value, index) { return value === arr2[index]; }));
 }
+var unknownBeforeLastSpringCache = new Map();
+function hasUnknownsBeforeLastSpring(springs) {
+    var cache = unknownBeforeLastSpringCache.get(springs);
+    if (cache)
+        return cache;
+    var result = springs.substring(0, springs.lastIndexOf("#")).includes("?");
+    unknownBeforeLastSpringCache.set(springs, result);
+    return result;
+}
+var groupsBeforeUnknownCache = new Map();
+function groupsBeforeUnknown(inputString) {
+    var cache = groupsBeforeUnknownCache.get(inputString);
+    if (cache)
+        return cache;
+    var result = [];
+    var split = inputString.split(".");
+    for (var i = 0; i < split.length; i++) {
+        if (split[i].includes("?")) {
+            break;
+        }
+        else {
+            result.push(split[i]);
+        }
+    }
+    groupsBeforeUnknownCache.set(inputString, result);
+    return result;
+}
+function trimSurroundingDots(inputString) {
+    return inputString.replace(/^\.+|\.+$/g, "");
+}
+function springsGroupSizes(springs) {
+    return mergeDots(springs.replace(/\?/g, "."))
+        .replace(/^\.+|\.+$/g, "")
+        .split(".")
+        .map(function (springGroup) { return springGroup.length; });
+}
+function isValidSolution(solution, groupSizes) {
+    var temp = groupsBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
+    var springGroups = temp.map(function (group) { return group.length; });
+    var result = springGroups.length == 0 ||
+        areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
+    return result;
+}
+function filterSolutions(solutions, groupSizes) {
+    return solutions.filter(function (solution) {
+        return isValidSolution(solution, groupSizes);
+    });
+}
 var solutionsCache = new Set();
 function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
-    // console.log(springs);
-    if (!springs.includes("?")) {
-        // console.log(springs);
-        if (!areArraysEqual(mergeDots(springs)
-            .replace(/^\.+|\.+$/g, "")
-            .split(".")
-            .map(function (springGroup) { return springGroup.length; }), groupSizes) ||
-            solutionsCache.has(springs)) {
+    var springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), groupSizes);
+    if (!hasUnknownsBeforeLastSpring(springs) &&
+        springGroupSizesMatchInputSizes &&
+        !solutionsCache.has(springs)) {
+        solutionsCache.add(springs);
+        return 1;
+    }
+    else if (!springs.includes("?")) {
+        if (!springGroupSizesMatchInputSizes || solutionsCache.has(springs)) {
             return 0;
         }
-        // console.log(springs);
         solutionsCache.add(springs);
         return 1;
     }
@@ -142,19 +200,25 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
         }
     }
     var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
+    // remove invalid solutions
+    solutions = filterSolutions(solutions, groupSizes);
     if (solutions.length == 0)
         return 0;
-    // console.log("Count");
-    // console.log(groupSizes[currentGroupSizeIndex]);
-    // console.log("Solutions");
-    // console.log(solutions);
-    return solutions
+    var result = solutions
         .map(function (solution) {
         return calculateLineArrangements(solution, currentGroupSizeIndex + 1, groupSizes);
     })
         .reduce(function (acc, result) { return acc + result; });
+    return result;
 }
+function toCacheKey(key1, key2) {
+    return key1 + " " + key2;
+}
+var combinationsForGroupSizeCache = new Map();
 function combinationsForGroupSize(springs, groupSize) {
+    var cached = combinationsForGroupSizeCache.get(toCacheKey(springs, groupSize));
+    if (cached)
+        return cached;
     var combinations = [];
     var currentChar;
     for (var i = 0; i < springs.length - groupSize + 1; i++) {
@@ -172,6 +236,7 @@ function combinationsForGroupSize(springs, groupSize) {
             }
         }
     }
+    combinationsForGroupSizeCache.set(toCacheKey(springs, groupSize), combinations);
     return combinations;
 }
 // Usage: node build/your-script.js your-text-file.txt

@@ -1,0 +1,32 @@
+#?#???????#?.? 3,1,2,2
+
+3
+###???????#?.? 1,2,2
+
+1
+a) ###.#?????#?.? 2,2
+###..#????#?.? 2,2
+###...#???#?.? 2,2
+###....#??#?.? 2,2
+###.....#?#?.? 2,2
+###.......#?.? 2,2
+
+2 a)
+a) ###.#.##??#?.? 2 -> cache (2 solutions)
+###.#..##?#?.? 2
+###.#....##?.? 2
+###.#.....##.? 2
+
+2 a) a)
+###.#.##.##?.? -> solution 1
+###.#.##..##.? -> solution 2
+
+
+Kako cacheirati ?
+
+a) ###.#.##??#?.? 2 -> cache (2 solutions)
+
+U ovom koraku ako bih odrezao "known" dio inputa "###.#." onda bi mi preostao "unknown" dio inputa "##??#?.?".
+Ako zamislim da je komadić "###" mogao biti drugačije raspoređen, tako da "unknown" dio ostane isti 
+- ne bih morao ponovno iterirati po unknown dijelu.
+Dakle, cacheiram "unknown" dio i preostalu listu group sizeova za "unknown"
