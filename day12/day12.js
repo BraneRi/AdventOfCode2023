@@ -52,7 +52,7 @@ var combinationsForGroupSizeCache = new Map();
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, result, e_1_1;
+        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, partTwoInput, partTwoGroupSizes, result, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -74,7 +74,9 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    result = calculateLineArrangements(lineParts[0], lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
+                    partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
+                    result = calculateLineArrangements(partTwoInput, partTwoGroupSizes.split(",").map(function (element) { return Number(element); }));
                     sum += result;
                     console.log(line);
                     console.log(result);
@@ -147,9 +149,10 @@ function calculateLineArrangements(springs, remainingGroupSizes) {
     // solutions = filterSolutions(solutions, remainingGroupSizes);
     if (solutions.length == 0)
         return 0;
+    var nextGroupSize = remainingGroupSizes.slice(1);
     var result = solutions
         .map(function (solution) {
-        return calculateLineArrangements(solution, remainingGroupSizes.slice(1));
+        return calculateLineArrangements(solution, nextGroupSize);
     })
         .reduce(function (acc, result) { return acc + result; });
     return result;
@@ -175,12 +178,15 @@ function combinationsForGroupSize(springs, groupSize) {
             if (!currentSolution.substring(i, i + groupSize).includes(".") &&
                 nextChar != "#" &&
                 previousChar != "#") {
-                // console.log(
-                //   currentSolution.substring(0, i).replace(/\?/g, ".") +
-                //     "#".repeat(groupSize) +
-                //     currentSolution.substring(i + groupSize)
-                // );
-                combinations.push(currentSolution.substring(i + 1 + groupSize));
+                if (!currentSolution.substring(0, i).includes("#")) {
+                    // console.log(groupSize);
+                    // console.log(
+                    //   currentSolution.substring(0, i).replace(/\?/g, ".") +
+                    //     "#".repeat(groupSize) +
+                    //     currentSolution.substring(i + groupSize)
+                    // );
+                    combinations.push(currentSolution.substring(i + 1 + groupSize));
+                }
             }
             if (onlySprings(currentSolution.substring(i, i + groupSize)) &&
                 (currentSolution.charAt(i + groupSize) == "." ||

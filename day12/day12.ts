@@ -19,14 +19,12 @@ async function processFile(filePath: string): Promise<void> {
   var sum = 0;
   for await (const line of rl) {
     const lineParts = line.split(" ");
-    // const partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
-    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
-    // console.log(partTwoInput);
-    // console.log(partTwoGroupSizes);
+    const partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
+    const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
 
     const result = calculateLineArrangements(
-      lineParts[0],
-      lineParts[1].split(",").map((element) => Number(element))
+      partTwoInput,
+      partTwoGroupSizes.split(",").map((element) => Number(element))
     );
     sum += result;
     console.log(line);
@@ -96,9 +94,10 @@ function calculateLineArrangements(
   // solutions = filterSolutions(solutions, remainingGroupSizes);
   if (solutions.length == 0) return 0;
 
+  const nextGroupSize = remainingGroupSizes.slice(1);
   const result = solutions
     .map((solution) => {
-      return calculateLineArrangements(solution, remainingGroupSizes.slice(1));
+      return calculateLineArrangements(solution, nextGroupSize);
     })
     .reduce((acc, result) => acc + result);
 
@@ -137,12 +136,15 @@ function combinationsForGroupSize(
         nextChar != "#" &&
         previousChar != "#"
       ) {
-        // console.log(
-        //   currentSolution.substring(0, i).replace(/\?/g, ".") +
-        //     "#".repeat(groupSize) +
-        //     currentSolution.substring(i + groupSize)
-        // );
-        combinations.push(currentSolution.substring(i + 1 + groupSize));
+        if (!currentSolution.substring(0, i).includes("#")) {
+          // console.log(groupSize);
+          // console.log(
+          //   currentSolution.substring(0, i).replace(/\?/g, ".") +
+          //     "#".repeat(groupSize) +
+          //     currentSolution.substring(i + groupSize)
+          // );
+          combinations.push(currentSolution.substring(i + 1 + groupSize));
+        }
       }
 
       if (
