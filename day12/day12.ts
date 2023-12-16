@@ -1,9 +1,11 @@
 import * as readline from "readline";
 import * as fs from "fs";
 
-// key - "Unknown" part of input hot springs string + group size
+// key - "Unknown" part of input hot springs string + remaining group sizes
 // value - count of arrangements
 const arrangementsCache = new Map<string, number>();
+const combinationsForGroupSizeCache = new Map<string, string[]>();
+
 async function processFile(filePath: string): Promise<void> {
   // Create a readable stream from the file
   const fileStream = fs.createReadStream(filePath);
@@ -22,27 +24,23 @@ async function processFile(filePath: string): Promise<void> {
     // console.log(partTwoInput);
     // console.log(partTwoGroupSizes);
 
-    sum += calculateLineArrangements(
+    const result = calculateLineArrangements(
       lineParts[0],
-      0,
       lineParts[1].split(",").map((element) => Number(element))
     );
+    sum += result;
+    console.log(line);
+    console.log(result);
+    console.log("---------");
+    combinationsForGroupSizeCache.clear();
     arrangementsCache.clear();
-    solutionsCache.clear();
-    // break;
   }
 
   console.log(sum);
 }
 
-const mergeDotsCache = new Map<string, string>();
 function mergeDots(inputString: string): string {
-  const cache = mergeDotsCache.get(inputString);
-  if (cache) return cache;
-
-  const result = inputString.replace(/\.{2,}/g, ".");
-  mergeDotsCache.set(inputString, result);
-  return result;
+  return inputString.replace(/\.{2,}/g, ".");
 }
 
 function areArraysEqual(arr1: number[], arr2: number[]): boolean {
@@ -52,38 +50,8 @@ function areArraysEqual(arr1: number[], arr2: number[]): boolean {
   );
 }
 
-const unknownBeforeLastSpringCache = new Map<string, boolean>();
 function hasUnknownsBeforeLastSpring(springs: string): boolean {
-  const cache = unknownBeforeLastSpringCache.get(springs);
-  if (cache) return cache;
-
-  const result = springs.substring(0, springs.lastIndexOf("#")).includes("?");
-  unknownBeforeLastSpringCache.set(springs, result);
-  return result;
-}
-
-const groupsBeforeUnknownCache = new Map<string, string[]>();
-function groupsBeforeUnknown(inputString: string): string[] {
-  const cache = groupsBeforeUnknownCache.get(inputString);
-  if (cache) return cache;
-
-  const result: string[] = [];
-  const split = inputString.split(".");
-
-  for (let i = 0; i < split.length; i++) {
-    if (split[i].includes("?")) {
-      break;
-    } else {
-      result.push(split[i]);
-    }
-  }
-
-  groupsBeforeUnknownCache.set(inputString, result);
-  return result;
-}
-
-function trimSurroundingDots(inputString: string): string {
-  return inputString.replace(/^\.+|\.+$/g, "");
+  return springs.substring(0, springs.lastIndexOf("#")).includes("?");
 }
 
 function springsGroupSizes(springs: string): number[] {
@@ -93,80 +61,44 @@ function springsGroupSizes(springs: string): number[] {
     .map((springGroup) => springGroup.length);
 }
 
-function isValidSolution(solution: string, groupSizes: number[]): boolean {
-  const temp = groupsBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
-  const springGroups = temp.map((group) => group.length);
-  const result =
-    springGroups.length == 0 ||
-    areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
-  return result;
+function onlyUnknownsAndDots(str: string): boolean {
+  return /^[\?\.]+$/.test(str);
 }
 
-function filterSolutions(solutions: string[], groupSizes: number[]): string[] {
-  return solutions.filter((solution) => {
-    return isValidSolution(solution, groupSizes);
-  });
+function onlySprings(str: string): boolean {
+  return /^#+$/.test(str);
 }
 
-const solutionsCache = new Set<string>();
 function calculateLineArrangements(
   springs: string,
-  currentGroupSizeIndex: number,
-  groupSizes: number[]
+  remainingGroupSizes: number[]
 ): number {
-  const springGroupSizesMatchInputSizes = areArraysEqual(
-    springsGroupSizes(springs),
-    groupSizes
-  );
-  if (
-    !hasUnknownsBeforeLastSpring(springs) &&
-    springGroupSizesMatchInputSizes &&
-    !solutionsCache.has(springs)
-  ) {
-    solutionsCache.add(springs);
-    return 1;
-  } else if (!springs.includes("?")) {
-    if (!springGroupSizesMatchInputSizes || solutionsCache.has(springs)) {
-      return 0;
-    }
-    solutionsCache.add(springs);
-    return 1;
-  } else {
-    // check if "?" are only after last "#"
-    if (!springs.substring(0, springs.lastIndexOf("#")).includes("?")) {
-      if (
-        areArraysEqual(
-          mergeDots(springs.replace(/\?/g, "."))
-            .replace(/^\.+|\.+$/g, "")
-            .split(".")
-            .map((springGroup) => springGroup.length),
-          groupSizes
-        ) &&
-        !solutionsCache.has(springs)
-      ) {
-        console.log(springs);
-        solutionsCache.add(springs);
-        return 1;
-      }
+  if (remainingGroupSizes.length == 0) {
+    if (springs.length == 0 || onlyUnknownsAndDots(springs)) {
+      return 1;
     }
   }
 
-  var solutions = combinationsForGroupSize(
-    springs,
-    groupSizes[currentGroupSizeIndex]
+  const springGroupSizesMatchInputSizes = areArraysEqual(
+    springsGroupSizes(springs),
+    remainingGroupSizes
   );
+  if (
+    !hasUnknownsBeforeLastSpring(springs) &&
+    springGroupSizesMatchInputSizes
+  ) {
+    return 1;
+  }
+
+  var solutions = combinationsForGroupSize(springs, remainingGroupSizes[0]);
 
   // remove invalid solutions
-  solutions = filterSolutions(solutions, groupSizes);
+  // solutions = filterSolutions(solutions, remainingGroupSizes);
   if (solutions.length == 0) return 0;
 
   const result = solutions
     .map((solution) => {
-      return calculateLineArrangements(
-        solution,
-        currentGroupSizeIndex + 1,
-        groupSizes
-      );
+      return calculateLineArrangements(solution, remainingGroupSizes.slice(1));
     })
     .reduce((acc, result) => acc + result);
 
@@ -176,7 +108,6 @@ function calculateLineArrangements(
 function toCacheKey(key1: string, key2: number) {
   return key1 + " " + key2;
 }
-const combinationsForGroupSizeCache = new Map<string, string[]>();
 
 function combinationsForGroupSize(
   springs: string,
@@ -185,12 +116,16 @@ function combinationsForGroupSize(
   const cached = combinationsForGroupSizeCache.get(
     toCacheKey(springs, groupSize)
   );
-  if (cached) return cached;
+  // if (cached) return cached;
 
   var combinations: string[] = [];
 
   var currentChar: string;
+
+  // if here is exactly springs as a grou size (surrounded by dots)
+  var foundUniqueMatch = false;
   for (let i = 0; i < springs.length - groupSize + 1; i++) {
+    if (foundUniqueMatch) break;
     var currentSolution = springs;
     currentChar = springs[i];
 
@@ -202,11 +137,20 @@ function combinationsForGroupSize(
         nextChar != "#" &&
         previousChar != "#"
       ) {
-        combinations.push(
-          currentSolution.substring(0, i).replace(/\?/g, ".") +
-            "#".repeat(groupSize) +
-            currentSolution.substring(i + groupSize)
-        );
+        // console.log(
+        //   currentSolution.substring(0, i).replace(/\?/g, ".") +
+        //     "#".repeat(groupSize) +
+        //     currentSolution.substring(i + groupSize)
+        // );
+        combinations.push(currentSolution.substring(i + 1 + groupSize));
+      }
+
+      if (
+        onlySprings(currentSolution.substring(i, i + groupSize)) &&
+        (currentSolution.charAt(i + groupSize) == "." ||
+          currentSolution.charAt(i + groupSize) == "?")
+      ) {
+        foundUniqueMatch = true;
       }
     }
   }

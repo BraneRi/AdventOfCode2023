@@ -45,13 +45,14 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
-// key - "Unknown" part of input hot springs string + group size
+// key - "Unknown" part of input hot springs string + remaining group sizes
 // value - count of arrangements
 var arrangementsCache = new Map();
+var combinationsForGroupSizeCache = new Map();
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, e_1_1;
+        var fileStream, rl, sum, _d, rl_1, rl_1_1, line, lineParts, result, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -73,13 +74,13 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineParts = line.split(" ");
-                    // const partTwoInput = (lineParts[0] + "?").repeat(5).slice(0, -1);
-                    // const partTwoGroupSizes = (lineParts[1] + ",").repeat(5).slice(0, -1);
-                    // console.log(partTwoInput);
-                    // console.log(partTwoGroupSizes);
-                    sum += calculateLineArrangements(lineParts[0], 0, lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    result = calculateLineArrangements(lineParts[0], lineParts[1].split(",").map(function (element) { return Number(element); }));
+                    sum += result;
+                    console.log(line);
+                    console.log(result);
+                    console.log("---------");
+                    combinationsForGroupSizeCache.clear();
                     arrangementsCache.clear();
-                    solutionsCache.clear();
                     _e.label = 4;
                 case 4:
                     _d = true;
@@ -108,48 +109,15 @@ function processFile(filePath) {
         });
     });
 }
-var mergeDotsCache = new Map();
 function mergeDots(inputString) {
-    var cache = mergeDotsCache.get(inputString);
-    if (cache)
-        return cache;
-    var result = inputString.replace(/\.{2,}/g, ".");
-    mergeDotsCache.set(inputString, result);
-    return result;
+    return inputString.replace(/\.{2,}/g, ".");
 }
 function areArraysEqual(arr1, arr2) {
     return (arr1.length === arr2.length &&
         arr1.every(function (value, index) { return value === arr2[index]; }));
 }
-var unknownBeforeLastSpringCache = new Map();
 function hasUnknownsBeforeLastSpring(springs) {
-    var cache = unknownBeforeLastSpringCache.get(springs);
-    if (cache)
-        return cache;
-    var result = springs.substring(0, springs.lastIndexOf("#")).includes("?");
-    unknownBeforeLastSpringCache.set(springs, result);
-    return result;
-}
-var groupsBeforeUnknownCache = new Map();
-function groupsBeforeUnknown(inputString) {
-    var cache = groupsBeforeUnknownCache.get(inputString);
-    if (cache)
-        return cache;
-    var result = [];
-    var split = inputString.split(".");
-    for (var i = 0; i < split.length; i++) {
-        if (split[i].includes("?")) {
-            break;
-        }
-        else {
-            result.push(split[i]);
-        }
-    }
-    groupsBeforeUnknownCache.set(inputString, result);
-    return result;
-}
-function trimSurroundingDots(inputString) {
-    return inputString.replace(/^\.+|\.+$/g, "");
+    return springs.substring(0, springs.lastIndexOf("#")).includes("?");
 }
 function springsGroupSizes(springs) {
     return mergeDots(springs.replace(/\?/g, "."))
@@ -157,56 +125,31 @@ function springsGroupSizes(springs) {
         .split(".")
         .map(function (springGroup) { return springGroup.length; });
 }
-function isValidSolution(solution, groupSizes) {
-    var temp = groupsBeforeUnknown(trimSurroundingDots(mergeDots(solution)));
-    var springGroups = temp.map(function (group) { return group.length; });
-    var result = springGroups.length == 0 ||
-        areArraysEqual(springGroups, groupSizes.slice(0, springGroups.length));
-    return result;
+function onlyUnknownsAndDots(str) {
+    return /^[\?\.]+$/.test(str);
 }
-function filterSolutions(solutions, groupSizes) {
-    return solutions.filter(function (solution) {
-        return isValidSolution(solution, groupSizes);
-    });
+function onlySprings(str) {
+    return /^#+$/.test(str);
 }
-var solutionsCache = new Set();
-function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
-    var springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), groupSizes);
+function calculateLineArrangements(springs, remainingGroupSizes) {
+    if (remainingGroupSizes.length == 0) {
+        if (springs.length == 0 || onlyUnknownsAndDots(springs)) {
+            return 1;
+        }
+    }
+    var springGroupSizesMatchInputSizes = areArraysEqual(springsGroupSizes(springs), remainingGroupSizes);
     if (!hasUnknownsBeforeLastSpring(springs) &&
-        springGroupSizesMatchInputSizes &&
-        !solutionsCache.has(springs)) {
-        solutionsCache.add(springs);
+        springGroupSizesMatchInputSizes) {
         return 1;
     }
-    else if (!springs.includes("?")) {
-        if (!springGroupSizesMatchInputSizes || solutionsCache.has(springs)) {
-            return 0;
-        }
-        solutionsCache.add(springs);
-        return 1;
-    }
-    else {
-        // check if "?" are only after last "#"
-        if (!springs.substring(0, springs.lastIndexOf("#")).includes("?")) {
-            if (areArraysEqual(mergeDots(springs.replace(/\?/g, "."))
-                .replace(/^\.+|\.+$/g, "")
-                .split(".")
-                .map(function (springGroup) { return springGroup.length; }), groupSizes) &&
-                !solutionsCache.has(springs)) {
-                console.log(springs);
-                solutionsCache.add(springs);
-                return 1;
-            }
-        }
-    }
-    var solutions = combinationsForGroupSize(springs, groupSizes[currentGroupSizeIndex]);
+    var solutions = combinationsForGroupSize(springs, remainingGroupSizes[0]);
     // remove invalid solutions
-    solutions = filterSolutions(solutions, groupSizes);
+    // solutions = filterSolutions(solutions, remainingGroupSizes);
     if (solutions.length == 0)
         return 0;
     var result = solutions
         .map(function (solution) {
-        return calculateLineArrangements(solution, currentGroupSizeIndex + 1, groupSizes);
+        return calculateLineArrangements(solution, remainingGroupSizes.slice(1));
     })
         .reduce(function (acc, result) { return acc + result; });
     return result;
@@ -214,14 +157,16 @@ function calculateLineArrangements(springs, currentGroupSizeIndex, groupSizes) {
 function toCacheKey(key1, key2) {
     return key1 + " " + key2;
 }
-var combinationsForGroupSizeCache = new Map();
 function combinationsForGroupSize(springs, groupSize) {
     var cached = combinationsForGroupSizeCache.get(toCacheKey(springs, groupSize));
-    if (cached)
-        return cached;
+    // if (cached) return cached;
     var combinations = [];
     var currentChar;
+    // if here is exactly springs as a grou size (surrounded by dots)
+    var foundUniqueMatch = false;
     for (var i = 0; i < springs.length - groupSize + 1; i++) {
+        if (foundUniqueMatch)
+            break;
         var currentSolution = springs;
         currentChar = springs[i];
         var nextChar = currentSolution.charAt(i + groupSize);
@@ -230,9 +175,17 @@ function combinationsForGroupSize(springs, groupSize) {
             if (!currentSolution.substring(i, i + groupSize).includes(".") &&
                 nextChar != "#" &&
                 previousChar != "#") {
-                combinations.push(currentSolution.substring(0, i).replace(/\?/g, ".") +
-                    "#".repeat(groupSize) +
-                    currentSolution.substring(i + groupSize));
+                // console.log(
+                //   currentSolution.substring(0, i).replace(/\?/g, ".") +
+                //     "#".repeat(groupSize) +
+                //     currentSolution.substring(i + groupSize)
+                // );
+                combinations.push(currentSolution.substring(i + 1 + groupSize));
+            }
+            if (onlySprings(currentSolution.substring(i, i + groupSize)) &&
+                (currentSolution.charAt(i + groupSize) == "." ||
+                    currentSolution.charAt(i + groupSize) == "?")) {
+                foundUniqueMatch = true;
             }
         }
     }
