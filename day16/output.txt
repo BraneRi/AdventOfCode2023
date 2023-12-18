@@ -1,0 +1,22 @@
+Too left
+Im in a loop at (7,0)
+Im in a loop at (7,4)
+Too low
+Too high
+Im in a loop at (7,0)
+Im in a loop at (7,2)
+Too low
+Too right
+Too low
+.#####....
+|#-#\#....
+.#.#.#####
+.#.#.##.|.
+.#.#.##...
+.#.#.##..\
+.#.#####..
+########..
+.#######.\
+.#//.#.#..
+51
+File processing completed.
