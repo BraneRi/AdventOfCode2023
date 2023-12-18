@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, i, load;
+        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, evenOutIterations, itemsForCycleChecking, cycleCandidates, i;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -92,58 +92,23 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    // let it run a while to avoid accident cycles
-                    for (i = 1; i <= 1000000000; i++) {
+                    evenOutIterations = 1000;
+                    itemsForCycleChecking = 100;
+                    cycleCandidates = [];
+                    for (i = 1; i <= evenOutIterations + itemsForCycleChecking; i++) {
+                        // leave it a while to even out
                         platform = tiltCycle(platform);
-                        console.log(calculateLoad(platform));
+                        if (i >= evenOutIterations) {
+                            // save last 100 iterations to check for cycles
+                            cycleCandidates.push(calculateLoad(platform));
+                        }
                     }
-                    // 99778 too low
-                    // 100034 too low
                     console.log("Starting to detect cycles...");
-                    load = calculateLoad(platform);
-                    console.log(load);
+                    console.log(cycleCandidates);
                     return [2 /*return*/];
             }
         });
     });
-}
-function arraysEqual(arr1, arr2) {
-    return (arr1.length === arr2.length &&
-        arr1.every(function (val, index) { return val === arr2[index]; }));
-}
-function detectCycleAndPredictValue(initialValue, updateValue, n, currentIteration) {
-    var tortoise = initialValue;
-    var hare = initialValue;
-    var iteration = 0;
-    while (iteration < n) {
-        hare = updateValue(updateValue(hare));
-        if (arraysEqual(tortoise, hare)) {
-            // Cycle detected, now predict the value for the n-th iteration
-            var cycleLength = iteration + 1;
-            var adjustedN = (n - iteration) % cycleLength;
-            // Reset the pointers
-            tortoise = initialValue;
-            hare = initialValue;
-            // Move hare ahead by adjustedN steps
-            for (var i = 0; i < adjustedN; i++) {
-                hare = updateValue(hare);
-            }
-            // Iterate until pointers meet (cycle start)
-            while (!arraysEqual(tortoise, hare)) {
-                tortoise = updateValue(tortoise);
-                hare = updateValue(hare);
-            }
-            // Move tortoise and hare until they meet again (cycle end)
-            while (!arraysEqual(tortoise, hare)) {
-                tortoise = updateValue(tortoise);
-                hare = updateValue(hare);
-            }
-            return hare; // The value for the n-th iteration
-        }
-        iteration++;
-        tortoise = updateValue(tortoise);
-    }
-    return null; // No cycle detected within the first n iterations
 }
 function tiltCycle(platform) {
     platform = tiltNorth(platform);

@@ -16,82 +16,29 @@ async function processFile(filePath: string): Promise<void> {
     platform.push(line);
   }
 
-  // let it run a while to avoid accident cycles
-  for (let i = 1; i <= 1000000000; i++) {
+  const evenOutIterations = 1000
+  const itemsForCycleChecking = 100
+  const cycleCandidates: number[] = [];
+  for (let i = 1; i <= evenOutIterations + itemsForCycleChecking; i++) {
+    // leave it a while to even out
     platform = tiltCycle(platform);
-    console.log(calculateLoad(platform));
+    if (i >= evenOutIterations) {
+      // save last 100 iterations to check for cycles
+      cycleCandidates.push(calculateLoad(platform));
+    }
   }
-
-  // 99778 too low
-  // 100034 too low
 
   console.log("Starting to detect cycles...");
+  console.log(cycleCandidates)
+  // const cycleData = detectCycle(cycleCandidates, evenOutIterations);
+  // console.log(cycleData);
 
-  // console.log(
-  //   detectCycleAndPredictValue(platform, tiltCycle, 1000000000, 1000)
-  // );
+  // const correctIndex = 1000000000 % cycleData!.size
+  // console.log("Value after 1000000000 iterations => " + Array.from(cycleData!.entries()).find( entry => entry[1] == evenOutIterations + correctIndex)?.[0])
 
   // printPlatform(platform);
-  const load = calculateLoad(platform);
-  console.log(load);
 }
 
-function arraysEqual(arr1: string[], arr2: string[]): boolean {
-  return (
-    arr1.length === arr2.length &&
-    arr1.every((val, index) => val === arr2[index])
-  );
-}
-
-function detectCycleAndPredictValue(
-  initialValue: string[],
-  updateValue: (currentValue: string[]) => string[],
-  n: number,
-  currentIteration: number
-): string[] | null {
-  let tortoise = initialValue;
-  let hare = initialValue;
-
-  let iteration = 0;
-
-  while (iteration < n) {
-    hare = updateValue(updateValue(hare));
-
-    if (arraysEqual(tortoise, hare)) {
-      // Cycle detected, now predict the value for the n-th iteration
-      const cycleLength = iteration + 1;
-      const adjustedN = (n - iteration) % cycleLength;
-
-      // Reset the pointers
-      tortoise = initialValue;
-      hare = initialValue;
-
-      // Move hare ahead by adjustedN steps
-      for (let i = 0; i < adjustedN; i++) {
-        hare = updateValue(hare);
-      }
-
-      // Iterate until pointers meet (cycle start)
-      while (!arraysEqual(tortoise, hare)) {
-        tortoise = updateValue(tortoise);
-        hare = updateValue(hare);
-      }
-
-      // Move tortoise and hare until they meet again (cycle end)
-      while (!arraysEqual(tortoise, hare)) {
-        tortoise = updateValue(tortoise);
-        hare = updateValue(hare);
-      }
-
-      return hare; // The value for the n-th iteration
-    }
-
-    iteration++;
-    tortoise = updateValue(tortoise);
-  }
-
-  return null; // No cycle detected within the first n iterations
-}
 
 function tiltCycle(platform: string[]): string[] {
   platform = tiltNorth(platform);
