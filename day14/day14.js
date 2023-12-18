@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, load;
+        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, i, load;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -92,14 +92,73 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    platform = tiltNorth(platform);
-                    printPlatform(platform);
+                    // let it run a while to avoid accident cycles
+                    for (i = 1; i <= 1000000000; i++) {
+                        platform = tiltCycle(platform);
+                        console.log(calculateLoad(platform));
+                    }
+                    // 99778 too low
+                    // 100034 too low
+                    console.log("Starting to detect cycles...");
                     load = calculateLoad(platform);
                     console.log(load);
                     return [2 /*return*/];
             }
         });
     });
+}
+function arraysEqual(arr1, arr2) {
+    return (arr1.length === arr2.length &&
+        arr1.every(function (val, index) { return val === arr2[index]; }));
+}
+function detectCycleAndPredictValue(initialValue, updateValue, n, currentIteration) {
+    var tortoise = initialValue;
+    var hare = initialValue;
+    var iteration = 0;
+    while (iteration < n) {
+        hare = updateValue(updateValue(hare));
+        if (arraysEqual(tortoise, hare)) {
+            // Cycle detected, now predict the value for the n-th iteration
+            var cycleLength = iteration + 1;
+            var adjustedN = (n - iteration) % cycleLength;
+            // Reset the pointers
+            tortoise = initialValue;
+            hare = initialValue;
+            // Move hare ahead by adjustedN steps
+            for (var i = 0; i < adjustedN; i++) {
+                hare = updateValue(hare);
+            }
+            // Iterate until pointers meet (cycle start)
+            while (!arraysEqual(tortoise, hare)) {
+                tortoise = updateValue(tortoise);
+                hare = updateValue(hare);
+            }
+            // Move tortoise and hare until they meet again (cycle end)
+            while (!arraysEqual(tortoise, hare)) {
+                tortoise = updateValue(tortoise);
+                hare = updateValue(hare);
+            }
+            return hare; // The value for the n-th iteration
+        }
+        iteration++;
+        tortoise = updateValue(tortoise);
+    }
+    return null; // No cycle detected within the first n iterations
+}
+function tiltCycle(platform) {
+    platform = tiltNorth(platform);
+    // printPlatform(platform);
+    // console.log("-----");
+    platform = tiltWest(platform);
+    // printPlatform(platform);
+    // console.log("-----");
+    platform = tiltSouth(platform);
+    // printPlatform(platform);
+    // console.log("-----");
+    platform = tiltEast(platform);
+    // printPlatform(platform);
+    // console.log("-----");
+    return platform;
 }
 function printPlatform(platform) {
     platform.forEach(function (element) {
@@ -140,6 +199,96 @@ function tiltNorth(platform) {
                 lastImmovableRock = row - emptySpaces;
                 if (lastImmovableRock != row) {
                     newPlatform[lastImmovableRock] = updateStringAtIndex(newPlatform[lastImmovableRock], col, "O");
+                    newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+                }
+            }
+        }
+    }
+    return newPlatform;
+}
+function tiltSouth(platform) {
+    var newPlatform = platform;
+    var columns = platform[0].length;
+    var rows = platform.length;
+    var element;
+    var lastImmovableRock;
+    var emptySpaces;
+    for (var col = 0; col < columns; col++) {
+        emptySpaces = 0;
+        lastImmovableRock = 0;
+        for (var row = rows - 1; row >= 0; row--) {
+            element = newPlatform[row][col];
+            if (element == "#") {
+                emptySpaces = 0;
+                lastImmovableRock = row;
+            }
+            else if (element == ".") {
+                emptySpaces++;
+            }
+            else if (element == "O") {
+                lastImmovableRock = row + emptySpaces;
+                if (lastImmovableRock != row) {
+                    newPlatform[lastImmovableRock] = updateStringAtIndex(newPlatform[lastImmovableRock], col, "O");
+                    newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+                }
+            }
+        }
+    }
+    return newPlatform;
+}
+function tiltWest(platform) {
+    var newPlatform = platform;
+    var columns = platform[0].length;
+    var rows = platform.length;
+    var element;
+    var lastImmovableRock;
+    var emptySpaces;
+    for (var row = 0; row < rows; row++) {
+        emptySpaces = 0;
+        lastImmovableRock = 0;
+        for (var col = 0; col < columns; col++) {
+            element = newPlatform[row][col];
+            if (element == "#") {
+                emptySpaces = 0;
+                lastImmovableRock = col;
+            }
+            else if (element == ".") {
+                emptySpaces++;
+            }
+            else if (element == "O") {
+                lastImmovableRock = col - emptySpaces;
+                if (lastImmovableRock != col) {
+                    newPlatform[row] = updateStringAtIndex(newPlatform[row], lastImmovableRock, "O");
+                    newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+                }
+            }
+        }
+    }
+    return newPlatform;
+}
+function tiltEast(platform) {
+    var newPlatform = platform;
+    var columns = platform[0].length;
+    var rows = platform.length;
+    var element;
+    var lastImmovableRock;
+    var emptySpaces;
+    for (var row = 0; row < rows; row++) {
+        emptySpaces = 0;
+        lastImmovableRock = 0;
+        for (var col = columns - 1; col >= 0; col--) {
+            element = newPlatform[row][col];
+            if (element == "#") {
+                emptySpaces = 0;
+                lastImmovableRock = col;
+            }
+            else if (element == ".") {
+                emptySpaces++;
+            }
+            else if (element == "O") {
+                lastImmovableRock = col + emptySpaces;
+                if (lastImmovableRock != col) {
+                    newPlatform[row] = updateStringAtIndex(newPlatform[row], lastImmovableRock, "O");
                     newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
                 }
             }

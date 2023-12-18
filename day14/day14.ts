@@ -16,10 +16,97 @@ async function processFile(filePath: string): Promise<void> {
     platform.push(line);
   }
 
-  platform = tiltNorth(platform);
-  printPlatform(platform);
+  // let it run a while to avoid accident cycles
+  for (let i = 1; i <= 1000000000; i++) {
+    platform = tiltCycle(platform);
+    console.log(calculateLoad(platform));
+  }
+
+  // 99778 too low
+  // 100034 too low
+
+  console.log("Starting to detect cycles...");
+
+  // console.log(
+  //   detectCycleAndPredictValue(platform, tiltCycle, 1000000000, 1000)
+  // );
+
+  // printPlatform(platform);
   const load = calculateLoad(platform);
   console.log(load);
+}
+
+function arraysEqual(arr1: string[], arr2: string[]): boolean {
+  return (
+    arr1.length === arr2.length &&
+    arr1.every((val, index) => val === arr2[index])
+  );
+}
+
+function detectCycleAndPredictValue(
+  initialValue: string[],
+  updateValue: (currentValue: string[]) => string[],
+  n: number,
+  currentIteration: number
+): string[] | null {
+  let tortoise = initialValue;
+  let hare = initialValue;
+
+  let iteration = 0;
+
+  while (iteration < n) {
+    hare = updateValue(updateValue(hare));
+
+    if (arraysEqual(tortoise, hare)) {
+      // Cycle detected, now predict the value for the n-th iteration
+      const cycleLength = iteration + 1;
+      const adjustedN = (n - iteration) % cycleLength;
+
+      // Reset the pointers
+      tortoise = initialValue;
+      hare = initialValue;
+
+      // Move hare ahead by adjustedN steps
+      for (let i = 0; i < adjustedN; i++) {
+        hare = updateValue(hare);
+      }
+
+      // Iterate until pointers meet (cycle start)
+      while (!arraysEqual(tortoise, hare)) {
+        tortoise = updateValue(tortoise);
+        hare = updateValue(hare);
+      }
+
+      // Move tortoise and hare until they meet again (cycle end)
+      while (!arraysEqual(tortoise, hare)) {
+        tortoise = updateValue(tortoise);
+        hare = updateValue(hare);
+      }
+
+      return hare; // The value for the n-th iteration
+    }
+
+    iteration++;
+    tortoise = updateValue(tortoise);
+  }
+
+  return null; // No cycle detected within the first n iterations
+}
+
+function tiltCycle(platform: string[]): string[] {
+  platform = tiltNorth(platform);
+  // printPlatform(platform);
+  // console.log("-----");
+  platform = tiltWest(platform);
+  // printPlatform(platform);
+  // console.log("-----");
+  platform = tiltSouth(platform);
+  // printPlatform(platform);
+  // console.log("-----");
+  platform = tiltEast(platform);
+  // printPlatform(platform);
+  // console.log("-----");
+  return platform;
 }
 
 function printPlatform(platform: string[]) {
@@ -74,6 +161,117 @@ function tiltNorth(platform: string[]): string[] {
       }
     }
   }
+  return newPlatform;
+}
+
+function tiltSouth(platform: string[]): string[] {
+  const newPlatform = platform;
+
+  const columns = platform[0].length;
+  const rows = platform.length;
+
+  var element: string;
+  var lastImmovableRock: number;
+  var emptySpaces: number;
+
+  for (let col = 0; col < columns; col++) {
+    emptySpaces = 0;
+    lastImmovableRock = 0;
+    for (let row = rows - 1; row >= 0; row--) {
+      element = newPlatform[row][col];
+      if (element == "#") {
+        emptySpaces = 0;
+        lastImmovableRock = row;
+      } else if (element == ".") {
+        emptySpaces++;
+      } else if (element == "O") {
+        lastImmovableRock = row + emptySpaces;
+        if (lastImmovableRock != row) {
+          newPlatform[lastImmovableRock] = updateStringAtIndex(
+            newPlatform[lastImmovableRock],
+            col,
+            "O"
+          );
+          newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+        }
+      }
+    }
+  }
+
+  return newPlatform;
+}
+
+function tiltWest(platform: string[]): string[] {
+  const newPlatform = platform;
+
+  const columns = platform[0].length;
+  const rows = platform.length;
+
+  var element: string;
+  var lastImmovableRock: number;
+  var emptySpaces: number;
+
+  for (let row = 0; row < rows; row++) {
+    emptySpaces = 0;
+    lastImmovableRock = 0;
+    for (let col = 0; col < columns; col++) {
+      element = newPlatform[row][col];
+      if (element == "#") {
+        emptySpaces = 0;
+        lastImmovableRock = col;
+      } else if (element == ".") {
+        emptySpaces++;
+      } else if (element == "O") {
+        lastImmovableRock = col - emptySpaces;
+        if (lastImmovableRock != col) {
+          newPlatform[row] = updateStringAtIndex(
+            newPlatform[row],
+            lastImmovableRock,
+            "O"
+          );
+          newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+        }
+      }
+    }
+  }
+
+  return newPlatform;
+}
+
+function tiltEast(platform: string[]): string[] {
+  const newPlatform = platform;
+
+  const columns = platform[0].length;
+  const rows = platform.length;
+
+  var element: string;
+  var lastImmovableRock: number;
+  var emptySpaces: number;
+
+  for (let row = 0; row < rows; row++) {
+    emptySpaces = 0;
+    lastImmovableRock = 0;
+    for (let col = columns - 1; col >= 0; col--) {
+      element = newPlatform[row][col];
+      if (element == "#") {
+        emptySpaces = 0;
+        lastImmovableRock = col;
+      } else if (element == ".") {
+        emptySpaces++;
+      } else if (element == "O") {
+        lastImmovableRock = col + emptySpaces;
+        if (lastImmovableRock != col) {
+          newPlatform[row] = updateStringAtIndex(
+            newPlatform[row],
+            lastImmovableRock,
+            "O"
+          );
+          newPlatform[row] = updateStringAtIndex(newPlatform[row], col, ".");
+        }
+      }
+    }
+  }
+
   return newPlatform;
 }
 
