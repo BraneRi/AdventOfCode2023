@@ -16,8 +16,9 @@ async function processFile(filePath: string): Promise<void> {
     platform.push(line);
   }
 
-  const evenOutIterations = 1000
-  const itemsForCycleChecking = 100
+  const evenOutIterations = 1000;
+  const itemsForCycleChecking = 100;
+  const targetIteration = 1000000000;
   const cycleCandidates: number[] = [];
   for (let i = 1; i <= evenOutIterations + itemsForCycleChecking; i++) {
     // leave it a while to even out
@@ -29,16 +30,57 @@ async function processFile(filePath: string): Promise<void> {
   }
 
   console.log("Starting to detect cycles...");
-  console.log(cycleCandidates)
-  // const cycleData = detectCycle(cycleCandidates, evenOutIterations);
-  // console.log(cycleData);
+  console.log(cycleCandidates);
+  const cycleData: { length: number; values: number[] } =
+    detectCycle(cycleCandidates);
+  console.log(cycleData);
 
-  // const correctIndex = 1000000000 % cycleData!.size
-  // console.log("Value after 1000000000 iterations => " + Array.from(cycleData!.entries()).find( entry => entry[1] == evenOutIterations + correctIndex)?.[0])
+  const correctIndex = getCorrectIndex(
+    evenOutIterations,
+    cycleData,
+    targetIteration
+  );
+  console.log(
+    "Value after 1000000000 iterations => " + cycleData.values[correctIndex]
+  );
 
   // printPlatform(platform);
 }
 
+function detectCycle(cycleCandidates: number[]): {
+  length: number;
+  values: number[];
+} {
+  var biggestCycle = 0;
+  var cycleFirst = cycleCandidates[0];
+  var cycleStart = 0;
+  var current: number;
+  for (let i = 1; i < cycleCandidates.length; i++) {
+    current = cycleCandidates[i];
+    if (current == cycleFirst) {
+      biggestCycle = Math.max(i - cycleStart, biggestCycle);
+      cycleStart = i;
+    }
+  }
+
+  return {
+    length: biggestCycle,
+    values: cycleCandidates.slice(0, biggestCycle),
+  };
+}
+
+function getCorrectIndex(
+  start: number,
+  cycleData: { length: number; values: number[] },
+  targetIteration: number
+): number {
+  const closestToTargetWIthZero =
+    Math.floor((targetIteration - start) / cycleData.length) *
+      cycleData.length +
+    start;
+
+  return targetIteration - closestToTargetWIthZero;
+}
 
 function tiltCycle(platform: string[]): string[] {
   platform = tiltNorth(platform);

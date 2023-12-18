@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, evenOutIterations, itemsForCycleChecking, cycleCandidates, i;
+        var fileStream, rl, platform, _d, rl_1, rl_1_1, line, e_1_1, evenOutIterations, itemsForCycleChecking, targetIteration, cycleCandidates, i, cycleData, correctIndex;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -94,6 +94,7 @@ function processFile(filePath) {
                 case 12:
                     evenOutIterations = 1000;
                     itemsForCycleChecking = 100;
+                    targetIteration = 1000000000;
                     cycleCandidates = [];
                     for (i = 1; i <= evenOutIterations + itemsForCycleChecking; i++) {
                         // leave it a while to even out
@@ -105,10 +106,37 @@ function processFile(filePath) {
                     }
                     console.log("Starting to detect cycles...");
                     console.log(cycleCandidates);
+                    cycleData = detectCycle(cycleCandidates);
+                    console.log(cycleData);
+                    correctIndex = getCorrectIndex(evenOutIterations, cycleData, targetIteration);
+                    console.log("Value after 1000000000 iterations => " + cycleData.values[correctIndex]);
                     return [2 /*return*/];
             }
         });
     });
+}
+function detectCycle(cycleCandidates) {
+    var biggestCycle = 0;
+    var cycleFirst = cycleCandidates[0];
+    var cycleStart = 0;
+    var current;
+    for (var i = 1; i < cycleCandidates.length; i++) {
+        current = cycleCandidates[i];
+        if (current == cycleFirst) {
+            biggestCycle = Math.max(i - cycleStart, biggestCycle);
+            cycleStart = i;
+        }
+    }
+    return {
+        length: biggestCycle,
+        values: cycleCandidates.slice(0, biggestCycle),
+    };
+}
+function getCorrectIndex(start, cycleData, targetIteration) {
+    var closestToTargetWIthZero = Math.floor((targetIteration - start) / cycleData.length) *
+        cycleData.length +
+        start;
+    return targetIteration - closestToTargetWIthZero;
 }
 function tiltCycle(platform) {
     platform = tiltNorth(platform);
