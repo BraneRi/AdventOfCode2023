@@ -1,0 +1,3562 @@
+Map(2197) {
+  '0,0,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,0,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,0,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,0,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,0,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 0,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,0,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,0,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,1,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,1,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,1,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,1,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,1,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 1,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,1,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,1,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,2,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,2,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,2,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,2,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,2,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 2,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,2,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,2,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,3,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,3,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,3,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,3,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,3,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 3,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,3,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,3,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,4,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,4,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,4,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,4,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,4,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 4,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,4,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,4,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,5,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,5,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,5,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,5,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,5,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 5,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,5,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,5,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,6,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,6,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,6,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,6,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  '0,6,3,0,0,0,0' => [
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,3,0,0,0' => [
+    {
+      row: 1,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 6,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,6,0,0,3,0,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,6,0,0,0,3,0' => [
+    {
+      row: 0,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,7,0,0,0,0,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 10,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,7,1,0,0,0,0' => [
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,7,0,1,0,0,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,7,0,0,1,0,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 10,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,7,0,0,0,1,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 10,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 6
+    }
+  ],
+  '0,7,2,0,0,0,0' => [
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,7,0,2,0,0,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 1,
+      weight: 3
+    },
+    {
+      row: 2,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 2,
+      weight: 6
+    },
+    {
+      row: 3,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 9
+    }
+  ],
+  '0,7,0,0,2,0,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 10,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    }
+  ],
+  '0,7,0,0,0,2,0' => [
+    {
+      row: 0,
+      col: 8,
+      consecutiveLeft: 0,
+      consecutiveRight: 1,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 4
+    },
+    {
+      row: 0,
+      col: 9,
+      consecutiveLeft: 0,
+      consecutiveRight: 2,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 5
+    },
+    {
+      row: 0,
+      col: 10,
+      consecutiveLeft: 0,
+      consecutiveRight: 3,
+      consecutiveUp: 0,
+      consecutiveDown: 0,
+      weight: 8
+    },
+    {
+      row: 1,
+      col: 7,
+      consecutiveLeft: 0,
+      consecutiveRight: 0,
+      consecutiveUp: 0,
+      consecutiveDown: 3,
+      weight: 3
+    }
+  ],
+  ... 2097 more items
+}
+{
+  '0,0,0,0,0,0,0': 0,
+  '0,1,0,1,0,0,4': 4,
+  '0,2,0,2,0,0,5': 5,
+  '0,3,0,3,0,0,8': 8,
+  '1,0,0,0,0,1,3': 3,
+  '2,0,0,0,0,2,6': 6,
+  '3,0,0,0,0,3,9': 9
+}
+9007199254740991
+File processing completed.
