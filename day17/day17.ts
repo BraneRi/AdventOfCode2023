@@ -94,7 +94,7 @@ function generateGraph(originalGraph: number[][]): Graph {
         consecutiveDown: 0,
       };
       newGraph.set(toStringKey(node), []);
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 4; i <= 10; i++) {
         newGraph.set(
           toStringKey({
             row: row,
@@ -158,32 +158,48 @@ function generateGraph(originalGraph: number[][]): Graph {
 
     // If we went right, we cannot go back left
     if (consecutiveRight == 0) {
-      var step = 1;
-      for (let i = consecutiveLeft + 1; i <= 3; i++) {
+      var step = 4;
+      for (
+        let i = Math.max(consecutiveLeft + 1, 4);
+        i <= 10 - consecutiveLeft;
+        i++
+      ) {
         deltas.push([0, -1 * step, i, 0, 0, 0]);
         step++;
       }
     }
 
     if (consecutiveLeft == 0) {
-      var step = 1;
-      for (let i = consecutiveRight + 1; i <= 3; i++) {
+      var step = 4;
+      for (
+        let i = Math.max(consecutiveRight + 1, 4);
+        i <= 10 - consecutiveRight;
+        i++
+      ) {
         deltas.push([0, step, 0, i, 0, 0]);
         step++;
       }
     }
 
     if (consecutiveDown == 0) {
-      var step = 1;
-      for (let i = consecutiveUp + 1; i <= 3; i++) {
+      var step = 4;
+      for (
+        let i = Math.max(consecutiveUp + 1, 4);
+        i <= 10 - consecutiveUp;
+        i++
+      ) {
         deltas.push([-1 * step, 0, 0, 0, i, 0]);
         step++;
       }
     }
 
     if (consecutiveUp == 0) {
-      var step = 1;
-      for (let i = consecutiveDown + 1; i <= 3; i++) {
+      var step = 4;
+      for (
+        let i = Math.max(consecutiveDown + 1, 4);
+        i <= 10 - consecutiveDown;
+        i++
+      ) {
         deltas.push([step, 0, 0, 0, 0, i]);
         step++;
       }
@@ -278,6 +294,12 @@ function dijkstra(
     .map((targets) => targets[1])
     .reduce((acc, entry) => Math.min(acc, entry), shortestTarget);
 
+  // console.log(
+  //   Object.entries(distances).filter(([key, _]) => {
+  //     const node = toNodeFromString(key);
+  //     return node.row == targetRow && node.col == targetColumn;
+  //   })
+  // );
   // console.log(previousNodes);
   return shortest || -1; // Return -1 if target is unreachable
 }
