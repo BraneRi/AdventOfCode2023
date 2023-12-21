@@ -113,7 +113,6 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     graph = generateGraph(input);
-                    console.log(graph);
                     startKey = {
                         row: 0,
                         col: 0,
@@ -121,9 +120,9 @@ function processFile(filePath) {
                         consecutiveRight: 0,
                         consecutiveUp: 0,
                         consecutiveDown: 0,
-                        weight: 0
+                        weight: 0,
                     };
-                    console.log(dijkstra(graph, startKey, input.length - 1, input[0].length - 1));
+                    console.log(dijkstra(graph, startKey, input.length - 1, input[0].length - 1, input));
                     return [2 /*return*/];
             }
         });
@@ -138,7 +137,6 @@ function toNodeFromString(stringKey) {
         consecutiveRight: Number(keyParts[3]),
         consecutiveUp: Number(keyParts[4]),
         consecutiveDown: Number(keyParts[5]),
-        weight: Number(keyParts[6])
     };
 }
 function generateGraph(originalGraph) {
@@ -153,7 +151,6 @@ function generateGraph(originalGraph) {
                 consecutiveRight: 0,
                 consecutiveUp: 0,
                 consecutiveDown: 0,
-                weight: 0
             };
             newGraph.set(toStringKey(node), []);
             for (var i = 1; i <= 3; i++) {
@@ -164,7 +161,6 @@ function generateGraph(originalGraph) {
                     consecutiveRight: 0,
                     consecutiveUp: 0,
                     consecutiveDown: 0,
-                    weight: 0
                 }), []);
                 newGraph.set(toStringKey({
                     row: row,
@@ -173,7 +169,6 @@ function generateGraph(originalGraph) {
                     consecutiveRight: i,
                     consecutiveUp: 0,
                     consecutiveDown: 0,
-                    weight: 0
                 }), []);
                 newGraph.set(toStringKey({
                     row: row,
@@ -182,7 +177,6 @@ function generateGraph(originalGraph) {
                     consecutiveRight: 0,
                     consecutiveUp: i,
                     consecutiveDown: 0,
-                    weight: 0
                 }), []);
                 newGraph.set(toStringKey({
                     row: row,
@@ -191,7 +185,6 @@ function generateGraph(originalGraph) {
                     consecutiveRight: 0,
                     consecutiveUp: 0,
                     consecutiveDown: i,
-                    weight: 0
                 }), []);
             }
         }
@@ -199,7 +192,7 @@ function generateGraph(originalGraph) {
     // adding neighbours
     for (var _i = 0, _b = Array.from(newGraph.entries()); _i < _b.length; _i++) {
         var _c = _b[_i], currentNode = _c[0], _ = _c[1];
-        var _d = toNodeFromString(currentNode), row = _d.row, col = _d.col, consecutiveLeft = _d.consecutiveLeft, consecutiveRight = _d.consecutiveRight, consecutiveUp = _d.consecutiveUp, consecutiveDown = _d.consecutiveDown, weight = _d.weight;
+        var _d = toNodeFromString(currentNode), row = _d.row, col = _d.col, consecutiveLeft = _d.consecutiveLeft, consecutiveRight = _d.consecutiveRight, consecutiveUp = _d.consecutiveUp, consecutiveDown = _d.consecutiveDown;
         var deltas = [];
         // If we went right, we cannot go back left
         if (consecutiveRight == 0) {
@@ -263,7 +256,7 @@ function generateGraph(originalGraph) {
             }
         }
         for (var _e = 0, deltas_1 = deltas; _e < deltas_1.length; _e++) {
-            var _f = deltas_1[_e], deltaRow = _f[0], deltaCol = _f[1], left = _f[2], right = _f[3], up = _f[4], down = _f[5], weight_1 = _f[6];
+            var _f = deltas_1[_e], deltaRow = _f[0], deltaCol = _f[1], left = _f[2], right = _f[3], up = _f[4], down = _f[5], weight = _f[6];
             var newRow = row + deltaRow;
             var newCol = col + deltaCol;
             if (newRow >= 0 &&
@@ -277,7 +270,6 @@ function generateGraph(originalGraph) {
                     consecutiveRight: right,
                     consecutiveUp: up,
                     consecutiveDown: down,
-                    weight: weight_1
                 };
                 (_a = newGraph.get(currentNode)) === null || _a === void 0 ? void 0 : _a.push(newNode);
             }
@@ -296,13 +288,13 @@ function toStringKey(key) {
         "," +
         key.consecutiveUp +
         "," +
-        key.consecutiveDown
-        + "," + key.weight);
+        key.consecutiveDown);
 }
-function dijkstra(graph, startKey, targetRow, targetColumn) {
+function dijkstra(graph, startKey, targetRow, targetColumn, input) {
     var _a;
     var distances = {};
     var priorityQueue = new PriorityQueue();
+    var previousNodes = {};
     distances[toStringKey(startKey)] = 0;
     priorityQueue.enqueue(startKey, 0);
     while (!priorityQueue.isEmpty()) {
@@ -312,11 +304,13 @@ function dijkstra(graph, startKey, targetRow, targetColumn) {
         }
         for (var _i = 0, _b = (_a = graph.get(toStringKey(currentNode))) !== null && _a !== void 0 ? _a : []; _i < _b.length; _i++) {
             var neighborKey = _b[_i];
-            var distanceToNeighbor = distances[toStringKey(currentNode)] + neighborKey.weight;
+            var distanceToNeighbor = distances[toStringKey(currentNode)] +
+                calculateDistance(currentNode, neighborKey, input);
             if (distances[toStringKey(neighborKey)] == undefined ||
                 distanceToNeighbor < distances[toStringKey(neighborKey)]) {
                 distances[toStringKey(neighborKey)] = distanceToNeighbor;
                 priorityQueue.enqueue(neighborKey, distanceToNeighbor);
+                previousNodes[toStringKey(neighborKey)] = toStringKey(currentNode);
             }
         }
     }
@@ -329,8 +323,29 @@ function dijkstra(graph, startKey, targetRow, targetColumn) {
     })
         .map(function (targets) { return targets[1]; })
         .reduce(function (acc, entry) { return Math.min(acc, entry); }, shortestTarget);
-    console.log(distances);
+    console.log(previousNodes);
     return shortest || -1; // Return -1 if target is unreachable
+}
+function backtrack(previousNodes) {
+    var previousNode = previousNodes["12,12,0,0,0,3"];
+    while (previousNode !== undefined) {
+        previousNode = previousNode[previousNode];
+        console.log(previousNode);
+    }
+}
+function calculateDistance(source, target, input) {
+    var distancesBetween = 0;
+    if (source.row == target.row) {
+        for (var i = source.col + 1; i <= target.col; i++) {
+            distancesBetween += input[source.row][i];
+        }
+    }
+    else {
+        for (var i = source.row + 1; i <= target.row; i++) {
+            distancesBetween += input[i][source.col];
+        }
+    }
+    return distancesBetween;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
