@@ -62,7 +62,6 @@ async function processFile(filePath: string): Promise<void> {
     consecutiveRight: 0,
     consecutiveUp: 0,
     consecutiveDown: 0,
-    weight: 0,
   };
   console.log(
     dijkstra(graph, startKey, input.length - 1, input[0].length - 1, input)
@@ -160,65 +159,37 @@ function generateGraph(originalGraph: number[][]): Graph {
     // If we went right, we cannot go back left
     if (consecutiveRight == 0) {
       var step = 1;
-      var totalWeight = 0;
       for (let i = consecutiveLeft + 1; i <= 3; i++) {
-        const w = originalGraph[0][-1 * step];
-        if (w) {
-          totalWeight += w;
-          deltas.push([0, -1 * step, i, 0, 0, 0, totalWeight]);
-          step++;
-        } else {
-          break;
-        }
+        deltas.push([0, -1 * step, i, 0, 0, 0]);
+        step++;
       }
     }
 
     if (consecutiveLeft == 0) {
       var step = 1;
-      var totalWeight = 0;
       for (let i = consecutiveRight + 1; i <= 3; i++) {
-        const w = originalGraph[0][step];
-        if (w) {
-          totalWeight += w;
-          deltas.push([0, step, 0, i, 0, 0, totalWeight]);
-          step++;
-        } else {
-          break;
-        }
+        deltas.push([0, step, 0, i, 0, 0]);
+        step++;
       }
     }
 
     if (consecutiveDown == 0) {
       var step = 1;
-      var totalWeight = 0;
       for (let i = consecutiveUp + 1; i <= 3; i++) {
-        const w = originalGraph[-1 * step];
-        if (w) {
-          totalWeight += w[0];
-          deltas.push([-1 * step, 0, 0, 0, i, 0, totalWeight]);
-          step++;
-        } else {
-          break;
-        }
+        deltas.push([-1 * step, 0, 0, 0, i, 0]);
+        step++;
       }
     }
 
     if (consecutiveUp == 0) {
       var step = 1;
-      var totalWeight = 0;
       for (let i = consecutiveDown + 1; i <= 3; i++) {
-        const w = originalGraph[step];
-        if (w) {
-          totalWeight += w[0];
-          deltas.push([step, 0, 0, 0, 0, i, totalWeight]);
-          step++;
-        } else {
-          break;
-        }
+        deltas.push([step, 0, 0, 0, 0, i]);
+        step++;
       }
     }
 
-    for (const [deltaRow, deltaCol, left, right, up, down, weight] of deltas) {
+    for (const [deltaRow, deltaCol, left, right, up, down] of deltas) {
       const newRow = row + deltaRow;
       const newCol = col + deltaCol;
 
@@ -281,7 +252,7 @@ function dijkstra(
       break;
     }
 
-    for (const neighborKey of graph.get(toStringKey(currentNode)) ?? []) {
+    for (const neighborKey of graph.get(toStringKey(currentNode))!) {
       const distanceToNeighbor =
         distances[toStringKey(currentNode)] +
         calculateDistance(currentNode, neighborKey, input);
@@ -307,7 +278,7 @@ function dijkstra(
     .map((targets) => targets[1])
     .reduce((acc, entry) => Math.min(acc, entry), shortestTarget);
 
-  console.log(previousNodes);
+  // console.log(previousNodes);
   return shortest || -1; // Return -1 if target is unreachable
 }
 
@@ -318,12 +289,24 @@ function calculateDistance(
 ): number {
   var distancesBetween = 0;
   if (source.row == target.row) {
-    for (let i = source.col + 1; i <= target.col; i++) {
-      distancesBetween += input[source.row][i];
+    if (source.col < target.col) {
+      for (let i = source.col + 1; i <= target.col; i++) {
+        distancesBetween += input[source.row][i];
+      }
+    } else {
+      for (let i = source.col - 1; i >= target.col; i--) {
+        distancesBetween += input[source.row][i];
+      }
     }
   } else {
-    for (let i = source.row + 1; i <= target.row; i++) {
-      distancesBetween += input[i][source.col];
+    if (source.row < target.row) {
+      for (let i = source.row + 1; i <= target.row; i++) {
+        distancesBetween += input[i][source.col];
+      }
+    } else {
+      for (let i = source.row - 1; i >= target.row; i--) {
+        distancesBetween += input[i][source.col];
+      }
     }
   }
   return distancesBetween;
