@@ -1,0 +1,42 @@
+#######
+#.....#
+###...#
+..#...#
+..#...#
+###.###
+#...#..
+##..###
+.#....#
+.######
+
+[
+    {x: 0, y: 0, top: true, left: true},
+    R 6 (#70c710)
+    {x: 7, y: 0, top: true, left: true},
+    D 5 (#0dc571)
+    {x: 7, y: -6, top: true, left: true},
+    L 2 (#5713f0)
+    {x: 5, y: -6, top: true, left: true},
+    D 2 (#d2c081)
+    {x: 5, y: -7, top: true, left: true},
+    R 2 (#59c680)
+    {x: 7, y: -7, top: true, left: true},
+    D 2 (#411b91)
+    {x: 7, y: -10, top: true, left: true},
+    L 5 (#8ceee2)
+    {x: 1, y: -10, top: true, left: true},
+    U 2 (#caa173)
+    {x: 1, y: -8, top: true, left: true},
+    L 1 (#1b58a2)
+    {x: 0, y: -8, top: true, left: true},
+    U 2 (#caa171)
+    {x: 0, y: -5, top: true, left: true},
+    R 2 (#7807d2)
+    {x: 2, y: -5, top: true, left: true},
+    U 3 (#a77fa3)
+    {x: 2, y: -3, top: true, left: true},
+    L 2 (#015232)
+    {x: 0, y: -3, top: true, left: true},
+    U 2 (#7a21e3)
+    {x: 0, y: 0, top: true, left: true},
+]

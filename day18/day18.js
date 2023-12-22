@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, direction, meters, fence, fence, fence, fence, e_1_1;
+        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, direction, meters, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -59,9 +59,7 @@ function processFile(filePath) {
                     });
                     currentVertex = {
                         x: 0,
-                        y: 0,
-                        top: true,
-                        left: true,
+                        y: 0
                     };
                     vertices = [currentVertex];
                     _e.label = 1;
@@ -81,42 +79,30 @@ function processFile(filePath) {
                     // const color = digData[2]
                     switch (direction) {
                         case "L": {
-                            fence = currentVertex.left ? meters : meters + 1;
                             currentVertex = {
-                                x: currentVertex.x - fence,
-                                y: currentVertex.y,
-                                left: true,
-                                top: currentVertex.top,
+                                x: currentVertex.x - meters,
+                                y: currentVertex.y
                             };
                             break;
                         }
                         case "R": {
-                            fence = currentVertex.left ? meters + 1 : meters;
                             currentVertex = {
-                                x: currentVertex.x + fence,
-                                y: currentVertex.y,
-                                left: false,
-                                top: currentVertex.top,
+                                x: currentVertex.x + meters,
+                                y: currentVertex.y
                             };
                             break;
                         }
                         case "D": {
-                            fence = currentVertex.top ? meters + 1 : meters;
                             currentVertex = {
                                 x: currentVertex.x,
-                                y: currentVertex.y - fence,
-                                left: currentVertex.left,
-                                top: false,
+                                y: currentVertex.y - meters
                             };
                             break;
                         }
                         case "U": {
-                            fence = currentVertex.top ? meters : meters + 1;
                             currentVertex = {
                                 x: currentVertex.x,
-                                y: currentVertex.y + fence,
-                                left: currentVertex.left,
-                                top: true,
+                                y: currentVertex.y + meters
                             };
                             break;
                         }

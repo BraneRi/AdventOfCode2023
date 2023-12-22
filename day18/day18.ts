@@ -5,8 +5,10 @@ import * as fs from "fs";
 type TrenchVertex = {
   x: number;
   y: number;
-  top: boolean;
-  left: boolean;
+  neighbourLeft: boolean;
+  neighbourRight: boolean;
+  neighbourTop: boolean;
+  neighbourBottom: boolean;
 };
 
 async function processFile(filePath: string): Promise<void> {
@@ -21,11 +23,9 @@ async function processFile(filePath: string): Promise<void> {
 
   var currentVertex = {
     x: 0,
-    y: 0,
-    top: true,
-    left: true,
+    y: 0
   };
-  const vertices: TrenchVertex[] = [currentVertex];
+  var vertices: TrenchVertex[] = [currentVertex];
   for await (const line of rl) {
     const digData = line.split(" ");
     const direction = digData[0];
@@ -34,46 +34,30 @@ async function processFile(filePath: string): Promise<void> {
 
     switch (direction) {
       case "L": {
-        const fence = currentVertex.left ? meters : meters + 1;
-
         currentVertex = {
-          x: currentVertex.x - fence,
-          y: currentVertex.y,
-          left: true,
-          top: currentVertex.top,
+          x: currentVertex.x - meters,
+          y: currentVertex.y
         };
         break;
       }
       case "R": {
-        const fence = currentVertex.left ? meters + 1 : meters;
-
         currentVertex = {
-          x: currentVertex.x + fence,
-          y: currentVertex.y,
-          left: false,
-          top: currentVertex.top,
+          x: currentVertex.x + meters,
+          y: currentVertex.y
         };
         break;
       }
       case "D": {
-        const fence = currentVertex.top ? meters + 1 : meters;
-
         currentVertex = {
           x: currentVertex.x,
-          y: currentVertex.y - fence,
-          left: currentVertex.left,
-          top: false,
+          y: currentVertex.y - meters
         };
         break;
       }
       case "U": {
-        const fence = currentVertex.top ? meters : meters + 1;
-
         currentVertex = {
           x: currentVertex.x,
-          y: currentVertex.y + fence,
-          left: currentVertex.left,
-          top: true,
+          y: currentVertex.y + meters
         };
         break;
       }
