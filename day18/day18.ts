@@ -30,9 +30,19 @@ async function processFile(filePath: string): Promise<void> {
   var vertices: TrenchVertex[] = [currentVertex];
   for await (const line of rl) {
     const digData = line.split(" ");
-    const direction = digData[0];
-    const meters = Number(digData[1]);
-    // const color = digData[2]
+    const hex = digData[2];
+    const directionCode = Number(hex[hex.length - 2]);
+    var direction: string;
+    if (directionCode == 0) {
+      direction = "R";
+    } else if (directionCode == 1) {
+      direction = "D";
+    } else if (directionCode == 2) {
+      direction = "L";
+    } else {
+      direction = "U";
+    }
+    const meters = parseInt(hex.slice(2, 7), 16);
 
     var newVertex: TrenchVertex;
     switch (direction) {

@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, direction, meters, newVertex, e_1_1, first, last;
+        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, hex, directionCode, direction, meters, newVertex, e_1_1, first, last;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -76,8 +76,21 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     digData = line.split(" ");
-                    direction = digData[0];
-                    meters = Number(digData[1]);
+                    hex = digData[2];
+                    directionCode = Number(hex[hex.length - 2]);
+                    if (directionCode == 0) {
+                        direction = "R";
+                    }
+                    else if (directionCode == 1) {
+                        direction = "D";
+                    }
+                    else if (directionCode == 2) {
+                        direction = "L";
+                    }
+                    else {
+                        direction = "U";
+                    }
+                    meters = parseInt(hex.slice(2, 7), 16);
                     switch (direction) {
                         case "R": {
                             currentVertex.to = "R";
