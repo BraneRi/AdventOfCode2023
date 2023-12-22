@@ -5,10 +5,10 @@ import * as fs from "fs";
 type TrenchVertex = {
   x: number;
   y: number;
-  neighbourLeft: boolean;
-  neighbourRight: boolean;
-  neighbourTop: boolean;
-  neighbourBottom: boolean;
+  // direction where it came from, so we can differentiate
+  // what is inside from outside polygon
+  from: string;
+  to: string;
 };
 
 async function processFile(filePath: string): Promise<void> {
@@ -23,7 +23,9 @@ async function processFile(filePath: string): Promise<void> {
 
   var currentVertex = {
     x: 0,
-    y: 0
+    y: 0,
+    from: "",
+    to: "",
   };
   var vertices: TrenchVertex[] = [currentVertex];
   for await (const line of rl) {
@@ -32,39 +34,93 @@ async function processFile(filePath: string): Promise<void> {
     const meters = Number(digData[1]);
     // const color = digData[2]
 
+    var newVertex: TrenchVertex;
     switch (direction) {
-      case "L": {
-        currentVertex = {
-          x: currentVertex.x - meters,
-          y: currentVertex.y
+      case "R": {
+        currentVertex.to = "R";
+        newVertex = {
+          x: currentVertex.x + meters,
+          y: currentVertex.y,
+          from: "L",
+          to: "",
         };
         break;
       }
-      case "R": {
-        currentVertex = {
-          x: currentVertex.x + meters,
-          y: currentVertex.y
+      case "L": {
+        currentVertex.to = "L";
+        newVertex = {
+          x: currentVertex.x - meters,
+          y: currentVertex.y,
+          from: "R",
+          to: "",
         };
         break;
       }
       case "D": {
-        currentVertex = {
+        currentVertex.to = "D";
+        newVertex = {
           x: currentVertex.x,
-          y: currentVertex.y - meters
+          y: currentVertex.y - meters,
+          from: "U",
+          to: "",
         };
         break;
       }
       case "U": {
-        currentVertex = {
+        currentVertex.to = "U";
+        newVertex = {
           x: currentVertex.x,
-          y: currentVertex.y + meters
+          y: currentVertex.y + meters,
+          from: "D",
+          to: "",
         };
         break;
       }
+      default: {
+        throw Error("invalid input");
+      }
     }
 
-    vertices.push(currentVertex);
+    vertices.push(newVertex);
+    currentVertex = newVertex;
   }
+
+  // last == first, so we have to fix "from" & "to"
+  const first = vertices[0];
+  const last = vertices[vertices.length - 1];
+
+  first.from = last.from;
+  last.to = first.to;
+
+  vertices = vertices.map((vertex) => {
+    if (vertex.from == "L" && vertex.to == "D") {
+      vertex.x += 0.5;
+      vertex.y += 0.5;
+    } else if (vertex.from == "D" && vertex.to == "L") {
+      vertex.x -= 0.5;
+      vertex.y -= 0.5;
+    } else if (vertex.from == "U" && vertex.to == "L") {
+      vertex.x += 0.5;
+      vertex.y -= 0.5;
+    } else if (vertex.from == "L" && vertex.to == "U") {
+      vertex.x -= 0.5;
+      vertex.y += 0.5;
+    } else if (vertex.from == "R" && vertex.to == "D") {
+      vertex.x += 0.5;
+      vertex.y -= 0.5;
+    } else if (vertex.from == "D" && vertex.to == "R") {
+      vertex.x -= 0.5;
+      vertex.y += 0.5;
+    } else if (vertex.from == "U" && vertex.to == "R") {
+      vertex.x += 0.5;
+      vertex.y += 0.5;
+    } else if (vertex.from == "R" && vertex.to == "U") {
+      vertex.x -= 0.5;
+      vertex.y -= 0.5;
+    }
+
+    return vertex;
+  });
 
   console.log(vertices);
   console.log(calculateArea(vertices.slice().reverse()));

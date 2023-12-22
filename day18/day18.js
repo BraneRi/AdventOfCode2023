@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, direction, meters, e_1_1;
+        var fileStream, rl, currentVertex, vertices, _d, rl_1, rl_1_1, line, digData, direction, meters, newVertex, e_1_1, first, last;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -59,7 +59,9 @@ function processFile(filePath) {
                     });
                     currentVertex = {
                         x: 0,
-                        y: 0
+                        y: 0,
+                        from: "",
+                        to: "",
                     };
                     vertices = [currentVertex];
                     _e.label = 1;
@@ -76,38 +78,53 @@ function processFile(filePath) {
                     digData = line.split(" ");
                     direction = digData[0];
                     meters = Number(digData[1]);
-                    // const color = digData[2]
                     switch (direction) {
-                        case "L": {
-                            currentVertex = {
-                                x: currentVertex.x - meters,
-                                y: currentVertex.y
+                        case "R": {
+                            currentVertex.to = "R";
+                            newVertex = {
+                                x: currentVertex.x + meters,
+                                y: currentVertex.y,
+                                from: "L",
+                                to: "",
                             };
                             break;
                         }
-                        case "R": {
-                            currentVertex = {
-                                x: currentVertex.x + meters,
-                                y: currentVertex.y
+                        case "L": {
+                            currentVertex.to = "L";
+                            newVertex = {
+                                x: currentVertex.x - meters,
+                                y: currentVertex.y,
+                                from: "R",
+                                to: "",
                             };
                             break;
                         }
                         case "D": {
-                            currentVertex = {
+                            currentVertex.to = "D";
+                            newVertex = {
                                 x: currentVertex.x,
-                                y: currentVertex.y - meters
+                                y: currentVertex.y - meters,
+                                from: "U",
+                                to: "",
                             };
                             break;
                         }
                         case "U": {
-                            currentVertex = {
+                            currentVertex.to = "U";
+                            newVertex = {
                                 x: currentVertex.x,
-                                y: currentVertex.y + meters
+                                y: currentVertex.y + meters,
+                                from: "D",
+                                to: "",
                             };
                             break;
                         }
+                        default: {
+                            throw Error("invalid input");
+                        }
                     }
-                    vertices.push(currentVertex);
+                    vertices.push(newVertex);
+                    currentVertex = newVertex;
                     _e.label = 4;
                 case 4:
                     _d = true;
@@ -130,6 +147,45 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
+                    first = vertices[0];
+                    last = vertices[vertices.length - 1];
+                    first.from = last.from;
+                    last.to = first.to;
+                    vertices = vertices.map(function (vertex) {
+                        if (vertex.from == "L" && vertex.to == "D") {
+                            vertex.x += 0.5;
+                            vertex.y += 0.5;
+                        }
+                        else if (vertex.from == "D" && vertex.to == "L") {
+                            vertex.x -= 0.5;
+                            vertex.y -= 0.5;
+                        }
+                        else if (vertex.from == "U" && vertex.to == "L") {
+                            vertex.x += 0.5;
+                            vertex.y -= 0.5;
+                        }
+                        else if (vertex.from == "L" && vertex.to == "U") {
+                            vertex.x -= 0.5;
+                            vertex.y += 0.5;
+                        }
+                        else if (vertex.from == "R" && vertex.to == "D") {
+                            vertex.x += 0.5;
+                            vertex.y -= 0.5;
+                        }
+                        else if (vertex.from == "D" && vertex.to == "R") {
+                            vertex.x -= 0.5;
+                            vertex.y += 0.5;
+                        }
+                        else if (vertex.from == "U" && vertex.to == "R") {
+                            vertex.x += 0.5;
+                            vertex.y += 0.5;
+                        }
+                        else if (vertex.from == "R" && vertex.to == "U") {
+                            vertex.x -= 0.5;
+                            vertex.y -= 0.5;
+                        }
+                        return vertex;
+                    });
                     console.log(vertices);
                     console.log(calculateArea(vertices.slice().reverse()));
                     return [2 /*return*/];
