@@ -56,101 +56,18 @@ async function processFile(filePath: string): Promise<void> {
 
   // console.log(sumOfAccepted(workflows, inputs));
   const solutions = Array.from(totalCombinations(workflows));
+  console.log(
+    solutions.reduce(
+      (acc, solution) =>
+        acc +
+        (solution.x.to - solution.x.from + 1) *
+          (solution.m.to - solution.m.from + 1) *
+          (solution.a.to - solution.a.from + 1) *
+          (solution.s.to - solution.s.from + 1),
+      0
+    )
+  );
   console.log(solutions);
-
-  var currentCombinations =
-    (solutions[0].x.to - solutions[0].x.from + 1) *
-    (solutions[0].m.to - solutions[0].m.from + 1) *
-    (solutions[0].a.to - solutions[0].a.from + 1) *
-    (solutions[0].s.to - solutions[0].s.from + 1);
-
-  const xRanges: Range[] = [solutions[0].x];
-  const mRanges: Range[] = [solutions[0].m];
-  const aRanges: Range[] = [solutions[0].a];
-  const sRanges: Range[] = [solutions[0].s];
-  var solution: Solution;
-  for (let i = 1; i < solutions.length; i++) {
-    solution = solutions[i];
-
-    var xDiff = 1;
-    for (let j = 0; j < xRanges.length; j++) {
-      const xRange = xRanges[j];
-      if (solution.x.from < xRange.from) {
-        xDiff += Math.min(solution.x.to, xRange.to) - solution.x.from;
-        xRanges.push({
-          from: solution.x.from,
-          to: Math.min(solution.x.to, xRange.to),
-        });
-      } else if (solution.x.to > xRange.to) {
-        xDiff += Math.max(solution.x.from, xRange.from) - solution.x.to;
-        xRanges.push({
-          from: Math.max(solution.x.from, xRange.from),
-          to: solution.x.to,
-        });
-      }
-    }
-
-    var mDiff = 1;
-    for (let j = 0; j < mRanges.length; j++) {
-      const mRange = mRanges[j];
-      if (solution.m.from < mRange.from) {
-        mDiff += Math.min(solution.m.to, mRange.to) - solution.m.from;
-        mRanges.push({
-          from: solution.m.from,
-          to: Math.min(solution.m.to, mRange.to),
-        });
-      } else if (solution.m.to > mRange.to) {
-        mDiff += Math.max(solution.m.from, mRange.from) - solution.m.to;
-        mRanges.push({
-          from: Math.max(solution.m.from, mRange.from),
-          to: solution.m.to,
-        });
-      }
-    }
-
-    var aDiff = 1;
-    for (let j = 0; j < aRanges.length; j++) {
-      const aRange = aRanges[j];
-      if (solution.a.from < aRange.from) {
-        aDiff += Math.min(solution.a.to, aRange.to) - solution.a.from;
-        aRanges.push({
-          from: solution.a.from,
-          to: Math.min(solution.a.to, aRange.to),
-        });
-      } else if (solution.a.to > aRange.to) {
-        aDiff += Math.max(solution.a.from, aRange.from) - solution.a.to;
-        aRanges.push({
-          from: Math.max(solution.a.from, aRange.from),
-          to: solution.a.to,
-        });
-      }
-    }
-
-    var sDiff = 1;
-    for (let j = 0; j < sRanges.length; j++) {
-      const sRange = sRanges[j];
-      if (solution.s.from < sRange.from) {
-        sDiff += Math.min(solution.s.to, sRange.to) - solution.s.from;
-        sRanges.push({
-          from: solution.s.from,
-          to: Math.min(solution.s.to, sRange.to),
-        });
-      } else if (solution.s.to > sRange.to) {
-        sDiff += Math.max(solution.s.from, sRange.from) - solution.s.to;
-        sRanges.push({
-          from: Math.max(solution.s.from, sRange.from),
-          to: solution.s.to,
-        });
-      }
-    }
-
-    const newCombinations = xDiff * mDiff * aDiff * sDiff;
-    if (newCombinations > 1) {
-      currentCombinations += newCombinations;
-    }
-  }
-
-  console.log(currentCombinations);
 }
 
 interface Range {
@@ -169,10 +86,10 @@ interface Solution {
 function totalCombinations(
   workflows: Map<string, Rule[]>,
   currentWorkflow: string = "in",
-  x: Range = { from: 0, to: 4000 },
-  m: Range = { from: 0, to: 4000 },
-  a: Range = { from: 0, to: 4000 },
-  s: Range = { from: 0, to: 4000 },
+  x: Range = { from: 1, to: 4000 },
+  m: Range = { from: 1, to: 4000 },
+  a: Range = { from: 1, to: 4000 },
+  s: Range = { from: 1, to: 4000 },
   solutions: Set<Solution> = new Set()
 ): Set<Solution> {
   if (currentWorkflow === "R") return solutions;

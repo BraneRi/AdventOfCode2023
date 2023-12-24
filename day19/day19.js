@@ -53,7 +53,7 @@ var Condition;
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, workflows, inputs, ruleRegex, inputsRegex, _d, rl_1, rl_1_1, line, match, workflow, rulesString, match_1, x, m, a, s, e_1_1, solutions, currentCombinations, xRanges, mRanges, aRanges, sRanges, solution, i, xDiff, j, xRange, mDiff, j, mRange, aDiff, j, aRange, sDiff, j, sRange, newCombinations;
+        var fileStream, rl, workflows, inputs, ruleRegex, inputsRegex, _d, rl_1, rl_1_1, line, match, workflow, rulesString, match_1, x, m, a, s, e_1_1, solutions;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -116,95 +116,14 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     solutions = Array.from(totalCombinations(workflows));
+                    console.log(solutions.reduce(function (acc, solution) {
+                        return acc +
+                            (solution.x.to - solution.x.from + 1) *
+                                (solution.m.to - solution.m.from + 1) *
+                                (solution.a.to - solution.a.from + 1) *
+                                (solution.s.to - solution.s.from + 1);
+                    }, 0));
                     console.log(solutions);
-                    currentCombinations = (solutions[0].x.to - solutions[0].x.from + 1) *
-                        (solutions[0].m.to - solutions[0].m.from + 1) *
-                        (solutions[0].a.to - solutions[0].a.from + 1) *
-                        (solutions[0].s.to - solutions[0].s.from + 1);
-                    xRanges = [solutions[0].x];
-                    mRanges = [solutions[0].m];
-                    aRanges = [solutions[0].a];
-                    sRanges = [solutions[0].s];
-                    for (i = 1; i < solutions.length; i++) {
-                        solution = solutions[i];
-                        xDiff = 1;
-                        for (j = 0; j < xRanges.length; j++) {
-                            xRange = xRanges[j];
-                            if (solution.x.from < xRange.from) {
-                                xDiff += Math.min(solution.x.to, xRange.to) - solution.x.from;
-                                xRanges.push({
-                                    from: solution.x.from,
-                                    to: Math.min(solution.x.to, xRange.to),
-                                });
-                            }
-                            else if (solution.x.to > xRange.to) {
-                                xDiff += Math.max(solution.x.from, xRange.from) - solution.x.to;
-                                xRanges.push({
-                                    from: Math.max(solution.x.from, xRange.from),
-                                    to: solution.x.to,
-                                });
-                            }
-                        }
-                        mDiff = 1;
-                        for (j = 0; j < mRanges.length; j++) {
-                            mRange = mRanges[j];
-                            if (solution.m.from < mRange.from) {
-                                mDiff += Math.min(solution.m.to, mRange.to) - solution.m.from;
-                                mRanges.push({
-                                    from: solution.m.from,
-                                    to: Math.min(solution.m.to, mRange.to),
-                                });
-                            }
-                            else if (solution.m.to > mRange.to) {
-                                mDiff += Math.max(solution.m.from, mRange.from) - solution.m.to;
-                                mRanges.push({
-                                    from: Math.max(solution.m.from, mRange.from),
-                                    to: solution.m.to,
-                                });
-                            }
-                        }
-                        aDiff = 1;
-                        for (j = 0; j < aRanges.length; j++) {
-                            aRange = aRanges[j];
-                            if (solution.a.from < aRange.from) {
-                                aDiff += Math.min(solution.a.to, aRange.to) - solution.a.from;
-                                aRanges.push({
-                                    from: solution.a.from,
-                                    to: Math.min(solution.a.to, aRange.to),
-                                });
-                            }
-                            else if (solution.a.to > aRange.to) {
-                                aDiff += Math.max(solution.a.from, aRange.from) - solution.a.to;
-                                aRanges.push({
-                                    from: Math.max(solution.a.from, aRange.from),
-                                    to: solution.a.to,
-                                });
-                            }
-                        }
-                        sDiff = 1;
-                        for (j = 0; j < sRanges.length; j++) {
-                            sRange = sRanges[j];
-                            if (solution.s.from < sRange.from) {
-                                sDiff += Math.min(solution.s.to, sRange.to) - solution.s.from;
-                                sRanges.push({
-                                    from: solution.s.from,
-                                    to: Math.min(solution.s.to, sRange.to),
-                                });
-                            }
-                            else if (solution.s.to > sRange.to) {
-                                sDiff += Math.max(solution.s.from, sRange.from) - solution.s.to;
-                                sRanges.push({
-                                    from: Math.max(solution.s.from, sRange.from),
-                                    to: solution.s.to,
-                                });
-                            }
-                        }
-                        newCombinations = xDiff * mDiff * aDiff * sDiff;
-                        if (newCombinations > 1) {
-                            currentCombinations += newCombinations;
-                        }
-                    }
-                    console.log(currentCombinations);
                     return [2 /*return*/];
             }
         });
@@ -213,10 +132,10 @@ function processFile(filePath) {
 // Part two
 function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
     if (currentWorkflow === void 0) { currentWorkflow = "in"; }
-    if (x === void 0) { x = { from: 0, to: 4000 }; }
-    if (m === void 0) { m = { from: 0, to: 4000 }; }
-    if (a === void 0) { a = { from: 0, to: 4000 }; }
-    if (s === void 0) { s = { from: 0, to: 4000 }; }
+    if (x === void 0) { x = { from: 1, to: 4000 }; }
+    if (m === void 0) { m = { from: 1, to: 4000 }; }
+    if (a === void 0) { a = { from: 1, to: 4000 }; }
+    if (s === void 0) { s = { from: 1, to: 4000 }; }
     if (solutions === void 0) { solutions = new Set(); }
     if (currentWorkflow === "R")
         return solutions;
