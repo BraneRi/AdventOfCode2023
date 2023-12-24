@@ -116,6 +116,7 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     solutions = Array.from(totalCombinations(workflows));
+                    console.log(solutions);
                     currentCombinations = (solutions[0].x.to - solutions[0].x.from + 1) *
                         (solutions[0].m.to - solutions[0].m.from + 1) *
                         (solutions[0].a.to - solutions[0].a.from + 1) *
@@ -130,14 +131,14 @@ function processFile(filePath) {
                         for (j = 0; j < xRanges.length; j++) {
                             xRange = xRanges[j];
                             if (solution.x.from < xRange.from) {
-                                xDiff = Math.min(solution.x.to, xRange.to) - solution.x.from;
+                                xDiff += Math.min(solution.x.to, xRange.to) - solution.x.from;
                                 xRanges.push({
                                     from: solution.x.from,
                                     to: Math.min(solution.x.to, xRange.to),
                                 });
                             }
                             else if (solution.x.to > xRange.to) {
-                                xDiff = Math.max(solution.x.from, xRange.from) - solution.x.to;
+                                xDiff += Math.max(solution.x.from, xRange.from) - solution.x.to;
                                 xRanges.push({
                                     from: Math.max(solution.x.from, xRange.from),
                                     to: solution.x.to,
@@ -148,14 +149,14 @@ function processFile(filePath) {
                         for (j = 0; j < mRanges.length; j++) {
                             mRange = mRanges[j];
                             if (solution.m.from < mRange.from) {
-                                mDiff = Math.min(solution.m.to, mRange.to) - solution.m.from;
+                                mDiff += Math.min(solution.m.to, mRange.to) - solution.m.from;
                                 mRanges.push({
                                     from: solution.m.from,
                                     to: Math.min(solution.m.to, mRange.to),
                                 });
                             }
                             else if (solution.m.to > mRange.to) {
-                                mDiff = Math.max(solution.m.from, mRange.from) - solution.m.to;
+                                mDiff += Math.max(solution.m.from, mRange.from) - solution.m.to;
                                 mRanges.push({
                                     from: Math.max(solution.m.from, mRange.from),
                                     to: solution.m.to,
@@ -166,14 +167,14 @@ function processFile(filePath) {
                         for (j = 0; j < aRanges.length; j++) {
                             aRange = aRanges[j];
                             if (solution.a.from < aRange.from) {
-                                aDiff = Math.min(solution.a.to, aRange.to) - solution.a.from;
+                                aDiff += Math.min(solution.a.to, aRange.to) - solution.a.from;
                                 aRanges.push({
                                     from: solution.a.from,
                                     to: Math.min(solution.a.to, aRange.to),
                                 });
                             }
                             else if (solution.a.to > aRange.to) {
-                                aDiff = Math.max(solution.a.from, aRange.from) - solution.a.to;
+                                aDiff += Math.max(solution.a.from, aRange.from) - solution.a.to;
                                 aRanges.push({
                                     from: Math.max(solution.a.from, aRange.from),
                                     to: solution.a.to,
@@ -184,14 +185,14 @@ function processFile(filePath) {
                         for (j = 0; j < sRanges.length; j++) {
                             sRange = sRanges[j];
                             if (solution.s.from < sRange.from) {
-                                sDiff = Math.min(solution.s.to, sRange.to) - solution.s.from;
+                                sDiff += Math.min(solution.s.to, sRange.to) - solution.s.from;
                                 sRanges.push({
                                     from: solution.s.from,
                                     to: Math.min(solution.s.to, sRange.to),
                                 });
                             }
                             else if (solution.s.to > sRange.to) {
-                                sDiff = Math.max(solution.s.from, sRange.from) - solution.s.to;
+                                sDiff += Math.max(solution.s.from, sRange.from) - solution.s.to;
                                 sRanges.push({
                                     from: Math.max(solution.s.from, sRange.from),
                                     to: solution.s.to,
@@ -251,9 +252,6 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                         solutions.add(element);
                     });
                 }
-                else {
-                    return solutions;
-                }
                 if (isLastRule && conditionNotOk.to - conditionNotOk.from > 0) {
                     totalCombinations(workflows, rule.conditionNotOkWorkflow, conditionNotOk, m, a, s, solutions).forEach(function (element) {
                         solutions.add(element);
@@ -262,6 +260,7 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                 else if (isLastRule) {
                     return solutions;
                 }
+                x = { from: conditionNotOk.from, to: conditionNotOk.to };
                 break;
             case "m":
                 conditionOk.from =
@@ -279,9 +278,6 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                         solutions.add(element);
                     });
                 }
-                else {
-                    return solutions;
-                }
                 if (isLastRule && conditionNotOk.to - conditionNotOk.from > 0) {
                     totalCombinations(workflows, rule.conditionNotOkWorkflow, x, conditionNotOk, a, s, solutions).forEach(function (element) {
                         solutions.add(element);
@@ -290,6 +286,7 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                 else if (isLastRule) {
                     return solutions;
                 }
+                m = { from: conditionNotOk.from, to: conditionNotOk.to };
                 break;
             case "a":
                 conditionOk.from =
@@ -307,9 +304,6 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                         solutions.add(element);
                     });
                 }
-                else {
-                    return solutions;
-                }
                 if (isLastRule && conditionNotOk.to - conditionNotOk.from > 0) {
                     totalCombinations(workflows, rule.conditionNotOkWorkflow, x, m, conditionNotOk, s, solutions).forEach(function (element) {
                         solutions.add(element);
@@ -318,6 +312,7 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                 else if (isLastRule) {
                     return solutions;
                 }
+                a = { from: conditionNotOk.from, to: conditionNotOk.to };
                 break;
             default:
                 conditionOk.from =
@@ -335,15 +330,13 @@ function totalCombinations(workflows, currentWorkflow, x, m, a, s, solutions) {
                         solutions.add(element);
                     });
                 }
-                else {
-                    return solutions;
-                }
                 if (isLastRule && conditionNotOk.to - conditionNotOk.from > 0) {
                     totalCombinations(workflows, rule.conditionNotOkWorkflow, x, m, a, conditionNotOk, solutions);
                 }
                 else if (isLastRule) {
                     return solutions;
                 }
+                s = { from: conditionNotOk.from, to: conditionNotOk.to };
                 break;
         }
     }

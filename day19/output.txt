@@ -1,2 +1,58 @@
-15375552490096
+[
+  {
+    x: { from: 0, to: 1415 },
+    m: { from: 0, to: 4000 },
+    a: { from: 0, to: 2005 },
+    s: { from: 0, to: 1350 }
+  },
+  {
+    x: { from: 2663, to: 4000 },
+    m: { from: 0, to: 4000 },
+    a: { from: 0, to: 2005 },
+    s: { from: 0, to: 1350 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 2091, to: 4000 },
+    a: { from: 2006, to: 4000 },
+    s: { from: 0, to: 1350 }
+  },
+  {
+    x: { from: 0, to: 2440 },
+    m: { from: 0, to: 2090 },
+    a: { from: 2006, to: 4000 },
+    s: { from: 537, to: 1350 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 0, to: 4000 },
+    a: { from: 0, to: 4000 },
+    s: { from: 3449, to: 4000 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 1549, to: 4000 },
+    a: { from: 0, to: 4000 },
+    s: { from: 2771, to: 3448 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 0, to: 1548 },
+    a: { from: 0, to: 4000 },
+    s: { from: 2771, to: 3448 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 839, to: 1800 },
+    a: { from: 0, to: 4000 },
+    s: { from: 1351, to: 2770 }
+  },
+  {
+    x: { from: 0, to: 4000 },
+    m: { from: 0, to: 838 },
+    a: { from: 0, to: 1716 },
+    s: { from: 1351, to: 2770 }
+  }
+]
+15371480093546
 File processing completed.
