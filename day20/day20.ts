@@ -9,17 +9,15 @@ enum Pulse {
 abstract class Module {
   abstract getKey(): string;
   abstract getDestinations(): string[];
-  abstract process(
-    key: string,
-    pulse: Pulse,
-    modules: Map<string, Module>
-  ): void;
+  abstract releaseOutput(modules: Map<string, Module>): void;
+  abstract calculateOutput(key: string, pulse: Pulse): void;
 }
 
 class FlipFLop extends Module {
   isOn: boolean;
   key: string;
   destinationKeys: string[];
+  output: Pulse | undefined;
 
   constructor(key: string, destinationKeys: string[]) {
     super();
@@ -36,32 +34,36 @@ class FlipFLop extends Module {
     return this.key;
   }
 
-  override process(key: string, input: Pulse, modules: Map<string, Module>) {
+  override releaseOutput(modules: Map<string, Module>): void {
+    if (this.output) {
+      Array.from(modules.entries()).forEach((moduleEntry) => {
+        if (this.destinationKeys.includes(moduleEntry[0])) {
+          moduleEntry[1].calculateOutput(moduleEntry[0], this.output!);
+        }
+      });
+    }
+  }
+
+  override calculateOutput(key: string, input: Pulse) {
     switch (input) {
       case Pulse.HIGH: {
-        // do nothing - this is where the loop eventually stops
+        this.output = undefined;
         break;
       }
       case Pulse.LOW: {
-        var result: Pulse;
         switch (this.isOn) {
           case true: {
             this.isOn = false;
-            result = Pulse.LOW;
+            this.output = Pulse.LOW;
             break;
           }
 
           case false: {
             this.isOn = true;
-            result = Pulse.HIGH;
+            this.output = Pulse.HIGH;
             break;
           }
         }
-        Array.from(modules.entries()).forEach((moduleEntry) => {
-          if (this.destinationKeys.includes(moduleEntry[0])) {
-            moduleEntry[1].process(moduleEntry[0], result, modules);
-          }
-        });
       }
     }
   }
@@ -72,6 +74,7 @@ class Conjunction extends Module {
   destinatonModuleKeys: string[];
   mostRecentPulseForModule: Map<string, Pulse>;
   key: string;
+  output: Pulse;
 
   constructor(key: string, destinatonModuleKeys: string[]) {
     super();
@@ -94,34 +97,32 @@ class Conjunction extends Module {
     return this.key;
   }
 
-  override process(
-    moduleKey: string,
-    input: Pulse,
-    modules: Map<string, Module>
-  ) {
+  override releaseOutput(modules: Map<string, Module>): void {
+    this.destinatonModuleKeys.forEach((moduleKey) => {
+      const module = modules.get(moduleKey)!;
+      module.calculateOutput(moduleKey, this.output, modules);
+    });
+  }
+
+  override calculateOutput(moduleKey: string, input: Pulse) {
     this.mostRecentPulseForModule.set(moduleKey, input);
 
-    var result: Pulse;
     if (
       Array.from(this.mostRecentPulseForModule.values()).every(
         (pulse) => pulse == Pulse.HIGH
       )
     ) {
-      result = Pulse.LOW;
+      this.output = Pulse.LOW;
     } else {
-      result = Pulse.HIGH;
+      this.output = Pulse.HIGH;
     }
-
-    this.destinatonModuleKeys.forEach((moduleKey) => {
-      const module = modules.get(moduleKey)!;
-      module.process(moduleKey, result, modules);
-    });
   }
 }
 
 class Broadcast extends Module {
   destinationKeys: string[];
   key: string;
+  output: Pulse;
 
   constructor(key: string, destinationKeys: string[]) {
     super();
@@ -137,23 +138,32 @@ class Broadcast extends Module {
     return this.key;
   }
 
-  override process(key: string, input: Pulse, modules: Map<string, Module>) {
+  override releaseOutput(modules: Map<string, Module>): void {
     this.destinationKeys.forEach((moduleKey) => {
       const module = modules.get(moduleKey)!;
-      module.process(moduleKey, input, modules);
+      module.calculateOutput(moduleKey, this.output);
     });
+  }
+
+  override calculateOutput(key: string, input: Pulse) {
+    this.output = input;
   }
 }
 
 function pushTheButton(modules: Map<string, Module>) {
-  // todo save result pulse and destinations so we can repeate steps following this rule ->
-  // Pulses are always processed in the order they are sent.
-  // So, if a pulse is sent to modules a, b, and c,
-  // and then module a processes its pulse and sends more pulses,
-  // the pulses sent to modules b and c would have to be handled first.
-  modules.get("broadcaster")!.process("broadcaster", Pulse.LOW, modules);
+  var destinations: Module[];
+  destinations = modules
+    .get("broadcaster")!
+    .calculateOutput("broadcaster", Pulse.LOW);
 
-  // while(!results.isEmpty) releaseResults(results, destinations)
+  while (destinations.length > 0) {
+    const newDestinations: Module[] = [];
+    destinations.forEach((destination) => {
+      newDestinations.pushAll(destination.calculateOutput());
+      destination.releaseOutput(modules);
+    });
+    destinations = newDestinations;
+  }
 }
 
 async function processFile(filePath: string): Promise<void> {
