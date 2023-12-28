@@ -9,8 +9,8 @@ enum Pulse {
 abstract class Module {
   abstract getKey(): string;
   abstract getDestinations(): string[];
-  abstract releaseOutput(modules: Map<string, Module>): void;
   abstract calculateOutput(key: string, pulse: Pulse): void;
+  abstract getOutput(): Pulse | undefined;
 }
 
 class FlipFLop extends Module {
@@ -34,14 +34,8 @@ class FlipFLop extends Module {
     return this.key;
   }
 
-  override releaseOutput(modules: Map<string, Module>): void {
-    if (this.output) {
-      Array.from(modules.entries()).forEach((moduleEntry) => {
-        if (this.destinationKeys.includes(moduleEntry[0])) {
-          moduleEntry[1].calculateOutput(moduleEntry[0], this.output!);
-        }
-      });
-    }
+  override getOutput(): Pulse | undefined {
+    return this.output;
   }
 
   override calculateOutput(key: string, input: Pulse) {
@@ -97,11 +91,8 @@ class Conjunction extends Module {
     return this.key;
   }
 
-  override releaseOutput(modules: Map<string, Module>): void {
-    this.destinatonModuleKeys.forEach((moduleKey) => {
-      const module = modules.get(moduleKey)!;
-      module.calculateOutput(moduleKey, this.output, modules);
-    });
+  override getOutput(): Pulse | undefined {
+    return this.output;
   }
 
   override calculateOutput(moduleKey: string, input: Pulse) {
@@ -138,11 +129,8 @@ class Broadcast extends Module {
     return this.key;
   }
 
-  override releaseOutput(modules: Map<string, Module>): void {
-    this.destinationKeys.forEach((moduleKey) => {
-      const module = modules.get(moduleKey)!;
-      module.calculateOutput(moduleKey, this.output);
-    });
+  override getOutput(): Pulse | undefined {
+    return this.output;
   }
 
   override calculateOutput(key: string, input: Pulse) {
@@ -150,20 +138,60 @@ class Broadcast extends Module {
   }
 }
 
-function pushTheButton(modules: Map<string, Module>) {
-  var destinations: Module[];
-  destinations = modules
-    .get("broadcaster")!
-    .calculateOutput("broadcaster", Pulse.LOW);
+function pushTheButton(modules: Map<string, Module>): {
+  low: number;
+  high: number;
+} {
+  var destinations: {
+    key: string;
+    input: Pulse | undefined;
+    parentKey: string;
+  }[] = [];
+  const broadcast = modules.get("broadcaster")!;
+  broadcast.calculateOutput("broadcaster", Pulse.LOW);
+  broadcast
+    .getDestinations()
+    .forEach((d) =>
+      destinations.push({ key: d, input: broadcast.getOutput(), parentKey: "" })
+    );
 
+  // we count initial low
+  var lowCount = 1;
+  var highCount = 0;
   while (destinations.length > 0) {
-    const newDestinations: Module[] = [];
+    const newDestinations: {
+      key: string;
+      input: Pulse | undefined;
+      parentKey: string;
+    }[] = [];
     destinations.forEach((destination) => {
-      newDestinations.pushAll(destination.calculateOutput());
-      destination.releaseOutput(modules);
+      if (destination.input != undefined) {
+        destination.input == Pulse.LOW ? lowCount++ : highCount++;
+      }
+      // console.log(destination);
+      const module = modules.get(destination.key)!;
+      if (destination.input != undefined && module != undefined) {
+        // console.log("SIG");
+        // console.log(destination.key);
+        // console.log(destination.input);
+        module.calculateOutput(destination.parentKey, destination.input);
+        // console.log(module.getDestinations());
+        // console.log("--------");
+        module.getDestinations().forEach((d) =>
+          newDestinations.push({
+            key: d,
+            input: module.getOutput(),
+            parentKey: destination.key,
+          })
+        );
+      }
     });
     destinations = newDestinations;
+    // console.log("end batch");
   }
+  // console.log(lowCount);
+  // console.log(highCount);
+  return { low: lowCount, high: highCount };
 }
 
 async function processFile(filePath: string): Promise<void> {
@@ -184,7 +212,7 @@ async function processFile(filePath: string): Promise<void> {
       .split(",")
       .map((destination) => destination.trim());
     if (line.startsWith("broadcaster")) {
-      modules.set("broadcast", new Broadcast("broadcast", destinations));
+      modules.set("broadcaster", new Broadcast("broadcaster", destinations));
     } else if (line.startsWith("%")) {
       const key = line.substring(1, line.indexOf("-")).trim();
       modules.set(key, new FlipFLop(key, destinations));
@@ -204,7 +232,21 @@ async function processFile(filePath: string): Promise<void> {
     });
   });
 
-  console.log(modules);
+  // console.log(modules);
+  // console.log();
+  // console.log();
+  // console.log();
+  // console.log();
+
+  var countLow = 0;
+  var countHigh = 0;
+  var result: { low: number; high: number };
+  for (let i = 0; i < 1000; i++) {
+    result = pushTheButton(modules);
+    countLow += result.low;
+    countHigh += result.high;
+  }
+  console.log(countLow * countHigh);
 }
 
 // Usage: node build/your-script.js your-text-file.txt

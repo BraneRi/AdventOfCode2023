@@ -85,34 +85,30 @@ var FlipFLop = /** @class */ (function (_super) {
     FlipFLop.prototype.getKey = function () {
         return this.key;
     };
-    FlipFLop.prototype.process = function (key, input, modules) {
-        var _this = this;
-        var result;
+    FlipFLop.prototype.getOutput = function () {
+        return this.output;
+    };
+    FlipFLop.prototype.calculateOutput = function (key, input) {
         switch (input) {
             case Pulse.HIGH: {
-                // do nothing
+                this.output = undefined;
                 break;
             }
             case Pulse.LOW: {
                 switch (this.isOn) {
                     case true: {
                         this.isOn = false;
-                        result = Pulse.LOW;
+                        this.output = Pulse.LOW;
                         break;
                     }
                     case false: {
                         this.isOn = true;
-                        result = Pulse.LOW;
+                        this.output = Pulse.HIGH;
                         break;
                     }
                 }
             }
         }
-        Array.from(modules.entries()).forEach(function (moduleEntry) {
-            if (_this.destinationKeys.includes(moduleEntry[0])) {
-                moduleEntry[1].process(moduleEntry[0], result, modules);
-            }
-        });
     };
     return FlipFLop;
 }(Module));
@@ -136,13 +132,16 @@ var Conjunction = /** @class */ (function (_super) {
     Conjunction.prototype.getKey = function () {
         return this.key;
     };
-    Conjunction.prototype.process = function (moduleKey, input) {
+    Conjunction.prototype.getOutput = function () {
+        return this.output;
+    };
+    Conjunction.prototype.calculateOutput = function (moduleKey, input) {
         this.mostRecentPulseForModule.set(moduleKey, input);
         if (Array.from(this.mostRecentPulseForModule.values()).every(function (pulse) { return pulse == Pulse.HIGH; })) {
-            return Pulse.LOW;
+            this.output = Pulse.LOW;
         }
         else {
-            return Pulse.HIGH;
+            this.output = Pulse.HIGH;
         }
     };
     return Conjunction;
@@ -161,23 +160,63 @@ var Broadcast = /** @class */ (function (_super) {
     Broadcast.prototype.getKey = function () {
         return this.key;
     };
-    Broadcast.prototype.process = function (key, input, modules) {
-        this.destinationKeys.forEach(function (moduleKey) {
-            var module = modules.get(moduleKey);
-            module.process(moduleKey, input, modules);
-        });
-        //todo what do I return ?
-        return;
+    Broadcast.prototype.getOutput = function () {
+        return this.output;
+    };
+    Broadcast.prototype.calculateOutput = function (key, input) {
+        this.output = input;
     };
     return Broadcast;
 }(Module));
-function pushTheButton(broadcastModule, modules) {
-    broadcastModule.process("broadcaster", Pulse.LOW, modules);
+function pushTheButton(modules) {
+    var destinations = [];
+    var broadcast = modules.get("broadcaster");
+    broadcast.calculateOutput("broadcaster", Pulse.LOW);
+    broadcast
+        .getDestinations()
+        .forEach(function (d) {
+        return destinations.push({ key: d, input: broadcast.getOutput(), parentKey: "" });
+    });
+    // we count initial low
+    var lowCount = 1;
+    var highCount = 0;
+    var _loop_1 = function () {
+        var newDestinations = [];
+        destinations.forEach(function (destination) {
+            if (destination.input != undefined) {
+                destination.input == Pulse.LOW ? lowCount++ : highCount++;
+            }
+            // console.log(destination);
+            var module = modules.get(destination.key);
+            if (destination.input != undefined && module != undefined) {
+                // console.log("SIG");
+                // console.log(destination.key);
+                // console.log(destination.input);
+                module.calculateOutput(destination.parentKey, destination.input);
+                // console.log(module.getDestinations());
+                // console.log("--------");
+                module.getDestinations().forEach(function (d) {
+                    return newDestinations.push({
+                        key: d,
+                        input: module.getOutput(),
+                        parentKey: destination.key,
+                    });
+                });
+            }
+        });
+        destinations = newDestinations;
+    };
+    while (destinations.length > 0) {
+        _loop_1();
+    }
+    // console.log(lowCount);
+    // console.log(highCount);
+    return { low: lowCount, high: highCount };
 }
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1;
+        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1, countLow, countHigh, result, i;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -203,7 +242,7 @@ function processFile(filePath) {
                         .split(",")
                         .map(function (destination) { return destination.trim(); });
                     if (line.startsWith("broadcaster")) {
-                        modules.set("broadcast", new Broadcast("broadcast", destinations));
+                        modules.set("broadcaster", new Broadcast("broadcaster", destinations));
                     }
                     else if (line.startsWith("%")) {
                         key = line.substring(1, line.indexOf("-")).trim();
@@ -244,7 +283,14 @@ function processFile(filePath) {
                             }
                         });
                     });
-                    console.log(modules);
+                    countLow = 0;
+                    countHigh = 0;
+                    for (i = 0; i < 1000; i++) {
+                        result = pushTheButton(modules);
+                        countLow += result.low;
+                        countHigh += result.high;
+                    }
+                    console.log(countLow * countHigh);
                     return [2 /*return*/];
             }
         });
