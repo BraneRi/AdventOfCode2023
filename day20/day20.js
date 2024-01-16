@@ -62,8 +62,8 @@ var readline = require("readline");
 var fs = require("fs");
 var Pulse;
 (function (Pulse) {
-    Pulse[Pulse["HIGH"] = 0] = "HIGH";
-    Pulse[Pulse["LOW"] = 1] = "LOW";
+    Pulse[Pulse["HIGH"] = 1] = "HIGH";
+    Pulse[Pulse["LOW"] = 0] = "LOW";
 })(Pulse || (Pulse = {}));
 var Module = /** @class */ (function () {
     function Module() {
@@ -77,8 +77,15 @@ var FlipFLop = /** @class */ (function (_super) {
         _this.isOn = false;
         _this.key = key;
         _this.destinationKeys = destinationKeys;
+        _this.parentModules = [];
         return _this;
     }
+    FlipFLop.prototype.getParents = function () {
+        return this.parentModules;
+    };
+    FlipFLop.prototype.addParentModule = function (connectedModuleKey) {
+        this.parentModules.push(connectedModuleKey);
+    };
     FlipFLop.prototype.getDestinations = function () {
         return this.destinationKeys;
     };
@@ -122,10 +129,13 @@ var Conjunction = /** @class */ (function (_super) {
         _this.mostRecentPulseForModule = new Map();
         return _this;
     }
+    Conjunction.prototype.getParents = function () {
+        return this.connectedModuleKeys;
+    };
     Conjunction.prototype.getDestinations = function () {
         return this.destinatonModuleKeys;
     };
-    Conjunction.prototype.addConnectedModule = function (connectedModuleKey) {
+    Conjunction.prototype.addParentModule = function (connectedModuleKey) {
         this.connectedModuleKeys.push(connectedModuleKey);
         this.mostRecentPulseForModule.set(connectedModuleKey, Pulse.LOW);
     };
@@ -137,11 +147,15 @@ var Conjunction = /** @class */ (function (_super) {
     };
     Conjunction.prototype.calculateOutput = function (moduleKey, input) {
         this.mostRecentPulseForModule.set(moduleKey, input);
-        if (Array.from(this.mostRecentPulseForModule.values()).every(function (pulse) { return pulse == Pulse.HIGH; })) {
-            this.output = Pulse.LOW;
+        if (input == Pulse.LOW) {
+            this.output = Pulse.HIGH;
+            return;
+        }
+        if (Array.from(this.mostRecentPulseForModule.values()).find(function (pulse) { return pulse == Pulse.LOW; }) != undefined) {
+            this.output = Pulse.HIGH;
         }
         else {
-            this.output = Pulse.HIGH;
+            this.output = Pulse.LOW;
         }
     };
     return Conjunction;
@@ -154,6 +168,12 @@ var Broadcast = /** @class */ (function (_super) {
         _this.key = key;
         return _this;
     }
+    Broadcast.prototype.getParents = function () {
+        return [];
+    };
+    Broadcast.prototype.addParentModule = function (connectedModuleKey) {
+        // button
+    };
     Broadcast.prototype.getDestinations = function () {
         return this.destinationKeys;
     };
@@ -169,41 +189,51 @@ var Broadcast = /** @class */ (function (_super) {
     return Broadcast;
 }(Module));
 function pushTheButton(modules) {
+    var _a;
     var destinations = [];
     var broadcast = modules.get("broadcaster");
     broadcast.calculateOutput("broadcaster", Pulse.LOW);
-    broadcast
-        .getDestinations()
-        .forEach(function (d) {
-        return destinations.push({ key: d, input: broadcast.getOutput(), parentKey: "" });
+    broadcast.getDestinations().forEach(function (d) {
+        return destinations.push({
+            key: d,
+            input: broadcast.getOutput(),
+            parentKey: broadcast.getKey(),
+        });
     });
     // we count initial low
     var lowCount = 1;
     var highCount = 0;
     var _loop_1 = function () {
         var newDestinations = [];
-        destinations.forEach(function (destination) {
+        var _loop_2 = function (destination) {
             if (destination.input != undefined) {
                 destination.input == Pulse.LOW ? lowCount++ : highCount++;
             }
             // console.log(destination);
-            var module = modules.get(destination.key);
-            if (destination.input != undefined && module != undefined) {
+            var module_1 = modules.get(destination.key);
+            if (destination.input != undefined && module_1 != undefined) {
                 // console.log("SIG");
                 // console.log(destination.key);
                 // console.log(destination.input);
-                module.calculateOutput(destination.parentKey, destination.input);
+                module_1.calculateOutput(destination.parentKey, destination.input);
                 // console.log(module.getDestinations());
                 // console.log("--------");
-                module.getDestinations().forEach(function (d) {
-                    return newDestinations.push({
-                        key: d,
-                        input: module.getOutput(),
-                        parentKey: destination.key,
+                if (module_1.getOutput() != undefined) {
+                    module_1.getDestinations().forEach(function (d) {
+                        return newDestinations.push({
+                            key: d,
+                            input: module_1.getOutput(),
+                            parentKey: destination.key,
+                        });
                     });
-                });
+                }
             }
-        });
+        };
+        // console.log(destinations);
+        for (var _i = 0, destinations_1 = destinations; _i < destinations_1.length; _i++) {
+            var destination = destinations_1[_i];
+            _loop_2(destination);
+        }
         destinations = newDestinations;
     };
     while (destinations.length > 0) {
@@ -211,12 +241,16 @@ function pushTheButton(modules) {
     }
     // console.log(lowCount);
     // console.log(highCount);
-    return { low: lowCount, high: highCount };
+    return {
+        low: lowCount,
+        high: highCount,
+        rxIsLow: ((_a = modules.get("mf")) === null || _a === void 0 ? void 0 : _a.getOutput()) == Pulse.LOW,
+    };
 }
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1, countLow, countHigh, result, i;
+        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1, buttonPushes, result;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -278,23 +312,100 @@ function processFile(filePath) {
                     Array.from(modules.values()).forEach(function (module) {
                         module.getDestinations().forEach(function (destination) {
                             var destinationModule = modules.get(destination);
-                            if (destinationModule instanceof Conjunction) {
-                                destinationModule.addConnectedModule(module.getKey());
-                            }
+                            destinationModule === null || destinationModule === void 0 ? void 0 : destinationModule.addParentModule(module.getKey());
                         });
                     });
-                    countLow = 0;
-                    countHigh = 0;
-                    for (i = 0; i < 1000; i++) {
+                    buttonPushes = 0;
+                    do {
+                        buttonPushes++;
                         result = pushTheButton(modules);
-                        countLow += result.low;
-                        countHigh += result.high;
-                    }
-                    console.log(countLow * countHigh);
+                        // console.log("button push " + buttonPushes);
+                        // // console.log(result.low + result.high);
+                        // console.log(result.low + result.high);
+                        // console.log("-----");
+                    } while (buttonPushes <
+                        2048 * 5
+                    // 2048 + 1024 + 512 + 256 + 128 + 64 + 32 + 16 + 8 + 4 + 2
+                    );
+                    console.log(modules);
                     return [2 /*return*/];
             }
         });
     });
+}
+function calculateLCM(num1, num2) {
+    // Calculate the Greatest Common Divisor (GCD) using Euclid's algorithm
+    var calculateGCD = function (a, b) {
+        if (b === 0) {
+            return a;
+        }
+        else {
+            return calculateGCD(b, a % b);
+        }
+    };
+    // LCM = (num1 * num2) / GCD(num1, num2)
+    var gcd = calculateGCD(num1, num2);
+    var lcm = (num1 * num2) / gcd;
+    return lcm;
+}
+var pulseCache = new Map();
+function pulseAndModuleToKey(pulse, moduleKey) {
+    return pulse.toString() + "," + moduleKey;
+}
+function pulseEveryNthTime(pulse, moduleKey, modules) {
+    console.log(moduleKey);
+    var currentModule = modules.get(moduleKey);
+    var cache = pulseCache.get(pulseAndModuleToKey(pulse, moduleKey));
+    if (cache) {
+        return cache;
+    }
+    else if (currentModule instanceof Broadcast) {
+        switch (pulse) {
+            case Pulse.HIGH:
+                console.log("ERROR");
+                return Number.NEGATIVE_INFINITY;
+            case Pulse.LOW:
+                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 1;
+                return 1;
+        }
+    }
+    else if (currentModule instanceof FlipFLop) {
+        var repeats = currentModule
+            .getParents()
+            .reduce(function (acc, parent) {
+            return Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules));
+        }, Number.POSITIVE_INFINITY);
+        switch (pulse) {
+            case Pulse.HIGH:
+                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats - 1;
+                return 2 * repeats - 1;
+            case Pulse.LOW:
+                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats;
+                return 2 * repeats;
+        }
+    }
+    else if (currentModule instanceof Conjunction) {
+        var result;
+        switch (pulse) {
+            case Pulse.HIGH:
+                result = currentModule
+                    .getParents()
+                    .reduce(function (acc, parent) {
+                    return calculateLCM(acc, pulseEveryNthTime(Pulse.HIGH, parent, modules));
+                }, 1);
+                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
+                return result;
+            case Pulse.LOW:
+                result = currentModule
+                    .getParents()
+                    .reduce(function (acc, parent) {
+                    return Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules));
+                }, Number.POSITIVE_INFINITY);
+                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
+                return result;
+        }
+    }
+    return Number.NEGATIVE_INFINITY;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
