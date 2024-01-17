@@ -250,7 +250,7 @@ function pushTheButton(modules) {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1, buttonPushes, result;
+        var fileStream, rl, modules, _d, rl_1, rl_1_1, line, destinationsLinePart, destinations, key, key, e_1_1, frequencies;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -315,97 +315,60 @@ function processFile(filePath) {
                             destinationModule === null || destinationModule === void 0 ? void 0 : destinationModule.addParentModule(module.getKey());
                         });
                     });
-                    buttonPushes = 0;
-                    do {
-                        buttonPushes++;
-                        result = pushTheButton(modules);
-                        // console.log("button push " + buttonPushes);
-                        // // console.log(result.low + result.high);
-                        // console.log(result.low + result.high);
-                        // console.log("-----");
-                    } while (buttonPushes <
-                        2048 * 5
-                    // 2048 + 1024 + 512 + 256 + 128 + 64 + 32 + 16 + 8 + 4 + 2
-                    );
-                    console.log(modules);
+                    frequencies = new Map();
+                    pulseEveryNthTime("broadcaster", modules, 1, frequencies);
+                    console.log(frequencies.get("rx"));
                     return [2 /*return*/];
             }
         });
     });
 }
-function calculateLCM(num1, num2) {
-    // Calculate the Greatest Common Divisor (GCD) using Euclid's algorithm
-    var calculateGCD = function (a, b) {
-        if (b === 0) {
-            return a;
-        }
-        else {
-            return calculateGCD(b, a % b);
-        }
-    };
-    // LCM = (num1 * num2) / GCD(num1, num2)
-    var gcd = calculateGCD(num1, num2);
-    var lcm = (num1 * num2) / gcd;
-    return lcm;
-}
-var pulseCache = new Map();
-function pulseAndModuleToKey(pulse, moduleKey) {
-    return pulse.toString() + "," + moduleKey;
-}
-function pulseEveryNthTime(pulse, moduleKey, modules) {
-    console.log(moduleKey);
+function pulseEveryNthTime(moduleKey, modules, frequency, frequencies) {
     var currentModule = modules.get(moduleKey);
-    var cache = pulseCache.get(pulseAndModuleToKey(pulse, moduleKey));
-    if (cache) {
-        return cache;
+    if (currentModule == undefined) {
+        console.log("reached RX");
+        frequencies.set(moduleKey, frequency);
+        return;
     }
-    else if (currentModule instanceof Broadcast) {
-        switch (pulse) {
-            case Pulse.HIGH:
-                console.log("ERROR");
-                return Number.NEGATIVE_INFINITY;
-            case Pulse.LOW:
-                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 1;
-                return 1;
+    var destinations = currentModule.getDestinations();
+    if (currentModule instanceof Broadcast) {
+        frequencies.set(moduleKey, frequency);
+        for (var _i = 0, destinations_2 = destinations; _i < destinations_2.length; _i++) {
+            var dest = destinations_2[_i];
+            pulseEveryNthTime(dest, modules, 1 * frequency, frequencies);
         }
     }
     else if (currentModule instanceof FlipFLop) {
-        var repeats = currentModule
-            .getParents()
-            .reduce(function (acc, parent) {
-            return Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules));
-        }, Number.POSITIVE_INFINITY);
-        switch (pulse) {
-            case Pulse.HIGH:
-                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats - 1;
-                return 2 * repeats - 1;
-            case Pulse.LOW:
-                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats;
-                return 2 * repeats;
+        frequencies.set(moduleKey, frequency);
+        for (var _a = 0, destinations_3 = destinations; _a < destinations_3.length; _a++) {
+            var dest = destinations_3[_a];
+            pulseEveryNthTime(dest, modules, 2 * frequency, frequencies);
         }
     }
     else if (currentModule instanceof Conjunction) {
-        var result;
-        switch (pulse) {
-            case Pulse.HIGH:
-                result = currentModule
-                    .getParents()
-                    .reduce(function (acc, parent) {
-                    return calculateLCM(acc, pulseEveryNthTime(Pulse.HIGH, parent, modules));
-                }, 1);
-                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
-                return result;
-            case Pulse.LOW:
-                result = currentModule
-                    .getParents()
-                    .reduce(function (acc, parent) {
-                    return Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules));
-                }, Number.POSITIVE_INFINITY);
-                pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
-                return result;
+        var conjunctionParentsProduct = 1;
+        var flipFlopParentsSum = 0;
+        for (var _b = 0, _c = currentModule.getParents(); _b < _c.length; _b++) {
+            var parent_1 = _c[_b];
+            if (!frequencies.has(parent_1)) {
+                // we have to cover all connected modules first
+                return frequency;
+            }
+            if (modules.get(parent_1) instanceof FlipFLop)
+                flipFlopParentsSum += frequencies.get(parent_1);
+            if (modules.get(parent_1) instanceof Conjunction)
+                conjunctionParentsProduct *= frequencies.get(parent_1);
+        }
+        var f = Math.max(flipFlopParentsSum, 1) * conjunctionParentsProduct;
+        frequencies.set(moduleKey, f);
+        for (var _d = 0, destinations_4 = destinations; _d < destinations_4.length; _d++) {
+            var dest_1 = destinations_4[_d];
+            if (!frequencies.has(dest_1)) {
+                // avoid going back to loop
+                pulseEveryNthTime(dest_1, modules, f, frequencies);
+            }
         }
     }
-    return Number.NEGATIVE_INFINITY;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);

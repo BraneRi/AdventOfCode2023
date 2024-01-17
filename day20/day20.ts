@@ -275,6 +275,8 @@ async function processFile(filePath: string): Promise<void> {
   // console.log();
   // console.log();
 
+  // PART 1
+
   // var countLow = 0;
   // var countHigh = 0;
   // var result: { low: number; high: number };
@@ -285,118 +287,61 @@ async function processFile(filePath: string): Promise<void> {
   // }
   // console.log(countLow * countHigh);
 
-  var buttonPushes = 0;
-  var result: {
-    low: number;
-    high: number;
-    rxIsLow: boolean;
-  };
-  do {
-    buttonPushes++;
-    result = pushTheButton(modules);
-    // console.log("button push " + buttonPushes);
-    // // console.log(result.low + result.high);
-    // console.log(result.low + result.high);
-    // console.log("-----");
-  } while (
-    buttonPushes <
-    2048 * 5
-    // 2048 + 1024 + 512 + 256 + 128 + 64 + 32 + 16 + 8 + 4 + 2
-  );
-
-  console.log(modules);
-
-  // console.log(buttonPushes);
-
-  // console.log(pulseEveryNthTime(Pulse.LOW, "mf", modules));
-}
-
-function calculateLCM(num1: number, num2: number): number {
-  // Calculate the Greatest Common Divisor (GCD) using Euclid's algorithm
-  const calculateGCD = (a: number, b: number): number => {
-    if (b === 0) {
-      return a;
-    } else {
-      return calculateGCD(b, a % b);
-    }
-  };
-
-  // LCM = (num1 * num2) / GCD(num1, num2)
-  const gcd = calculateGCD(num1, num2);
-  const lcm = (num1 * num2) / gcd;
-
-  return lcm;
-}
-
-const pulseCache: Map<string, number> = new Map();
-
-function pulseAndModuleToKey(pulse: Pulse, moduleKey: string): string {
-  return pulse.toString() + "," + moduleKey;
+  // PART 2
+  // Mathematically easier to understand than in code
+  const frequencies: Map<string, number> = new Map();
+  pulseEveryNthTime("broadcaster", modules, 1, frequencies);
+  console.log(frequencies.get("rx"));
 }
 
 function pulseEveryNthTime(
-  pulse: Pulse,
   moduleKey: string,
-  modules: Map<string, Module>
-): number {
-  console.log(moduleKey);
+  modules: Map<string, Module>,
+  frequency: number,
+  frequencies: Map<string, number>
+) {
   const currentModule = modules.get(moduleKey);
-  const cache = pulseCache.get(pulseAndModuleToKey(pulse, moduleKey));
-  if (cache) {
-    return cache;
-  } else if (currentModule instanceof Broadcast) {
-    switch (pulse) {
-      case Pulse.HIGH:
-        console.log("ERROR");
-        return Number.NEGATIVE_INFINITY;
-      case Pulse.LOW:
-        pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 1;
-        return 1;
-    }
-  } else if (currentModule instanceof FlipFLop) {
-    const repeats = currentModule
-      .getParents()
-      .reduce(
-        (acc, parent) =>
-          Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules)),
-        Number.POSITIVE_INFINITY
-      );
-    switch (pulse) {
-      case Pulse.HIGH:
-        pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats - 1;
-        return 2 * repeats - 1;
-      case Pulse.LOW:
-        pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = 2 * repeats;
-        return 2 * repeats;
-    }
-  } else if (currentModule instanceof Conjunction) {
-    var result: number;
-    switch (pulse) {
-      case Pulse.HIGH:
-        result = currentModule
-          .getParents()
-          .reduce(
-            (acc, parent) =>
-              calculateLCM(acc, pulseEveryNthTime(Pulse.HIGH, parent, modules)),
-            1
-          );
-        pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
-        return result;
-
-      case Pulse.LOW:
-        result = currentModule
-          .getParents()
-          .reduce(
-            (acc, parent) =>
-              Math.min(acc, pulseEveryNthTime(Pulse.LOW, parent, modules)),
-            Number.POSITIVE_INFINITY
-          );
-        pulseCache.set[pulseAndModuleToKey(pulse, moduleKey)] = result;
-        return result;
-    }
+  if (currentModule == undefined) {
+    console.log("reached RX");
+    frequencies.set(moduleKey, frequency);
+    return;
   }
 
-  return Number.NEGATIVE_INFINITY;
+  const destinations = currentModule.getDestinations();
+  if (currentModule instanceof Broadcast) {
+    frequencies.set(moduleKey, frequency);
+    for (var dest of destinations) {
+      pulseEveryNthTime(dest, modules, 1 * frequency, frequencies);
+    }
+  } else if (currentModule instanceof FlipFLop) {
+    frequencies.set(moduleKey, frequency);
+    for (var dest of destinations) {
+      pulseEveryNthTime(dest, modules, 2 * frequency, frequencies);
+    }
+  } else if (currentModule instanceof Conjunction) {
+    var conjunctionParentsProduct = 1;
+    var flipFlopParentsSum = 0;
+
+    for (const parent of currentModule.getParents()) {
+      if (!frequencies.has(parent)) {
+        // we have to cover all connected modules first
+        return frequency;
+      }
+      if (modules.get(parent) instanceof FlipFLop)
+        flipFlopParentsSum += frequencies.get(parent)!;
+      if (modules.get(parent) instanceof Conjunction)
+        conjunctionParentsProduct *= frequencies.get(parent)!;
+    }
+
+    const f = Math.max(flipFlopParentsSum, 1) * conjunctionParentsProduct;
+    frequencies.set(moduleKey, f);
+    for (const dest of destinations) {
+      if (!frequencies.has(dest)) {
+        // avoid going back to loop
+        pulseEveryNthTime(dest, modules, f, frequencies);
+      }
+    }
+  }
 }
 
 // Usage: node build/your-script.js your-text-file.txt
