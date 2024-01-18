@@ -68,7 +68,7 @@ var PriorityQueue = /** @class */ (function () {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, graph, x, source, _d, rl_1, rl_1_1, line, e_1_1, distances, steps, viableGardenCoordinates;
+        var fileStream, rl, graph, x, source, yMax, _d, rl_1, rl_1_1, line, e_1_1, xMax, steps, distances, viableGardenCoordinates;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -79,6 +79,7 @@ function processFile(filePath) {
                     });
                     graph = new Map();
                     x = 0;
+                    yMax = 0;
                     _e.label = 1;
                 case 1:
                     _e.trys.push([1, 6, 7, 12]);
@@ -91,10 +92,15 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     line.split("").forEach(function (c, index) {
-                        if (c === "S")
+                        if (c === "S") {
                             source = { x: x, y: index };
-                        if (c === ".")
+                            graph.set(coordinateToKey(source), 1);
+                        }
+                        if (c === ".") {
+                            if (index > yMax)
+                                yMax = index;
                             graph.set(coordinateToKey({ x: x, y: index }), 1);
+                        }
                     });
                     x++;
                     _e.label = 4;
@@ -119,30 +125,57 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    distances = dijkstra(graph, source);
-                    steps = 64;
+                    xMax = x;
+                    yMax = yMax + 1;
+                    steps = 30;
+                    distances = dijkstra(graph, source, steps, xMax, yMax);
                     viableGardenCoordinates = Array.from(distances.entries()).filter(function (entry) {
                         return entry[1] <= steps && entry[1] % 2 == 0;
                     });
                     console.log(viableGardenCoordinates.length);
+                    // viableGardenCoordinates.forEach((c) => {
+                    //   const x = c[0].split(",")[0];
+                    //   const y = c[0].split(",")[1];
+                    //   if (Number(x) == 5 && Number(y) > 0) {
+                    //     console.log(y + ":" + c[1]);
+                    //   }
+                    // });
+                    visualizeDistances(distances);
                     return [2 /*return*/];
             }
         });
     });
 }
+function visualizeDistances(distances) {
+    for (var x = -22; x < 33; x++) {
+        if (x == 0 || x == 11 || x == -11 || x == 22) {
+            console.log();
+        }
+        for (var y = -22; y < 33; y++) {
+            if (y == 0 || y == 11 || y == -11 || y == 22) {
+                process.stdout.write(" |");
+            }
+            var coordinate = { x: x, y: y };
+            var distance = distances.get(coordinateToKey(coordinate));
+            if (distance !== undefined && distance % 2 == 0) {
+                process.stdout.write(String(distance).padStart(2, " "));
+            }
+            else if (distance !== undefined) {
+                process.stdout.write(" .");
+            }
+            else {
+                process.stdout.write(" #");
+            }
+        }
+        console.log();
+    }
+}
 function coordinateToKey(coordinate) {
     return coordinate.x + "," + coordinate.y;
 }
-function keyToCoordinate(key) {
-    var keyParts = key.split(",");
-    return { x: Number(keyParts[0]), y: Number(keyParts[1]) };
-}
-function dijkstra(graph, source) {
+function dijkstra(graph, source, steps, xMax, yMax) {
     var distances = new Map();
     var Q = new PriorityQueue();
-    Array.from(graph.keys()).forEach(function (coordinateKey) {
-        distances.set(coordinateKey, Number.POSITIVE_INFINITY);
-    });
     distances.set(coordinateToKey(source), 0);
     Q.enqueue(source, 0);
     while (!Q.isEmpty()) {
@@ -150,12 +183,13 @@ function dijkstra(graph, source) {
         if (!currentCoordinate) {
             break;
         }
-        var neigbours = getNeighbours(currentCoordinate, graph);
+        var neigbours = getNeighbours(currentCoordinate, graph, xMax, yMax);
         for (var _i = 0, neigbours_1 = neigbours; _i < neigbours_1.length; _i++) {
             var neigbour = neigbours_1[_i];
             var newDistance = distances.get(coordinateToKey(currentCoordinate)) + 1;
             var oldDistance = distances.get(coordinateToKey(neigbour));
-            if (oldDistance === undefined || newDistance < oldDistance) {
+            if (newDistance <= steps &&
+                (oldDistance === undefined || newDistance < oldDistance)) {
                 distances.set(coordinateToKey(neigbour), newDistance);
                 Q.enqueue(neigbour, newDistance);
             }
@@ -163,7 +197,12 @@ function dijkstra(graph, source) {
     }
     return distances;
 }
-function getNeighbours(u, graph) {
+// takes into account negative numbers as well
+function properModulo(dividend, divisor) {
+    return ((dividend % divisor) + divisor) % divisor;
+}
+// In part two getting neigbours must respect infinite graph :)
+function getNeighbours(u, graph, xMax, yMax) {
     var neigbourCandidates = [
         { x: u.x - 1, y: u.y },
         { x: u.x + 1, y: u.y },
@@ -171,9 +210,20 @@ function getNeighbours(u, graph) {
         { x: u.x, y: u.y + 1 },
     ];
     neigbourCandidates = neigbourCandidates.filter(function (candidate) {
-        return graph.has(coordinateToKey(candidate));
+        // transform to original coordinate
+        return graph.has(coordinateToKey({
+            x: properModulo(candidate.x, xMax),
+            y: properModulo(candidate.y, yMax),
+        }));
     });
+    // console.log(neigbourCandidates);
     return neigbourCandidates;
+}
+function isPartOfInfiniteGraph(candidate, graph, xMax, yMax) {
+    return graph.has(coordinateToKey({
+        x: properModulo(candidate.x, xMax),
+        y: properModulo(candidate.y, yMax),
+    }));
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
