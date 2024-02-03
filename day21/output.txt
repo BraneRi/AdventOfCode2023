@@ -1,0 +1,11 @@
+total gardens: 623754
+distances in zero: 7388
+distances in one: 7401
+distances in two: 7388
+distances in tree: 7401
+distances in four: 7388
+distances in five six: 7401
+distances in four: 5481
+gridsNextOfZeroGrid: 202300
+Total: 605247072653394
+File processing completed.

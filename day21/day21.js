@@ -68,7 +68,7 @@ var PriorityQueue = /** @class */ (function () {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, graph, x, source, _d, rl_1, rl_1_1, line, e_1_1, graphSize, steps, distances, viableGardenCoordinates;
+        var fileStream, rl, graph, x, source, _d, rl_1, rl_1_1, line, e_1_1, graphSize, distancesForTwo, upperLeftTriangle, upperRightTriangle, lowerRightTriangle, lowerLeftTriangle, upperLeftBorder, upperRightBorder, lowerRightBorder, lowerLeftBorder, topBorder, bottomBorder, leftBorder, rightBorder, a, b, totalSteps, gridsNextOfZeroGrid, totalA, totalB, edges, total;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -123,240 +123,65 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     graphSize = x;
-                    steps = 500;
-                    distances = dijkstra(graph, source, steps, graphSize, undefined);
-                    viableGardenCoordinates = Array.from(distances.entries()).filter(function (entry) {
-                        return entry[1] <= steps && entry[1] % 2 == 0;
-                    });
-                    console.log(viableGardenCoordinates.length);
+                    distancesForTwo = dijkstra(graph, source, 65 + 131 * 6, graphSize, undefined);
+                    upperLeftTriangle = calculateDistancesInSquare(131 * -6, 131 * -5, 131 * -1, 0, distancesForTwo);
+                    upperRightTriangle = calculateDistancesInSquare(131 * 6, 131 * 7, 131 * -1, 0, distancesForTwo);
+                    lowerRightTriangle = calculateDistancesInSquare(131 * 6, 131 * 7, 131, 131 * 2, distancesForTwo);
+                    lowerLeftTriangle = calculateDistancesInSquare(131 * -6, 131 * -5, 131, 131 * 2, distancesForTwo);
+                    upperLeftBorder = calculateDistancesInSquare(131 * -5, 131 * -4, 131 * -1, 0, distancesForTwo);
+                    upperRightBorder = calculateDistancesInSquare(131 * 5, 131 * 6, 131 * -1, 0, distancesForTwo);
+                    lowerRightBorder = calculateDistancesInSquare(131 * 5, 131 * 6, 131, 131 * 2, distancesForTwo);
+                    lowerLeftBorder = calculateDistancesInSquare(131 * -5, 131 * -4, 131, 131 * 2, distancesForTwo);
+                    topBorder = calculateDistancesInSquare(0, 131, -6 * 131, -5 * 131, distancesForTwo);
+                    bottomBorder = calculateDistancesInSquare(0, 131, 131 * 6, 131 * 7, distancesForTwo);
+                    leftBorder = calculateDistancesInSquare(131 * -6, 131 * -5, 0, 131, distancesForTwo);
+                    rightBorder = calculateDistancesInSquare(131 * 6, 131 * 7, 0, 131, distancesForTwo);
+                    a = 7388;
+                    b = 7401;
+                    totalSteps = 26501365;
+                    gridsNextOfZeroGrid = (totalSteps - 65) / 131;
+                    console.log("gridsNextOfZeroGrid: " + gridsNextOfZeroGrid);
+                    totalA = a * Math.pow(gridsNextOfZeroGrid - 1, 2);
+                    totalB = b * Math.pow(gridsNextOfZeroGrid, 2);
+                    edges = gridsNextOfZeroGrid *
+                        (upperLeftTriangle +
+                            upperRightTriangle +
+                            lowerLeftTriangle +
+                            lowerRightTriangle) +
+                        (gridsNextOfZeroGrid - 1) *
+                            (lowerLeftBorder +
+                                lowerRightBorder +
+                                upperRightBorder +
+                                upperLeftBorder) +
+                        topBorder +
+                        bottomBorder +
+                        leftBorder +
+                        rightBorder;
+                    total = totalA + totalB + edges;
+                    console.log("Total: " + total);
                     return [2 /*return*/];
             }
         });
     });
 }
-function predictViableGardens(graph, source, steps, graphSize) {
-    // Graph needs 3 adjacent graph paths, until numbers start to repeat with graph size difference
-    var distancesFor4Graphs = dijkstra(graph, source, steps, graphSize, 4);
-    var stableDiff = distancesFor4Graphs.get(coordinateToKey({ x: 0, y: 4 * graphSize })) -
-        distancesFor4Graphs.get(coordinateToKey({ x: 0, y: 3 * graphSize }));
-    console.log("STABLE DIFF: " + stableDiff);
-    // 1. Calculate gardens in zero graph
-    var zeroGardens = 0;
-    for (var x = 0; x < graphSize; x++) {
-        for (var y = 0; y < graphSize; y++) {
-            var distance = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-            if (distance !== undefined && distance % 2 == 0) {
-                zeroGardens++;
-            }
-        }
-    }
-    console.log(zeroGardens);
-    // 2. Calculate gardens in adjacent graphs
-    var adjacentGardens = 0;
-    for (var x = graphSize; x < 2 * graphSize; x++) {
-        for (var y = 0; y < graphSize; y++) {
-            var distance = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-            if (distance !== undefined && distance % 2 == 0) {
-                adjacentGardens++;
-            }
-        }
-    }
-    console.log(adjacentGardens);
-    // for full grids, number of gardens will be ((FULL_GRIDS_NUM - 1) / 2) * adjacent_gardens + ((FULL_GRIDS_NUM - 1) / 2 + 1) * zero_gardens
-    //
-    // For top, left, bottom and right 3rd grid ->
-    // 1. calculate max and min paths
-    // 2. max + graph_size (x or y) * k <= steps -> k represents number of graphs after second one, that will have full grids => FULL_GRIDS_NUM = 3 + k
-    // 3. min + graph_size (x or y) * l <= steps -> l represents number of graphs after second one, that will have both full and partial grids => k - l = partial graphs for this side
-    //
-    // Partial graphs repeat diagonally, but not taking into account one on main axis.
-    // For each partial graph, calculate paths for one above and beyond and multiply them by number of their diagonal instances
-    // RIGHT EDGE + full and partial graphs calculation
-    var min = Number.POSITIVE_INFINITY;
-    var max = Number.NEGATIVE_INFINITY;
-    for (var x = 0; x < graphSize; x++) {
-        for (var y = 3 * graphSize; y < 4 * graphSize; y++) {
+function calculateDistancesInSquare(xFrom, xTo, yFrom, yTo, distances) {
+    var count = 0;
+    for (var x = xFrom; x < xTo; x++) {
+        for (var y = yFrom; y < yTo; y++) {
             var coordinate = { x: x, y: y };
-            var distance = distancesFor4Graphs.get(coordinateToKey(coordinate));
-            if (distance && distance > max && distance % 2 == 0)
-                max = distance;
-            if (distance && distance < min && distance % 2 == 0)
-                min = distance;
+            var dist = distances.get(coordinateToKey(coordinate));
+            if (dist % 2 == 0) {
+                count++;
+            }
         }
     }
-    // from 1 to k, same applies in other directions
-    var fullGrids1Dimension = 3 + Math.floor((steps - max) / stableDiff) - 1;
-    var fullAndPartialGrids1Dimension = 3 + Math.floor((steps - min) / stableDiff) + 1; // +1 to cover cases where min is not in the line with zero graph;
-    var partialGraphs1Dimenesion = fullAndPartialGrids1Dimension - fullGrids1Dimension;
-    console.log("Full:" + fullGrids1Dimension);
-    console.log(fullAndPartialGrids1Dimension);
-    console.log("Partial:" + partialGraphs1Dimenesion);
-    var partialDiagonalsSum = 0;
-    var partialGridMainAxisSum = 0;
-    for (var i = fullGrids1Dimension; i <= fullAndPartialGrids1Dimension; i++) {
-        console.log("------ grid = " + i + " ------");
-        console.log("Main axis partials");
-        // RIGHT EDGE
-        var gardens = 0;
-        for (var x = 0; x < graphSize; x++) {
-            for (var y = 3 * graphSize; y < 4 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        partialGridMainAxisSum += gardens;
-        console.log("R:" + gardens);
-        // LEFT EDGE
-        var gardens = 0;
-        for (var x = 0; x < graphSize; x++) {
-            for (var y = -3 * graphSize; y < -2 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        partialGridMainAxisSum += gardens;
-        console.log("L:" + gardens);
-        // UP EDGE
-        var gardens = 0;
-        for (var x = -3 * graphSize; x < -2 * graphSize; x++) {
-            for (var y = 0; y < graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        partialGridMainAxisSum += gardens;
-        console.log("U:" + gardens);
-        // DOWN EDGE
-        var gardens = 0;
-        for (var x = 3 * graphSize; x < 4 * graphSize; x++) {
-            for (var y = 0; y < graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        partialGridMainAxisSum += gardens;
-        console.log("D:" + gardens);
-        console.log("Diagonal partials");
-        // RIGHT UP
-        var gardens = 0;
-        for (var x = -1 * graphSize; x < 0; x++) {
-            for (var y = 3 * graphSize; y < 4 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        // multiply diagonals
-        gardens = i * gardens;
-        partialDiagonalsSum += gardens;
-        console.log("R up:" + gardens);
-        // RIGHT DOWN
-        var gardens = 0;
-        for (var x = graphSize; x < 2 * graphSize; x++) {
-            for (var y = 3 * graphSize; y < 4 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        // multiply diagonals
-        gardens = i * gardens;
-        partialDiagonalsSum += gardens;
-        console.log("R down:" + gardens);
-        // LEFT UP
-        var gardens = 0;
-        for (var x = -1 * graphSize; x < 0; x++) {
-            for (var y = -3 * graphSize; y < -2 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        // multiply diagonals
-        gardens = i * gardens;
-        partialDiagonalsSum += gardens;
-        console.log("L up:" + gardens);
-        // LEFT DOWN
-        var gardens = 0;
-        for (var x = graphSize; x < 2 * graphSize; x++) {
-            for (var y = -3 * graphSize; y < -2 * graphSize; y++) {
-                var distance3 = distancesFor4Graphs.get(coordinateToKey({ x: x, y: y }));
-                if (distance3 !== undefined &&
-                    ((i % 2 == 0 && distance3 % 2 != 0) ||
-                        (i % 2 != 0 && distance3 % 2 == 0)) &&
-                    distance3 + stableDiff * (i - 3) <= steps) {
-                    gardens++;
-                }
-            }
-        }
-        // multiply diagonals
-        gardens = i * gardens;
-        partialDiagonalsSum += gardens;
-        console.log("L down:" + gardens);
-    }
-    // Finally SOLUTION = FULL_GRID_GARDENS + diagonal_partial_grid_gardens_sum + partial_grid_gardens_sum
-    var fullGridGardensSum = 0;
-    var lineFactor = 3;
-    for (var fulls = 1; fulls < fullGrids1Dimension; fulls++) {
-        fullGridGardensSum += lineFactor;
-        lineFactor += 2;
-    }
-    fullGridGardensSum = fullGridGardensSum * 2 + (lineFactor - 2);
-    console.log("Number of full grids:" + fullGridGardensSum);
-    var zeroAdjacentDiff = (fullGrids1Dimension - 1) * 2 - 1;
-    console.log("zeroAdjacentDiff:" + zeroAdjacentDiff);
-    var fewerFullGrids = (fullGridGardensSum - zeroAdjacentDiff) / 2;
-    var moreFullGrids = fewerFullGrids + zeroAdjacentDiff;
-    console.log("More full grids:" + moreFullGrids);
-    console.log("Fewer full grids:" + fewerFullGrids);
-    var fullGridGardens;
-    if (fullGrids1Dimension % 2 == 0) {
-        // more zero type fullgrids
-        fullGridGardens =
-            fewerFullGrids * adjacentGardens + moreFullGrids * zeroGardens;
-    }
-    else {
-        // more adjacent type full grids
-        fullGridGardens =
-            moreFullGrids * adjacentGardens + fewerFullGrids * zeroGardens;
-    }
-    console.log("------");
-    console.log(fullGridGardens);
-    console.log(partialDiagonalsSum);
-    console.log(partialGridMainAxisSum);
-    return fullGridGardens + partialDiagonalsSum + partialGridMainAxisSum;
+    return count;
+}
+function getSteps(distances, steps) {
+    var viableGardenCoordinates = Array.from(distances.entries()).filter(function (entry) {
+        return entry[1] <= steps && entry[1] % 2 == 0;
+    });
+    return viableGardenCoordinates.length;
 }
 function visualizeDistances(distances, graphSize, gridRepeats) {
     if (gridRepeats === void 0) { gridRepeats = 1; }
@@ -366,19 +191,19 @@ function visualizeDistances(distances, graphSize, gridRepeats) {
         }
         for (var y = -1 * graphSize * gridRepeats; y < graphSize * (gridRepeats + 1); y++) {
             if (y % graphSize == 0) {
-                process.stdout.write(" |");
+                process.stdout.write(" | ");
             }
             var coordinate = { x: x, y: y };
             var distance = distances.get(coordinateToKey(coordinate));
             if (distance !== undefined && distance % 2 == 0) {
-                process.stdout.write(String(distance).padStart(2, " "));
+                process.stdout.write(String(distance).padStart(3, " "));
                 // process.stdout.write(" O");
             }
             else if (distance !== undefined) {
-                process.stdout.write(" .");
+                process.stdout.write(" . ");
             }
             else {
-                process.stdout.write(" #");
+                process.stdout.write(" # ");
             }
         }
         console.log();
