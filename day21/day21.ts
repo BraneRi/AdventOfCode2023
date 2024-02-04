@@ -62,168 +62,140 @@ async function processFile(filePath: string): Promise<void> {
   // I rely on input being same width and height
   const graphSize = x;
 
-  // 65 -> 3594
-  // 65 + 131 -> 33494
-  // 65 + 131 * 2 -> 92002
-  // 65 + 131 * 3 -> 181706
-  // 65 + 131 * 4 -> 298722
-  // 65 + 131 * 5 -> 448230
-  // 65 + 131 * 8 -> 1067098
-  // 65 + 131 * 10 -> 1628754
-  // 605242619247152 too low
-  // 605244113817388 too low
-  // 605247072647913
-  // 605247072653394 too low
-  // 605247072653394
-  // 605247072653394
-  // 605247072653394
-  // 605247104313444 not correct
-  // 605247852924594 not correct
-  // 605250097454189 too high
-  // n = 202300 => toliko ima gridova desno od sredine do ruba
+  const steps = 26501365;
 
   // PART 1
-  // const steps = 65 + 131 * 6;
   // var distances = dijkstra(graph, source!, steps, graphSize, undefined);
   // console.log("total gardens: " + getSteps(distances, steps));
-  // // visualizeDistances(distances, graphSize, 6);
-
-  // console.log(
-  //   "distances in zero: " +
-  //     calculateDistancesInSquare(0, 131, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in one: " +
-  //     calculateDistancesInSquare(131, 131 * 2, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in two: " +
-  //     calculateDistancesInSquare(131 * 2, 131 * 3, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in tree: " +
-  //     calculateDistancesInSquare(131 * 3, 131 * 4, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in four: " +
-  //     calculateDistancesInSquare(131 * 4, 131 * 5, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in five: " +
-  //     calculateDistancesInSquare(131 * 5, 131 * 6, 0, 131, distances)
-  // );
-  // console.log(
-  //   "distances in six: " +
-  //     calculateDistancesInSquare(131 * 6, 131 * 7, 0, 131, distances)
-  // );
+  // visualizeDistances(distances, graphSize, 4);
 
   // PART 2
   const distancesForTwo = dijkstra(
     graph,
     source!,
-    65 + 131 * 6,
+    65 + 131 * 2,
     graphSize,
     undefined
   );
 
   const upperLeftTriangle = calculateDistancesInSquare(
-    131 * -6,
-    131 * -5,
+    131 * -2,
+    131 * -1,
     131 * -1,
     0,
     distancesForTwo
   );
+  console.log("upperLeftTriangle:" + upperLeftTriangle);
+
   const upperRightTriangle = calculateDistancesInSquare(
-    131 * 6,
-    131 * 7,
+    131 * 2,
+    131 * 3,
     131 * -1,
     0,
     distancesForTwo
   );
+  console.log("upperRightTriangle:" + upperRightTriangle);
+
   const lowerRightTriangle = calculateDistancesInSquare(
-    131 * 6,
-    131 * 7,
+    131 * 2,
+    131 * 3,
     131,
     131 * 2,
     distancesForTwo
   );
+  console.log("lowerRightTriangle:" + lowerRightTriangle);
+
   const lowerLeftTriangle = calculateDistancesInSquare(
-    131 * -6,
-    131 * -5,
+    131 * -2,
+    131 * -1,
     131,
     131 * 2,
     distancesForTwo
   );
+  console.log("lowerLeftTriangle:" + lowerLeftTriangle);
 
   const upperLeftBorder = calculateDistancesInSquare(
-    131 * -5,
-    131 * -4,
+    131 * -1,
+    131 * 0,
     131 * -1,
     0,
     distancesForTwo
   );
+  console.log("upperLeftBorder:" + upperLeftBorder);
+
   const upperRightBorder = calculateDistancesInSquare(
-    131 * 5,
-    131 * 6,
+    131 * 1,
+    131 * 2,
     131 * -1,
     0,
     distancesForTwo
   );
+  console.log("upperRightBorder:" + upperRightBorder);
+
   const lowerRightBorder = calculateDistancesInSquare(
-    131 * 5,
-    131 * 6,
+    131 * 1,
+    131 * 2,
     131,
     131 * 2,
     distancesForTwo
   );
+  console.log("lowerRightBorder:" + lowerRightBorder);
+
   const lowerLeftBorder = calculateDistancesInSquare(
-    131 * -5,
-    131 * -4,
+    131 * -1,
+    131 * 0,
     131,
     131 * 2,
     distancesForTwo
   );
+  console.log("lowerLeftBorder:" + lowerLeftBorder);
 
   const topBorder = calculateDistancesInSquare(
     0,
     131,
-    -6 * 131,
-    -5 * 131,
+    -2 * 131,
+    -1 * 131,
     distancesForTwo
   );
+  console.log("topBorder:" + topBorder);
+
   const bottomBorder = calculateDistancesInSquare(
     0,
     131,
-    131 * 6,
-    131 * 7,
+    131 * 2,
+    131 * 3,
     distancesForTwo
   );
+  console.log("bottomBorder:" + bottomBorder);
   const leftBorder = calculateDistancesInSquare(
-    131 * -6,
-    131 * -5,
+    131 * -2,
+    131 * -1,
     0,
     131,
     distancesForTwo
   );
+  console.log("leftBorder:" + leftBorder);
   const rightBorder = calculateDistancesInSquare(
-    131 * 6,
-    131 * 7,
+    131 * 2,
+    131 * 3,
     0,
     131,
     distancesForTwo
   );
+  console.log("rightBorder:" + rightBorder);
 
-  // distances in zero, provided by upper calculation
-  const a = 7388;
-  // distances in next one, provided by upper calculation -> observation is that these two repeat
-  const b = 7401;
+  const a = calculateDistancesInSquare(0, 131, 0, 131, distancesForTwo);
+  console.log("distances in zero: " + a);
+  const b = calculateDistancesInSquare(131, 131 * 2, 0, 131, distancesForTwo);
+  console.log("distances in one: " + b);
 
-  const totalSteps = 26501365;
-  const gridsNextOfZeroGrid = (totalSteps - 65) / 131;
+  const gridsNextOfZeroGrid = (steps - 65) / 131;
   console.log("gridsNextOfZeroGrid: " + gridsNextOfZeroGrid);
 
   const totalA = a * Math.pow(gridsNextOfZeroGrid - 1, 2);
   const totalB = b * Math.pow(gridsNextOfZeroGrid, 2);
+  console.log("Total a grids:" + totalA);
+  console.log("Total b grids:" + totalB);
 
   const edges =
     gridsNextOfZeroGrid *
@@ -256,7 +228,8 @@ function calculateDistancesInSquare(
     for (let y = yFrom; y < yTo; y++) {
       const coordinate = { x: x, y: y };
       const dist = distances.get(coordinateToKey(coordinate))!!;
-      if (dist % 2 == 0) {
+      // findin odd ones because input steps is odd number
+      if (dist % 2 == 1) {
         count++;
       }
     }

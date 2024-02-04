@@ -68,7 +68,7 @@ var PriorityQueue = /** @class */ (function () {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, graph, x, source, _d, rl_1, rl_1_1, line, e_1_1, graphSize, distancesForTwo, upperLeftTriangle, upperRightTriangle, lowerRightTriangle, lowerLeftTriangle, upperLeftBorder, upperRightBorder, lowerRightBorder, lowerLeftBorder, topBorder, bottomBorder, leftBorder, rightBorder, a, b, totalSteps, gridsNextOfZeroGrid, totalA, totalB, edges, total;
+        var fileStream, rl, graph, x, source, _d, rl_1, rl_1_1, line, e_1_1, graphSize, steps, distancesForTwo, upperLeftTriangle, upperRightTriangle, lowerRightTriangle, lowerLeftTriangle, upperLeftBorder, upperRightBorder, lowerRightBorder, lowerLeftBorder, topBorder, bottomBorder, leftBorder, rightBorder, a, b, gridsNextOfZeroGrid, totalA, totalB, edges, total;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -123,26 +123,42 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     graphSize = x;
-                    distancesForTwo = dijkstra(graph, source, 65 + 131 * 6, graphSize, undefined);
-                    upperLeftTriangle = calculateDistancesInSquare(131 * -6, 131 * -5, 131 * -1, 0, distancesForTwo);
-                    upperRightTriangle = calculateDistancesInSquare(131 * 6, 131 * 7, 131 * -1, 0, distancesForTwo);
-                    lowerRightTriangle = calculateDistancesInSquare(131 * 6, 131 * 7, 131, 131 * 2, distancesForTwo);
-                    lowerLeftTriangle = calculateDistancesInSquare(131 * -6, 131 * -5, 131, 131 * 2, distancesForTwo);
-                    upperLeftBorder = calculateDistancesInSquare(131 * -5, 131 * -4, 131 * -1, 0, distancesForTwo);
-                    upperRightBorder = calculateDistancesInSquare(131 * 5, 131 * 6, 131 * -1, 0, distancesForTwo);
-                    lowerRightBorder = calculateDistancesInSquare(131 * 5, 131 * 6, 131, 131 * 2, distancesForTwo);
-                    lowerLeftBorder = calculateDistancesInSquare(131 * -5, 131 * -4, 131, 131 * 2, distancesForTwo);
-                    topBorder = calculateDistancesInSquare(0, 131, -6 * 131, -5 * 131, distancesForTwo);
-                    bottomBorder = calculateDistancesInSquare(0, 131, 131 * 6, 131 * 7, distancesForTwo);
-                    leftBorder = calculateDistancesInSquare(131 * -6, 131 * -5, 0, 131, distancesForTwo);
-                    rightBorder = calculateDistancesInSquare(131 * 6, 131 * 7, 0, 131, distancesForTwo);
-                    a = 7388;
-                    b = 7401;
-                    totalSteps = 26501365;
-                    gridsNextOfZeroGrid = (totalSteps - 65) / 131;
+                    steps = 26501365;
+                    distancesForTwo = dijkstra(graph, source, 65 + 131 * 2, graphSize, undefined);
+                    upperLeftTriangle = calculateDistancesInSquare(131 * -2, 131 * -1, 131 * -1, 0, distancesForTwo);
+                    console.log("upperLeftTriangle:" + upperLeftTriangle);
+                    upperRightTriangle = calculateDistancesInSquare(131 * 2, 131 * 3, 131 * -1, 0, distancesForTwo);
+                    console.log("upperRightTriangle:" + upperRightTriangle);
+                    lowerRightTriangle = calculateDistancesInSquare(131 * 2, 131 * 3, 131, 131 * 2, distancesForTwo);
+                    console.log("lowerRightTriangle:" + lowerRightTriangle);
+                    lowerLeftTriangle = calculateDistancesInSquare(131 * -2, 131 * -1, 131, 131 * 2, distancesForTwo);
+                    console.log("lowerLeftTriangle:" + lowerLeftTriangle);
+                    upperLeftBorder = calculateDistancesInSquare(131 * -1, 131 * 0, 131 * -1, 0, distancesForTwo);
+                    console.log("upperLeftBorder:" + upperLeftBorder);
+                    upperRightBorder = calculateDistancesInSquare(131 * 1, 131 * 2, 131 * -1, 0, distancesForTwo);
+                    console.log("upperRightBorder:" + upperRightBorder);
+                    lowerRightBorder = calculateDistancesInSquare(131 * 1, 131 * 2, 131, 131 * 2, distancesForTwo);
+                    console.log("lowerRightBorder:" + lowerRightBorder);
+                    lowerLeftBorder = calculateDistancesInSquare(131 * -1, 131 * 0, 131, 131 * 2, distancesForTwo);
+                    console.log("lowerLeftBorder:" + lowerLeftBorder);
+                    topBorder = calculateDistancesInSquare(0, 131, -2 * 131, -1 * 131, distancesForTwo);
+                    console.log("topBorder:" + topBorder);
+                    bottomBorder = calculateDistancesInSquare(0, 131, 131 * 2, 131 * 3, distancesForTwo);
+                    console.log("bottomBorder:" + bottomBorder);
+                    leftBorder = calculateDistancesInSquare(131 * -2, 131 * -1, 0, 131, distancesForTwo);
+                    console.log("leftBorder:" + leftBorder);
+                    rightBorder = calculateDistancesInSquare(131 * 2, 131 * 3, 0, 131, distancesForTwo);
+                    console.log("rightBorder:" + rightBorder);
+                    a = calculateDistancesInSquare(0, 131, 0, 131, distancesForTwo);
+                    console.log("distances in zero: " + a);
+                    b = calculateDistancesInSquare(131, 131 * 2, 0, 131, distancesForTwo);
+                    console.log("distances in one: " + b);
+                    gridsNextOfZeroGrid = (steps - 65) / 131;
                     console.log("gridsNextOfZeroGrid: " + gridsNextOfZeroGrid);
                     totalA = a * Math.pow(gridsNextOfZeroGrid - 1, 2);
                     totalB = b * Math.pow(gridsNextOfZeroGrid, 2);
+                    console.log("Total a grids:" + totalA);
+                    console.log("Total b grids:" + totalB);
                     edges = gridsNextOfZeroGrid *
                         (upperLeftTriangle +
                             upperRightTriangle +
@@ -170,7 +186,7 @@ function calculateDistancesInSquare(xFrom, xTo, yFrom, yTo, distances) {
         for (var y = yFrom; y < yTo; y++) {
             var coordinate = { x: x, y: y };
             var dist = distances.get(coordinateToKey(coordinate));
-            if (dist % 2 == 0) {
+            if (dist % 2 == 1) {
                 count++;
             }
         }
