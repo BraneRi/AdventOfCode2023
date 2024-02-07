@@ -37,35 +37,122 @@ async function processFile(filePath: string): Promise<void> {
   // sort them from lowest to highest
   bricks = bricks.sort((a, b) => a.start.z - b.end.z);
 
-  // key is level -> z coordinate
-  // value are taken coordinates on that level after fall
-  const brickStack = new Map<number, { x: number; y: number }[]>();
+  // key is number id of bricks as they come, values is list of ids that brick supports
+  const bricksOnTop = new Map<number, number[]>();
 
-  freeFall(bricks, brickStack);
-  console.log(brickStack);
+  freeFall(bricks, bricksOnTop);
+  console.log(bricksOnTop);
 }
 
-function freeFall(
-  bricks: Brick[],
-  brickStack: Map<number, { x: number; y: number }[]>
-) {
+type Coordinate2D = { x: number; y: number };
+
+function freeFall(bricks: Brick[], bricksOnTop: Map<number, number[]>) {
+  var index = 1;
+  // key is coordinate and value is how high we reached on that coordinate, with coordinate of brick occupying it
+  const tallestCoordinates: Map<Coordinate2D, { id: number; height: number }> =
+    new Map();
   for (let brick of bricks) {
-    for (let c of coordinatesPerLevel(brick)) {
-      let level = brickStack.get(c.z) ?? [];
-      if (!level.includes({ x: c.x, y: c.y })) {
-        level?.push({ x: c.x, y: c.y });
-      } else {
-        // TODO find a clean way to ad brick on top of existing
-      }
-      brickStack.set(c.z, level);
+    if (brick.start.z == brick.start.z) {
+      resolveHorizontalBricks(brick, tallestCoordinates, bricksOnTop, index);
+    } else {
+      resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index);
+    }
+    index++;
+  }
+}
+
+function resolveHorizontalBricks(
+  brick: Brick,
+  tallestCoordinates: Map<Coordinate2D, { id: number; height: number }>,
+  bricksOnTop: Map<number, number[]>,
+  index: number
+) {
+  var tallestBelow = { id: -1, height: 0 };
+  for (let coordinate2D of coordinates(brick)) {
+    let currentBelow = tallestCoordinates.get(coordinate2D);
+    if (currentBelow && currentBelow.height > tallestBelow.height) {
+      // TODO two tallest is valid case, we have to update both
+      tallestBelow = currentBelow;
+    }
+  }
+
+  if (tallestBelow.id != -1) {
+    const topBricks = bricksOnTop.get(tallestBelow.id);
+    if (topBricks) {
+      topBricks.push(index);
+    } else {
+      bricksOnTop.set(tallestBelow.id, [index]);
+    }
+
+    for (let coordinate2D of coordinates(brick)) {
+      tallestCoordinates.set(coordinate2D, {
+        id: index,
+        height: tallestBelow.height + 1,
+      });
+    }
+  } else {
+    for (let coordinate2D of coordinates(brick)) {
+      tallestCoordinates.set(coordinate2D, {
+        id: index,
+        height: 1,
+      });
     }
   }
 }
 
-function coordinatesPerLevel(brick: Brick): Coordinate[] {
-  const coordinates = [];
-  // TODO
-  return coordinates;
+function resolveVerticalBricks(
+  brick: Brick,
+  tallestCoordinates: Map<Coordinate2D, { id: number; height: number }>,
+  bricksOnTop: Map<number, number[]>,
+  index: number
+) {
+  var lowestSection: Coordinate;
+  var highestSection: Coordinate;
+  if (brick.start.z < brick.end.z) {
+    lowestSection = brick.start;
+    highestSection = brick.end;
+  } else {
+    highestSection = brick.start;
+    lowestSection = brick.end;
+  }
+
+  const tallestBelow = tallestCoordinates.get({
+    x: lowestSection.x,
+    y: lowestSection.y,
+  });
+
+  if (tallestBelow) {
+    const topBricks = bricksOnTop.get(tallestBelow.id);
+    if (topBricks) {
+      topBricks.push(index);
+    } else {
+      bricksOnTop.set(tallestBelow.id, [index]);
+    }
+
+    tallestCoordinates.set(
+      { x: lowestSection.x, y: lowestSection.y },
+      {
+        id: index,
+        height: tallestBelow.height + highestSection.z - lowestSection.z,
+      }
+    );
+  } else {
+    tallestCoordinates.set(
+      { x: lowestSection.x, y: lowestSection.y },
+      { id: index, height: highestSection.z - lowestSection.z }
+    );
+  }
+}
+
+function coordinates(brick: Brick): Coordinate2D[] {
+  const result: Coordinate2D[] = [];
+
+  for (let x = brick.start.x; x <= brick.end.x; x++) {
+    for (let y = brick.start.y; y <= brick.end.y; y++) {
+      result.push({ x, y });
+    }
+  }
+  return result;
 }
 
 // Usage: node build/your-script.js your-text-file.txt

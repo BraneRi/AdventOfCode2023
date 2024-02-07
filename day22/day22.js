@@ -48,7 +48,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1;
+        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1, bricksOnTop;
         return __generator(this, function (_g) {
             switch (_g.label) {
                 case 0:
@@ -98,12 +98,107 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
+                    // sort them from lowest to highest
                     bricks = bricks.sort(function (a, b) { return a.start.z - b.end.z; });
-                    console.log(bricks);
+                    bricksOnTop = new Map();
+                    freeFall(bricks, bricksOnTop);
+                    console.log(bricksOnTop);
                     return [2 /*return*/];
             }
         });
     });
+}
+function freeFall(bricks, bricksOnTop) {
+    bricksOnTop.set(1, [1]);
+    var index = 1;
+    // key is coordinate and value is how high we reached on that coordinate, with coordinate of brick occupying it
+    var tallestCoordinates = new Map();
+    for (var _i = 0, bricks_1 = bricks; _i < bricks_1.length; _i++) {
+        var brick = bricks_1[_i];
+        if (brick.start.z == brick.start.z) {
+            resolveHorizontalBricks(brick, tallestCoordinates, bricksOnTop, index);
+        }
+        else {
+            resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index);
+        }
+        index++;
+    }
+}
+function resolveHorizontalBricks(brick, tallestCoordinates, bricksOnTop, index) {
+    var tallestBelow = { id: -1, height: 0 };
+    for (var _i = 0, _a = coordinates(brick); _i < _a.length; _i++) {
+        var coordinate2D = _a[_i];
+        var currentBelow = tallestCoordinates.get(coordinate2D);
+        if (currentBelow && currentBelow.height > tallestBelow.height) {
+            tallestBelow = currentBelow;
+        }
+    }
+    if (tallestBelow.id != -1) {
+        var topBricks = bricksOnTop.get(tallestBelow.id);
+        if (topBricks) {
+            topBricks.push(index);
+        }
+        else {
+            bricksOnTop.set(tallestBelow.id, [index]);
+        }
+        for (var _b = 0, _c = coordinates(brick); _b < _c.length; _b++) {
+            var coordinate2D = _c[_b];
+            tallestCoordinates.set(coordinate2D, {
+                id: index,
+                height: tallestBelow.height + 1,
+            });
+        }
+    }
+    else {
+        for (var _d = 0, _e = coordinates(brick); _d < _e.length; _d++) {
+            var coordinate2D = _e[_d];
+            tallestCoordinates.set(coordinate2D, {
+                id: index,
+                height: 1,
+            });
+        }
+    }
+}
+function resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index) {
+    var lowestSection;
+    var highestSection;
+    if (brick.start.z < brick.end.z) {
+        lowestSection = brick.start;
+        highestSection = brick.end;
+    }
+    else {
+        highestSection = brick.start;
+        lowestSection = brick.end;
+    }
+    var tallestBelow = tallestCoordinates.get({
+        x: lowestSection.x,
+        y: lowestSection.y,
+    });
+    if (tallestBelow) {
+        var topBricks = bricksOnTop.get(tallestBelow.id);
+        if (topBricks) {
+            topBricks.push(index);
+        }
+        else {
+            bricksOnTop.set(tallestBelow.id, [index]);
+        }
+        tallestCoordinates.set({ x: lowestSection.x, y: lowestSection.y }, {
+            id: index,
+            height: tallestBelow.height + highestSection.z - lowestSection.z,
+        });
+    }
+    else {
+        tallestCoordinates.set({ x: lowestSection.x, y: lowestSection.y }, { id: index, height: highestSection.z - lowestSection.z });
+    }
+}
+function coordinates(brick) {
+    var result = [];
+    for (var x = brick.start.x; x <= brick.end.x; x++) {
+        for (var y = brick.start.y; y <= brick.end.y; y++) {
+            result.push({ x: x, y: y });
+        }
+    }
+    return result;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
