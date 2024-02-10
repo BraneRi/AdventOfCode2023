@@ -42,15 +42,24 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1, bricksOnTop;
-        return __generator(this, function (_g) {
-            switch (_g.label) {
+        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1, bricksOnTop, debugResult, supportedBricks, keys, i, key, valuesForKey, _i, valuesForKey_1, value, numberOfValue, cannotBeDestroyed, i, key, valuesForKey, _g, valuesForKey_2, value, numberOfValue, topOnes;
+        return __generator(this, function (_h) {
+            switch (_h.label) {
                 case 0:
                     fileStream = fs.createReadStream(filePath);
                     rl = readline.createInterface({
@@ -58,14 +67,14 @@ function processFile(filePath) {
                         crlfDelay: Infinity, // Treats each line as a separate data event
                     });
                     bricks = [];
-                    _g.label = 1;
+                    _h.label = 1;
                 case 1:
-                    _g.trys.push([1, 6, 7, 12]);
+                    _h.trys.push([1, 6, 7, 12]);
                     _d = true, rl_1 = __asyncValues(rl);
-                    _g.label = 2;
+                    _h.label = 2;
                 case 2: return [4 /*yield*/, rl_1.next()];
                 case 3:
-                    if (!(rl_1_1 = _g.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
+                    if (!(rl_1_1 = _h.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
                     _c = rl_1_1.value;
                     _d = false;
                     line = _c;
@@ -76,22 +85,22 @@ function processFile(filePath) {
                         start: { x: startX, y: startY, z: startZ },
                         end: { x: endX, y: endY, z: endZ },
                     });
-                    _g.label = 4;
+                    _h.label = 4;
                 case 4:
                     _d = true;
                     return [3 /*break*/, 2];
                 case 5: return [3 /*break*/, 12];
                 case 6:
-                    e_1_1 = _g.sent();
+                    e_1_1 = _h.sent();
                     e_1 = { error: e_1_1 };
                     return [3 /*break*/, 12];
                 case 7:
-                    _g.trys.push([7, , 10, 11]);
+                    _h.trys.push([7, , 10, 11]);
                     if (!(!_d && !_a && (_b = rl_1.return))) return [3 /*break*/, 9];
                     return [4 /*yield*/, _b.call(rl_1)];
                 case 8:
-                    _g.sent();
-                    _g.label = 9;
+                    _h.sent();
+                    _h.label = 9;
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     if (e_1) throw e_1.error;
@@ -99,23 +108,65 @@ function processFile(filePath) {
                 case 11: return [7 /*endfinally*/];
                 case 12:
                     // sort them from lowest to highest
-                    bricks = bricks.sort(function (a, b) { return a.start.z - b.end.z; });
+                    bricks = bricks.sort(function (a, b) { return Math.min(a.start.z, a.end.z) - Math.min(b.start.z, b.end.z); });
+                    console.log(bricks);
                     bricksOnTop = new Map();
                     freeFall(bricks, bricksOnTop);
-                    console.log(bricksOnTop);
+                    debugResult = Array.from(bricksOnTop.entries()).map(function (entry) {
+                        return (
+                        // String.fromCharCode(entry[0] + 64) +
+                        entry[0] +
+                            " is supporting: " +
+                            entry[1].reduce(function (str, num) { return str + num + " and "; }, "").slice(0, -5));
+                    });
+                    process.stdout.write(debugResult.join("\n"));
+                    console.log();
+                    supportedBricks = new Map();
+                    keys = Array.from(bricksOnTop.keys());
+                    for (i = 0; i < keys.length; i++) {
+                        key = keys[i];
+                        valuesForKey = bricksOnTop.get(key);
+                        for (_i = 0, valuesForKey_1 = valuesForKey; _i < valuesForKey_1.length; _i++) {
+                            value = valuesForKey_1[_i];
+                            numberOfValue = supportedBricks.get(value);
+                            if (numberOfValue) {
+                                supportedBricks.set(value, numberOfValue + 1);
+                            }
+                            else {
+                                supportedBricks.set(value, 1);
+                            }
+                        }
+                    }
+                    cannotBeDestroyed = 0;
+                    for (i = 0; i < keys.length; i++) {
+                        key = keys[i];
+                        valuesForKey = bricksOnTop.get(key);
+                        for (_g = 0, valuesForKey_2 = valuesForKey; _g < valuesForKey_2.length; _g++) {
+                            value = valuesForKey_2[_g];
+                            numberOfValue = supportedBricks.get(value);
+                            if (numberOfValue == 1) {
+                                cannotBeDestroyed += 1;
+                                break;
+                            }
+                        }
+                    }
+                    console.log("cannotBeDestroyed: " + cannotBeDestroyed);
+                    topOnes = bricks.filter(function (_, index) { return !bricksOnTop.has(index); }).length;
+                    // not even using top ones if we count cannot's
+                    console.log("There are " + topOnes + " bricks on top");
+                    console.log("We can destroy " + (bricks.length - cannotBeDestroyed) + " bricks");
                     return [2 /*return*/];
             }
         });
     });
 }
 function freeFall(bricks, bricksOnTop) {
-    bricksOnTop.set(1, [1]);
-    var index = 1;
+    var index = 0;
     // key is coordinate and value is how high we reached on that coordinate, with coordinate of brick occupying it
     var tallestCoordinates = new Map();
     for (var _i = 0, bricks_1 = bricks; _i < bricks_1.length; _i++) {
         var brick = bricks_1[_i];
-        if (brick.start.z == brick.start.z) {
+        if (brick.start.z == brick.end.z) {
             resolveHorizontalBricks(brick, tallestCoordinates, bricksOnTop, index);
         }
         else {
@@ -124,42 +175,65 @@ function freeFall(bricks, bricksOnTop) {
         index++;
     }
 }
+function coordinate2DtoKey(coordinate2D) {
+    return coordinate2D.x + "," + coordinate2D.y;
+}
 function resolveHorizontalBricks(brick, tallestCoordinates, bricksOnTop, index) {
-    var tallestBelow = { id: -1, height: 0 };
+    var tallestBelowList = [];
     for (var _i = 0, _a = coordinates(brick); _i < _a.length; _i++) {
         var coordinate2D = _a[_i];
-        var currentBelow = tallestCoordinates.get(coordinate2D);
-        if (currentBelow && currentBelow.height > tallestBelow.height) {
-            tallestBelow = currentBelow;
+        var currentBelow = tallestCoordinates.get(coordinate2DtoKey(coordinate2D));
+        if (currentBelow &&
+            (!tallestBelowList.length ||
+                currentBelow.height > tallestBelowList[0].height)) {
+            tallestBelowList = [currentBelow];
+        }
+        else if (currentBelow &&
+            currentBelow.height === tallestBelowList[0].height) {
+            tallestBelowList.push(currentBelow);
         }
     }
-    if (tallestBelow.id != -1) {
-        var topBricks = bricksOnTop.get(tallestBelow.id);
-        if (topBricks) {
-            topBricks.push(index);
+    // remove duplicates that have same id
+    tallestBelowList = tallestBelowList.reduce(function (acc, curr) {
+        if (!acc.some(function (item) { return item.id === curr.id; })) {
+            acc.push(curr);
         }
-        else {
-            bricksOnTop.set(tallestBelow.id, [index]);
+        return acc;
+    }, []);
+    if (tallestBelowList.length) {
+        for (var _b = 0, tallestBelowList_1 = tallestBelowList; _b < tallestBelowList_1.length; _b++) {
+            var tallestBelow = tallestBelowList_1[_b];
+            updateBricksOnTop(bricksOnTop, tallestBelow, index);
         }
-        for (var _b = 0, _c = coordinates(brick); _b < _c.length; _b++) {
-            var coordinate2D = _c[_b];
-            tallestCoordinates.set(coordinate2D, {
+        for (var _c = 0, _d = coordinates(brick); _c < _d.length; _c++) {
+            var coordinate2D = _d[_c];
+            tallestCoordinates.set(coordinate2DtoKey(coordinate2D), {
                 id: index,
-                height: tallestBelow.height + 1,
+                height: tallestBelowList[0].height + 1, // we know height is 1 because it is horizontal brick
             });
         }
     }
     else {
-        for (var _d = 0, _e = coordinates(brick); _d < _e.length; _d++) {
-            var coordinate2D = _e[_d];
-            tallestCoordinates.set(coordinate2D, {
+        for (var _e = 0, _f = coordinates(brick); _e < _f.length; _e++) {
+            var coordinate2D = _f[_e];
+            tallestCoordinates.set(coordinate2DtoKey(coordinate2D), {
                 id: index,
                 height: 1,
             });
         }
     }
 }
+function updateBricksOnTop(bricksOnTop, tallestBelow, index) {
+    var topBricks = bricksOnTop.get(tallestBelow.id);
+    if (topBricks) {
+        bricksOnTop.set(tallestBelow.id, __spreadArray(__spreadArray([], topBricks, true), [index], false));
+    }
+    else {
+        bricksOnTop.set(tallestBelow.id, [index]);
+    }
+}
 function resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index) {
+    console.log("vertical brick index: " + (index + 1));
     var lowestSection;
     var highestSection;
     if (brick.start.z < brick.end.z) {
@@ -170,25 +244,20 @@ function resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index) {
         highestSection = brick.start;
         lowestSection = brick.end;
     }
-    var tallestBelow = tallestCoordinates.get({
+    // we know there can be only one tallest below because it is vertical brick
+    var tallestBelow = tallestCoordinates.get(coordinate2DtoKey({
         x: lowestSection.x,
         y: lowestSection.y,
-    });
+    }));
     if (tallestBelow) {
-        var topBricks = bricksOnTop.get(tallestBelow.id);
-        if (topBricks) {
-            topBricks.push(index);
-        }
-        else {
-            bricksOnTop.set(tallestBelow.id, [index]);
-        }
-        tallestCoordinates.set({ x: lowestSection.x, y: lowestSection.y }, {
+        updateBricksOnTop(bricksOnTop, tallestBelow, index);
+        tallestCoordinates.set(coordinate2DtoKey({ x: lowestSection.x, y: lowestSection.y }), {
             id: index,
-            height: tallestBelow.height + highestSection.z - lowestSection.z,
+            height: tallestBelow.height + highestSection.z - lowestSection.z + 1,
         });
     }
     else {
-        tallestCoordinates.set({ x: lowestSection.x, y: lowestSection.y }, { id: index, height: highestSection.z - lowestSection.z });
+        tallestCoordinates.set(coordinate2DtoKey({ x: lowestSection.x, y: lowestSection.y }), { id: index, height: highestSection.z - lowestSection.z + 1 });
     }
 }
 function coordinates(brick) {

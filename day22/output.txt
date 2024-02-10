@@ -1,0 +1,1214 @@
+[
+  { start: { x: 5, y: 0, z: 1 }, end: { x: 5, y: 0, z: 3 } },
+  { start: { x: 2, y: 4, z: 1 }, end: { x: 4, y: 4, z: 1 } },
+  { start: { x: 7, y: 0, z: 1 }, end: { x: 9, y: 0, z: 1 } },
+  { start: { x: 5, y: 3, z: 1 }, end: { x: 5, y: 4, z: 1 } },
+  { start: { x: 0, y: 1, z: 1 }, end: { x: 1, y: 1, z: 1 } },
+  { start: { x: 2, y: 1, z: 1 }, end: { x: 2, y: 3, z: 1 } },
+  { start: { x: 5, y: 6, z: 1 }, end: { x: 5, y: 9, z: 1 } },
+  { start: { x: 3, y: 5, z: 1 }, end: { x: 6, y: 5, z: 1 } },
+  { start: { x: 9, y: 5, z: 1 }, end: { x: 9, y: 8, z: 1 } },
+  { start: { x: 1, y: 4, z: 2 }, end: { x: 1, y: 4, z: 3 } },
+  { start: { x: 6, y: 6, z: 2 }, end: { x: 6, y: 9, z: 2 } },
+  { start: { x: 3, y: 2, z: 2 }, end: { x: 3, y: 4, z: 2 } },
+  { start: { x: 7, y: 1, z: 2 }, end: { x: 8, y: 1, z: 2 } },
+  { start: { x: 7, y: 0, z: 2 }, end: { x: 9, y: 0, z: 2 } },
+  { start: { x: 8, y: 6, z: 2 }, end: { x: 8, y: 8, z: 2 } },
+  { start: { x: 4, y: 7, z: 2 }, end: { x: 4, y: 8, z: 2 } },
+  { start: { x: 1, y: 6, z: 2 }, end: { x: 1, y: 8, z: 2 } },
+  { start: { x: 7, y: 4, z: 3 }, end: { x: 7, y: 7, z: 3 } },
+  { start: { x: 0, y: 9, z: 3 }, end: { x: 2, y: 9, z: 3 } },
+  { start: { x: 8, y: 0, z: 3 }, end: { x: 9, y: 0, z: 3 } },
+  { start: { x: 1, y: 5, z: 3 }, end: { x: 3, y: 5, z: 3 } },
+  { start: { x: 3, y: 2, z: 3 }, end: { x: 3, y: 4, z: 3 } },
+  { start: { x: 9, y: 2, z: 3 }, end: { x: 9, y: 4, z: 3 } },
+  { start: { x: 0, y: 3, z: 3 }, end: { x: 0, y: 3, z: 5 } },
+  { start: { x: 7, y: 3, z: 4 }, end: { x: 7, y: 6, z: 4 } },
+  { start: { x: 9, y: 4, z: 4 }, end: { x: 9, y: 6, z: 4 } },
+  { start: { x: 4, y: 0, z: 4 }, end: { x: 6, y: 0, z: 4 } },
+  { start: { x: 2, y: 0, z: 4 }, end: { x: 2, y: 1, z: 4 } },
+  { start: { x: 0, y: 6, z: 4 }, end: { x: 2, y: 6, z: 4 } },
+  { start: { x: 9, y: 7, z: 4 }, end: { x: 9, y: 8, z: 4 } },
+  { start: { x: 4, y: 3, z: 4 }, end: { x: 4, y: 5, z: 4 } },
+  { start: { x: 6, y: 1, z: 5 }, end: { x: 8, y: 1, z: 5 } },
+  { start: { x: 6, y: 6, z: 5 }, end: { x: 6, y: 9, z: 5 } },
+  { start: { x: 6, y: 2, z: 5 }, end: { x: 9, y: 2, z: 5 } },
+  { start: { x: 4, y: 6, z: 5 }, end: { x: 4, y: 9, z: 5 } },
+  { start: { x: 0, y: 5, z: 5 }, end: { x: 0, y: 8, z: 5 } },
+  { start: { x: 0, y: 7, z: 6 }, end: { x: 3, y: 7, z: 6 } },
+  { start: { x: 2, y: 0, z: 6 }, end: { x: 2, y: 0, z: 8 } },
+  { start: { x: 5, y: 8, z: 6 }, end: { x: 8, y: 8, z: 6 } },
+  { start: { x: 3, y: 3, z: 6 }, end: { x: 3, y: 5, z: 6 } },
+  { start: { x: 7, y: 6, z: 6 }, end: { x: 7, y: 7, z: 6 } },
+  { start: { x: 2, y: 2, z: 6 }, end: { x: 3, y: 2, z: 6 } },
+  { start: { x: 0, y: 3, z: 7 }, end: { x: 0, y: 4, z: 7 } },
+  { start: { x: 9, y: 5, z: 7 }, end: { x: 9, y: 5, z: 10 } },
+  { start: { x: 3, y: 7, z: 7 }, end: { x: 4, y: 7, z: 7 } },
+  { start: { x: 8, y: 7, z: 7 }, end: { x: 8, y: 8, z: 7 } },
+  { start: { x: 6, y: 2, z: 7 }, end: { x: 6, y: 4, z: 7 } },
+  { start: { x: 7, y: 2, z: 7 }, end: { x: 7, y: 5, z: 7 } },
+  { start: { x: 3, y: 0, z: 8 }, end: { x: 3, y: 3, z: 8 } },
+  { start: { x: 0, y: 2, z: 8 }, end: { x: 0, y: 5, z: 8 } },
+  { start: { x: 4, y: 9, z: 8 }, end: { x: 4, y: 9, z: 10 } },
+  { start: { x: 5, y: 9, z: 8 }, end: { x: 8, y: 9, z: 8 } },
+  { start: { x: 0, y: 6, z: 8 }, end: { x: 3, y: 6, z: 8 } },
+  { start: { x: 6, y: 2, z: 8 }, end: { x: 6, y: 3, z: 8 } },
+  { start: { x: 6, y: 4, z: 9 }, end: { x: 6, y: 5, z: 9 } },
+  { start: { x: 4, y: 6, z: 9 }, end: { x: 7, y: 6, z: 9 } },
+  { start: { x: 6, y: 3, z: 9 }, end: { x: 8, y: 3, z: 9 } },
+  { start: { x: 3, y: 5, z: 9 }, end: { x: 3, y: 5, z: 10 } },
+  { start: { x: 8, y: 5, z: 9 }, end: { x: 8, y: 7, z: 9 } },
+  { start: { x: 7, y: 2, z: 9 }, end: { x: 7, y: 2, z: 11 } },
+  { start: { x: 2, y: 4, z: 9 }, end: { x: 2, y: 7, z: 9 } },
+  { start: { x: 3, y: 7, z: 9 }, end: { x: 5, y: 7, z: 9 } },
+  { start: { x: 2, y: 7, z: 10 }, end: { x: 2, y: 8, z: 10 } },
+  { start: { x: 4, y: 2, z: 10 }, end: { x: 6, y: 2, z: 10 } },
+  { start: { x: 2, y: 0, z: 10 }, end: { x: 2, y: 0, z: 13 } },
+  { start: { x: 6, y: 8, z: 10 }, end: { x: 8, y: 8, z: 10 } },
+  { start: { x: 6, y: 9, z: 10 }, end: { x: 9, y: 9, z: 10 } },
+  { start: { x: 1, y: 6, z: 10 }, end: { x: 1, y: 9, z: 10 } },
+  { start: { x: 0, y: 9, z: 11 }, end: { x: 3, y: 9, z: 11 } },
+  { start: { x: 7, y: 3, z: 11 }, end: { x: 7, y: 3, z: 11 } },
+  { start: { x: 6, y: 6, z: 11 }, end: { x: 9, y: 6, z: 11 } },
+  { start: { x: 5, y: 2, z: 11 }, end: { x: 5, y: 4, z: 11 } },
+  { start: { x: 5, y: 5, z: 11 }, end: { x: 7, y: 5, z: 11 } },
+  { start: { x: 2, y: 3, z: 11 }, end: { x: 2, y: 5, z: 11 } },
+  { start: { x: 0, y: 6, z: 12 }, end: { x: 0, y: 9, z: 12 } },
+  { start: { x: 5, y: 4, z: 12 }, end: { x: 8, y: 4, z: 12 } },
+  { start: { x: 4, y: 3, z: 12 }, end: { x: 5, y: 3, z: 12 } },
+  { start: { x: 9, y: 7, z: 12 }, end: { x: 9, y: 9, z: 12 } },
+  { start: { x: 4, y: 2, z: 12 }, end: { x: 6, y: 2, z: 12 } },
+  { start: { x: 1, y: 6, z: 13 }, end: { x: 1, y: 8, z: 13 } },
+  { start: { x: 5, y: 8, z: 13 }, end: { x: 7, y: 8, z: 13 } },
+  { start: { x: 9, y: 6, z: 13 }, end: { x: 9, y: 7, z: 13 } },
+  { start: { x: 9, y: 8, z: 13 }, end: { x: 9, y: 8, z: 15 } },
+  { start: { x: 0, y: 8, z: 13 }, end: { x: 0, y: 9, z: 13 } },
+  { start: { x: 4, y: 4, z: 13 }, end: { x: 5, y: 4, z: 13 } },
+  { start: { x: 7, y: 2, z: 13 }, end: { x: 7, y: 4, z: 13 } },
+  { start: { x: 4, y: 9, z: 13 }, end: { x: 5, y: 9, z: 13 } },
+  { start: { x: 5, y: 5, z: 13 }, end: { x: 5, y: 5, z: 16 } },
+  { start: { x: 6, y: 5, z: 13 }, end: { x: 9, y: 5, z: 13 } },
+  { start: { x: 1, y: 6, z: 14 }, end: { x: 1, y: 9, z: 14 } },
+  { start: { x: 1, y: 0, z: 14 }, end: { x: 2, y: 0, z: 14 } },
+  { start: { x: 2, y: 9, z: 14 }, end: { x: 2, y: 9, z: 17 } },
+  { start: { x: 0, y: 4, z: 14 }, end: { x: 0, y: 6, z: 14 } },
+  { start: { x: 4, y: 6, z: 14 }, end: { x: 6, y: 6, z: 14 } },
+  { start: { x: 4, y: 3, z: 15 }, end: { x: 6, y: 3, z: 15 } },
+  { start: { x: 3, y: 8, z: 15 }, end: { x: 5, y: 8, z: 15 } },
+  { start: { x: 0, y: 7, z: 15 }, end: { x: 2, y: 7, z: 15 } },
+  { start: { x: 9, y: 4, z: 15 }, end: { x: 9, y: 6, z: 15 } },
+  { start: { x: 7, y: 7, z: 15 }, end: { x: 7, y: 9, z: 15 } },
+  { start: { x: 0, y: 0, z: 15 }, end: { x: 1, y: 0, z: 15 } },
+  ... 1223 more items
+]
+vertical brick index: 1
+vertical brick index: 10
+vertical brick index: 24
+vertical brick index: 38
+vertical brick index: 44
+vertical brick index: 51
+vertical brick index: 58
+vertical brick index: 60
+vertical brick index: 65
+vertical brick index: 83
+vertical brick index: 88
+vertical brick index: 92
+vertical brick index: 106
+vertical brick index: 117
+vertical brick index: 147
+vertical brick index: 186
+vertical brick index: 190
+vertical brick index: 194
+vertical brick index: 195
+vertical brick index: 211
+vertical brick index: 214
+vertical brick index: 239
+vertical brick index: 245
+vertical brick index: 257
+vertical brick index: 261
+vertical brick index: 262
+vertical brick index: 263
+vertical brick index: 280
+vertical brick index: 284
+vertical brick index: 294
+vertical brick index: 330
+vertical brick index: 332
+vertical brick index: 347
+vertical brick index: 352
+vertical brick index: 353
+vertical brick index: 355
+vertical brick index: 358
+vertical brick index: 366
+vertical brick index: 376
+vertical brick index: 377
+vertical brick index: 382
+vertical brick index: 397
+vertical brick index: 419
+vertical brick index: 430
+vertical brick index: 445
+vertical brick index: 462
+vertical brick index: 472
+vertical brick index: 473
+vertical brick index: 474
+vertical brick index: 480
+vertical brick index: 492
+vertical brick index: 499
+vertical brick index: 515
+vertical brick index: 523
+vertical brick index: 529
+vertical brick index: 530
+vertical brick index: 543
+vertical brick index: 544
+vertical brick index: 556
+vertical brick index: 562
+vertical brick index: 572
+vertical brick index: 574
+vertical brick index: 583
+vertical brick index: 596
+vertical brick index: 602
+vertical brick index: 604
+vertical brick index: 609
+vertical brick index: 621
+vertical brick index: 626
+vertical brick index: 628
+vertical brick index: 631
+vertical brick index: 654
+vertical brick index: 662
+vertical brick index: 674
+vertical brick index: 679
+vertical brick index: 685
+vertical brick index: 698
+vertical brick index: 700
+vertical brick index: 702
+vertical brick index: 711
+vertical brick index: 719
+vertical brick index: 725
+vertical brick index: 732
+vertical brick index: 739
+vertical brick index: 775
+vertical brick index: 805
+vertical brick index: 811
+vertical brick index: 812
+vertical brick index: 815
+vertical brick index: 834
+vertical brick index: 839
+vertical brick index: 852
+vertical brick index: 853
+vertical brick index: 854
+vertical brick index: 883
+vertical brick index: 892
+vertical brick index: 902
+vertical brick index: 911
+vertical brick index: 954
+vertical brick index: 960
+vertical brick index: 963
+vertical brick index: 971
+vertical brick index: 988
+vertical brick index: 1003
+vertical brick index: 1004
+vertical brick index: 1014
+vertical brick index: 1015
+vertical brick index: 1025
+vertical brick index: 1028
+vertical brick index: 1029
+vertical brick index: 1043
+vertical brick index: 1050
+vertical brick index: 1069
+vertical brick index: 1080
+vertical brick index: 1093
+vertical brick index: 1096
+vertical brick index: 1107
+vertical brick index: 1121
+vertical brick index: 1124
+vertical brick index: 1152
+vertical brick index: 1167
+vertical brick index: 1179
+vertical brick index: 1188
+vertical brick index: 1192
+vertical brick index: 1195
+vertical brick index: 1203
+vertical brick index: 1205
+vertical brick index: 1206
+vertical brick index: 1215
+vertical brick index: 1227
+vertical brick index: 1257
+vertical brick index: 1264
+vertical brick index: 1273
+vertical brick index: 1290
+vertical brick index: 1309
+vertical brick index: 1314
+1 is supporting: 11 and 30
+2 is supporting: 13
+13 is supporting: 19
+7 is supporting: 20 and 30
+11 is supporting: 21
+17 is supporting: 24
+22 is supporting: 25 and 33
+8 is supporting: 25 and 29
+0 is supporting: 26
+5 is supporting: 27
+16 is supporting: 28
+12 is supporting: 31
+10 is supporting: 32
+15 is supporting: 34
+28 is supporting: 35
+35 is supporting: 36 and 52
+27 is supporting: 37
+32 is supporting: 38 and 51
+21 is supporting: 39 and 41
+24 is supporting: 40 and 47
+23 is supporting: 42
+25 is supporting: 43
+36 is supporting: 44 and 60 and 67
+38 is supporting: 45
+33 is supporting: 46 and 47
+41 is supporting: 48
+39 is supporting: 48 and 57
+42 is supporting: 49
+34 is supporting: 50
+46 is supporting: 53 and 54
+40 is supporting: 55
+53 is supporting: 56 and 63
+45 is supporting: 58 and 65
+47 is supporting: 59
+52 is supporting: 60 and 67
+44 is supporting: 61
+60 is supporting: 62 and 73
+37 is supporting: 64
+51 is supporting: 66
+67 is supporting: 68 and 79
+56 is supporting: 69
+58 is supporting: 70
+63 is supporting: 71
+54 is supporting: 72
+68 is supporting: 74 and 89 and 91 and 106
+71 is supporting: 75 and 76 and 78
+66 is supporting: 77
+65 is supporting: 80
+70 is supporting: 81 and 93
+77 is supporting: 82
+74 is supporting: 83 and 92 and 96
+75 is supporting: 84 and 85 and 103
+50 is supporting: 86
+72 is supporting: 87
+43 is supporting: 88
+79 is supporting: 89
+64 is supporting: 90
+76 is supporting: 94
+80 is supporting: 95 and 98
+89 is supporting: 96 and 107
+88 is supporting: 97
+81 is supporting: 97
+90 is supporting: 99
+85 is supporting: 100 and 111
+78 is supporting: 101 and 102
+102 is supporting: 104 and 113 and 118
+101 is supporting: 104 and 113
+92 is supporting: 105
+86 is supporting: 106
+103 is supporting: 108 and 111
+94 is supporting: 109 and 118
+107 is supporting: 110
+110 is supporting: 112 and 115 and 120
+95 is supporting: 114
+99 is supporting: 116
+98 is supporting: 117
+84 is supporting: 118
+115 is supporting: 119 and 130 and 133
+118 is supporting: 120
+91 is supporting: 121
+106 is supporting: 122
+111 is supporting: 123 and 125
+114 is supporting: 124
+109 is supporting: 125
+108 is supporting: 126
+119 is supporting: 127 and 150
+105 is supporting: 127
+112 is supporting: 128 and 129 and 130
+120 is supporting: 130 and 133 and 143
+124 is supporting: 131 and 132
+117 is supporting: 134
+125 is supporting: 135
+135 is supporting: 136 and 153
+129 is supporting: 137 and 144
+133 is supporting: 138 and 144
+134 is supporting: 139 and 140
+121 is supporting: 141
+127 is supporting: 142
+132 is supporting: 143
+130 is supporting: 145
+123 is supporting: 146
+142 is supporting: 147 and 167
+140 is supporting: 148 and 155
+144 is supporting: 149 and 156
+138 is supporting: 149 and 152
+128 is supporting: 150
+143 is supporting: 151
+148 is supporting: 154
+137 is supporting: 156
+141 is supporting: 157 and 164
+153 is supporting: 158 and 165 and 168
+145 is supporting: 159
+151 is supporting: 160 and 164
+147 is supporting: 161 and 169 and 171
+150 is supporting: 162
+152 is supporting: 163
+154 is supporting: 164
+155 is supporting: 166
+162 is supporting: 167 and 177
+159 is supporting: 170
+167 is supporting: 171
+168 is supporting: 172
+166 is supporting: 173
+172 is supporting: 174 and 176 and 180
+169 is supporting: 175
+171 is supporting: 178
+174 is supporting: 179 and 184
+178 is supporting: 181
+177 is supporting: 182
+173 is supporting: 183
+176 is supporting: 185
+183 is supporting: 186 and 189
+175 is supporting: 187
+179 is supporting: 188 and 192
+180 is supporting: 190 and 191
+187 is supporting: 193
+190 is supporting: 194 and 199
+184 is supporting: 195
+181 is supporting: 196
+192 is supporting: 197 and 204 and 206
+186 is supporting: 198
+199 is supporting: 200
+191 is supporting: 201
+198 is supporting: 202
+195 is supporting: 203 and 208
+196 is supporting: 205
+203 is supporting: 207
+200 is supporting: 209 and 212
+197 is supporting: 210
+206 is supporting: 211
+204 is supporting: 213
+201 is supporting: 214
+207 is supporting: 215 and 216
+212 is supporting: 217 and 223
+214 is supporting: 218
+216 is supporting: 219
+213 is supporting: 220
+210 is supporting: 221
+218 is supporting: 222 and 227
+215 is supporting: 224
+211 is supporting: 225
+219 is supporting: 226 and 232
+224 is supporting: 228
+226 is supporting: 229 and 237
+227 is supporting: 230
+221 is supporting: 231
+232 is supporting: 233 and 234
+225 is supporting: 235 and 236
+235 is supporting: 238 and 245
+231 is supporting: 239
+233 is supporting: 240 and 241
+240 is supporting: 242 and 249
+236 is supporting: 243
+220 is supporting: 243
+237 is supporting: 244 and 251
+241 is supporting: 246 and 247
+228 is supporting: 248
+243 is supporting: 250
+239 is supporting: 252
+248 is supporting: 253 and 257
+252 is supporting: 254 and 261
+242 is supporting: 255
+250 is supporting: 256
+255 is supporting: 258 and 263
+249 is supporting: 259 and 262
+257 is supporting: 260
+254 is supporting: 264 and 265
+260 is supporting: 266
+259 is supporting: 267 and 269
+266 is supporting: 268
+267 is supporting: 270 and 277
+265 is supporting: 271
+256 is supporting: 272
+264 is supporting: 273 and 275
+269 is supporting: 274 and 280 and 283
+261 is supporting: 276
+271 is supporting: 278
+275 is supporting: 279
+268 is supporting: 281
+278 is supporting: 282
+262 is supporting: 284
+284 is supporting: 285
+280 is supporting: 286
+273 is supporting: 287
+270 is supporting: 287
+276 is supporting: 288
+281 is supporting: 289 and 295 and 296
+285 is supporting: 290
+287 is supporting: 291 and 301
+286 is supporting: 292
+277 is supporting: 293
+282 is supporting: 294
+291 is supporting: 297
+290 is supporting: 298 and 305
+294 is supporting: 299
+298 is supporting: 300 and 302 and 310
+301 is supporting: 303 and 312
+293 is supporting: 304
+296 is supporting: 306
+297 is supporting: 307 and 308
+304 is supporting: 309 and 314 and 318
+308 is supporting: 311
+306 is supporting: 313 and 320
+309 is supporting: 315 and 321 and 334
+312 is supporting: 316 and 323
+311 is supporting: 317
+310 is supporting: 319
+318 is supporting: 321 and 334
+317 is supporting: 322
+307 is supporting: 324
+313 is supporting: 325
+321 is supporting: 326
+319 is supporting: 327 and 333
+322 is supporting: 328 and 330 and 332
+325 is supporting: 329
+316 is supporting: 331
+314 is supporting: 335
+315 is supporting: 336
+333 is supporting: 337
+334 is supporting: 338 and 348
+332 is supporting: 339 and 345
+330 is supporting: 340 and 345
+327 is supporting: 341
+336 is supporting: 342
+328 is supporting: 343 and 344
+335 is supporting: 346 and 347
+343 is supporting: 349
+342 is supporting: 350
+347 is supporting: 351 and 352 and 354
+344 is supporting: 353
+341 is supporting: 355
+349 is supporting: 356
+348 is supporting: 357 and 360
+340 is supporting: 358
+350 is supporting: 359
+326 is supporting: 360
+359 is supporting: 361
+360 is supporting: 362 and 373
+353 is supporting: 363 and 364 and 367 and 370
+364 is supporting: 365 and 376
+362 is supporting: 366
+358 is supporting: 368
+361 is supporting: 369
+346 is supporting: 371
+368 is supporting: 372 and 378
+373 is supporting: 374
+372 is supporting: 375
+363 is supporting: 377
+377 is supporting: 379 and 385
+378 is supporting: 380
+357 is supporting: 381
+339 is supporting: 382
+374 is supporting: 382
+371 is supporting: 383
+369 is supporting: 384 and 386
+380 is supporting: 387
+384 is supporting: 388
+382 is supporting: 389
+389 is supporting: 390
+386 is supporting: 391
+385 is supporting: 392 and 394 and 400
+387 is supporting: 393 and 395
+394 is supporting: 396 and 404
+391 is supporting: 397 and 402
+397 is supporting: 398 and 406
+392 is supporting: 399
+381 is supporting: 401
+395 is supporting: 403 and 409
+393 is supporting: 405
+402 is supporting: 406 and 424
+405 is supporting: 407
+401 is supporting: 408 and 411
+399 is supporting: 410 and 412 and 414
+410 is supporting: 413
+408 is supporting: 415
+412 is supporting: 416
+414 is supporting: 416
+406 is supporting: 417
+403 is supporting: 418
+409 is supporting: 419 and 423
+407 is supporting: 420
+415 is supporting: 421 and 430
+396 is supporting: 422
+422 is supporting: 425 and 435
+411 is supporting: 426
+413 is supporting: 427
+426 is supporting: 428
+424 is supporting: 429
+416 is supporting: 431
+418 is supporting: 432
+431 is supporting: 433
+427 is supporting: 434 and 436 and 437
+432 is supporting: 438 and 443
+434 is supporting: 439
+439 is supporting: 440 and 442
+435 is supporting: 441 and 447
+433 is supporting: 444 and 450
+442 is supporting: 445 and 451
+438 is supporting: 446
+440 is supporting: 448
+437 is supporting: 449
+446 is supporting: 452 and 461 and 466
+441 is supporting: 453
+448 is supporting: 454 and 455 and 458 and 459
+444 is supporting: 456
+449 is supporting: 457
+443 is supporting: 459
+451 is supporting: 459
+447 is supporting: 460
+450 is supporting: 462
+456 is supporting: 463 and 467
+457 is supporting: 464
+455 is supporting: 465
+454 is supporting: 468
+468 is supporting: 469 and 476
+464 is supporting: 470 and 471 and 475
+462 is supporting: 472 and 473
+465 is supporting: 474 and 478
+445 is supporting: 475
+466 is supporting: 477
+463 is supporting: 479
+461 is supporting: 480
+477 is supporting: 481
+474 is supporting: 482
+476 is supporting: 483
+482 is supporting: 484 and 485 and 487 and 490
+471 is supporting: 486
+486 is supporting: 488
+481 is supporting: 489
+487 is supporting: 491 and 498
+480 is supporting: 492
+483 is supporting: 493
+493 is supporting: 494 and 495 and 499 and 509
+490 is supporting: 496
+484 is supporting: 497
+492 is supporting: 500 and 501 and 503
+495 is supporting: 502 and 512 and 513
+494 is supporting: 502
+501 is supporting: 504
+488 is supporting: 505 and 508
+497 is supporting: 506
+500 is supporting: 507
+479 is supporting: 509
+491 is supporting: 510
+503 is supporting: 511 and 517
+506 is supporting: 514 and 529
+505 is supporting: 515
+511 is supporting: 516 and 531
+508 is supporting: 518
+509 is supporting: 519
+498 is supporting: 520
+515 is supporting: 521 and 523
+512 is supporting: 522
+504 is supporting: 524 and 527
+518 is supporting: 525
+510 is supporting: 526
+507 is supporting: 528
+526 is supporting: 530 and 537
+517 is supporting: 532
+519 is supporting: 533
+524 is supporting: 534 and 539
+527 is supporting: 534 and 539 and 545
+531 is supporting: 535 and 536 and 545
+532 is supporting: 536 and 538
+521 is supporting: 540
+535 is supporting: 541 and 551
+541 is supporting: 542 and 563
+536 is supporting: 543 and 544 and 557
+516 is supporting: 545
+537 is supporting: 546
+533 is supporting: 547
+528 is supporting: 548
+538 is supporting: 549
+545 is supporting: 550 and 555 and 557
+539 is supporting: 552
+534 is supporting: 552
+546 is supporting: 553 and 560
+544 is supporting: 554
+550 is supporting: 556 and 561
+557 is supporting: 558 and 578
+547 is supporting: 559
+543 is supporting: 562
+551 is supporting: 563
+549 is supporting: 564
+559 is supporting: 565 and 566 and 580 and 582
+564 is supporting: 567 and 568 and 573
+562 is supporting: 569 and 577
+560 is supporting: 570
+554 is supporting: 571
+556 is supporting: 572
+568 is supporting: 574
+566 is supporting: 575
+572 is supporting: 576
+570 is supporting: 579 and 587
+575 is supporting: 581 and 589
+542 is supporting: 583
+558 is supporting: 584 and 585
+578 is supporting: 585 and 594
+569 is supporting: 586
+574 is supporting: 588
+571 is supporting: 590
+561 is supporting: 591
+577 is supporting: 592
+583 is supporting: 593 and 605
+584 is supporting: 595
+573 is supporting: 596
+585 is supporting: 597 and 602
+581 is supporting: 598 and 604
+590 is supporting: 599 and 600
+588 is supporting: 601
+594 is supporting: 602
+592 is supporting: 603 and 629
+589 is supporting: 604 and 611
+596 is supporting: 606
+599 is supporting: 607
+597 is supporting: 608
+600 is supporting: 609 and 610
+605 is supporting: 612
+593 is supporting: 613
+598 is supporting: 614
+604 is supporting: 615 and 627
+606 is supporting: 616 and 623
+602 is supporting: 617
+614 is supporting: 618
+610 is supporting: 619 and 624
+611 is supporting: 620 and 632
+616 is supporting: 621 and 633
+609 is supporting: 622
+613 is supporting: 625
+586 is supporting: 626
+618 is supporting: 628 and 629
+615 is supporting: 630
+626 is supporting: 631
+623 is supporting: 633
+624 is supporting: 634 and 635
+608 is supporting: 636
+631 is supporting: 636 and 643 and 644
+622 is supporting: 637
+621 is supporting: 638 and 662 and 671
+628 is supporting: 639 and 648 and 657
+601 is supporting: 640
+637 is supporting: 641
+633 is supporting: 642 and 662 and 671
+635 is supporting: 645
+632 is supporting: 646
+629 is supporting: 647
+645 is supporting: 649 and 655
+638 is supporting: 650
+650 is supporting: 651 and 659
+640 is supporting: 652
+646 is supporting: 653
+639 is supporting: 654
+641 is supporting: 656
+644 is supporting: 658
+656 is supporting: 660 and 665 and 675
+649 is supporting: 661 and 668
+654 is supporting: 662 and 671
+643 is supporting: 663
+651 is supporting: 664 and 676
+647 is supporting: 666
+648 is supporting: 667
+653 is supporting: 667
+666 is supporting: 669 and 672
+642 is supporting: 670
+658 is supporting: 670 and 674
+662 is supporting: 673
+663 is supporting: 677
+657 is supporting: 678 and 681
+665 is supporting: 679
+667 is supporting: 680
+660 is supporting: 682 and 683 and 688
+670 is supporting: 684
+671 is supporting: 685
+674 is supporting: 686
+681 is supporting: 687 and 699
+675 is supporting: 688
+661 is supporting: 689
+676 is supporting: 690
+680 is supporting: 691 and 695
+683 is supporting: 692 and 694
+672 is supporting: 693
+669 is supporting: 693
+688 is supporting: 694 and 702
+690 is supporting: 696
+694 is supporting: 697
+693 is supporting: 698 and 700
+689 is supporting: 701
+678 is supporting: 703
+700 is supporting: 704 and 708
+686 is supporting: 705 and 706
+691 is supporting: 707
+704 is supporting: 709 and 718
+703 is supporting: 710 and 713 and 717
+673 is supporting: 711
+695 is supporting: 712 and 716
+698 is supporting: 714
+682 is supporting: 715
+712 is supporting: 717
+679 is supporting: 719
+719 is supporting: 720 and 721 and 731
+701 is supporting: 722
+715 is supporting: 723
+716 is supporting: 724
+723 is supporting: 725 and 730
+699 is supporting: 726
+718 is supporting: 727
+722 is supporting: 728 and 732 and 733
+711 is supporting: 729
+720 is supporting: 730
+729 is supporting: 734
+733 is supporting: 735
+734 is supporting: 736
+728 is supporting: 737
+727 is supporting: 738
+730 is supporting: 739 and 743
+732 is supporting: 740
+739 is supporting: 741 and 746
+724 is supporting: 742
+743 is supporting: 744 and 752
+742 is supporting: 745
+740 is supporting: 747
+737 is supporting: 748
+735 is supporting: 748
+736 is supporting: 749 and 751
+747 is supporting: 750 and 761
+750 is supporting: 753
+749 is supporting: 754 and 768
+751 is supporting: 755 and 768
+746 is supporting: 756
+748 is supporting: 757
+745 is supporting: 758
+754 is supporting: 759
+752 is supporting: 760
+756 is supporting: 762 and 764 and 766
+744 is supporting: 763
+760 is supporting: 765
+758 is supporting: 767
+763 is supporting: 769
+761 is supporting: 770
+755 is supporting: 771 and 773
+768 is supporting: 771
+753 is supporting: 772
+766 is supporting: 774 and 785
+769 is supporting: 775
+767 is supporting: 776 and 778 and 781
+770 is supporting: 777 and 786
+762 is supporting: 779
+765 is supporting: 780
+772 is supporting: 782
+771 is supporting: 783
+778 is supporting: 784 and 794
+782 is supporting: 787
+777 is supporting: 788
+780 is supporting: 789
+776 is supporting: 790
+790 is supporting: 791 and 793
+786 is supporting: 792 and 798
+781 is supporting: 795
+774 is supporting: 796
+788 is supporting: 797 and 806
+785 is supporting: 799
+784 is supporting: 800
+791 is supporting: 801
+795 is supporting: 802
+792 is supporting: 803
+796 is supporting: 804 and 807
+793 is supporting: 805 and 808
+801 is supporting: 809 and 821
+794 is supporting: 810 and 811
+802 is supporting: 812
+805 is supporting: 813
+799 is supporting: 814
+807 is supporting: 815
+797 is supporting: 816 and 819
+800 is supporting: 817
+806 is supporting: 818 and 824
+804 is supporting: 820
+809 is supporting: 822
+812 is supporting: 823
+819 is supporting: 825 and 828 and 833
+815 is supporting: 826
+820 is supporting: 827 and 838
+818 is supporting: 829 and 830
+824 is supporting: 830
+822 is supporting: 831
+810 is supporting: 832
+811 is supporting: 832
+825 is supporting: 834 and 845
+830 is supporting: 835 and 839
+823 is supporting: 836 and 837
+831 is supporting: 840 and 849
+839 is supporting: 841
+835 is supporting: 842 and 854 and 855
+840 is supporting: 843 and 852
+837 is supporting: 844
+834 is supporting: 846
+845 is supporting: 847
+829 is supporting: 848
+828 is supporting: 850
+832 is supporting: 851
+847 is supporting: 853
+846 is supporting: 856
+848 is supporting: 857
+844 is supporting: 858
+838 is supporting: 859
+843 is supporting: 860
+855 is supporting: 861 and 864
+861 is supporting: 862 and 868 and 870
+850 is supporting: 863
+854 is supporting: 865
+856 is supporting: 866
+860 is supporting: 867
+852 is supporting: 869
+842 is supporting: 871
+865 is supporting: 872 and 875 and 877
+863 is supporting: 873
+869 is supporting: 874 and 885
+862 is supporting: 876 and 884
+864 is supporting: 878 and 882
+871 is supporting: 879 and 886
+853 is supporting: 880
+868 is supporting: 881
+881 is supporting: 883
+879 is supporting: 884 and 887
+880 is supporting: 888 and 899 and 921
+870 is supporting: 889
+875 is supporting: 889
+873 is supporting: 890
+885 is supporting: 891 and 906
+883 is supporting: 892 and 895
+890 is supporting: 893 and 905
+886 is supporting: 894
+882 is supporting: 896
+889 is supporting: 897 and 903 and 907 and 908
+878 is supporting: 898 and 901
+887 is supporting: 900
+894 is supporting: 902
+892 is supporting: 904 and 914
+877 is supporting: 906
+907 is supporting: 909
+908 is supporting: 910
+896 is supporting: 911
+899 is supporting: 912 and 916
+905 is supporting: 913
+895 is supporting: 914
+902 is supporting: 915
+901 is supporting: 917
+909 is supporting: 918
+916 is supporting: 919
+911 is supporting: 920 and 926
+904 is supporting: 922
+915 is supporting: 923
+913 is supporting: 924
+923 is supporting: 925
+918 is supporting: 926 and 930
+924 is supporting: 927
+920 is supporting: 928
+922 is supporting: 929 and 938
+927 is supporting: 931 and 934 and 936
+917 is supporting: 932
+910 is supporting: 933
+931 is supporting: 935 and 950
+928 is supporting: 937 and 940
+925 is supporting: 939
+932 is supporting: 939
+938 is supporting: 941
+930 is supporting: 942
+936 is supporting: 943 and 948
+934 is supporting: 944
+929 is supporting: 945
+937 is supporting: 946
+933 is supporting: 947
+942 is supporting: 949
+947 is supporting: 951 and 952
+941 is supporting: 953 and 957
+944 is supporting: 954 and 961 and 962
+943 is supporting: 954 and 964
+948 is supporting: 955 and 965
+945 is supporting: 956
+946 is supporting: 958
+951 is supporting: 959
+954 is supporting: 960
+958 is supporting: 963 and 970
+965 is supporting: 966 and 979
+955 is supporting: 966 and 968
+957 is supporting: 967 and 974
+964 is supporting: 969
+956 is supporting: 971
+960 is supporting: 972
+961 is supporting: 973
+967 is supporting: 975 and 981
+962 is supporting: 976
+966 is supporting: 977
+973 is supporting: 978 and 990
+972 is supporting: 980 and 989
+970 is supporting: 982
+968 is supporting: 983
+979 is supporting: 984
+974 is supporting: 985
+980 is supporting: 986
+978 is supporting: 987
+963 is supporting: 988
+952 is supporting: 991
+977 is supporting: 992 and 994
+989 is supporting: 993 and 1002
+976 is supporting: 993
+983 is supporting: 995
+990 is supporting: 996 and 1003
+985 is supporting: 997
+981 is supporting: 997
+988 is supporting: 998
+997 is supporting: 999 and 1011
+986 is supporting: 1000
+994 is supporting: 1001
+993 is supporting: 1004
+1000 is supporting: 1005 and 1009 and 1012 and 1019
+996 is supporting: 1006
+1001 is supporting: 1007 and 1014
+1004 is supporting: 1008 and 1019 and 1024
+998 is supporting: 1010
+1005 is supporting: 1013 and 1029
+1010 is supporting: 1015 and 1022 and 1023
+1009 is supporting: 1016
+1011 is supporting: 1017 and 1018 and 1025
+999 is supporting: 1018
+1007 is supporting: 1020
+1018 is supporting: 1021 and 1022
+1017 is supporting: 1026
+1008 is supporting: 1027
+1006 is supporting: 1028
+1012 is supporting: 1029 and 1031
+1021 is supporting: 1030 and 1038 and 1046
+1016 is supporting: 1032 and 1035
+1029 is supporting: 1033
+1026 is supporting: 1034 and 1037 and 1038
+1020 is supporting: 1036
+1023 is supporting: 1039
+1031 is supporting: 1040
+1014 is supporting: 1041
+1025 is supporting: 1042
+1033 is supporting: 1043
+1032 is supporting: 1043
+1022 is supporting: 1044
+1038 is supporting: 1045 and 1057
+1028 is supporting: 1046
+1046 is supporting: 1047
+1041 is supporting: 1048
+1045 is supporting: 1049 and 1051 and 1070
+1035 is supporting: 1050
+1039 is supporting: 1052
+1044 is supporting: 1052
+1048 is supporting: 1053 and 1059 and 1064
+1043 is supporting: 1054
+1052 is supporting: 1055 and 1058
+1040 is supporting: 1056
+1047 is supporting: 1060 and 1063
+1056 is supporting: 1061 and 1062 and 1070
+1027 is supporting: 1062
+1058 is supporting: 1065
+1062 is supporting: 1066 and 1067
+1066 is supporting: 1068
+1054 is supporting: 1069
+1049 is supporting: 1071
+1057 is supporting: 1072 and 1073
+1059 is supporting: 1074
+1069 is supporting: 1075
+1067 is supporting: 1076
+1061 is supporting: 1077 and 1079
+1060 is supporting: 1078 and 1080
+1064 is supporting: 1081
+1071 is supporting: 1082 and 1097
+1080 is supporting: 1083
+1082 is supporting: 1084 and 1089 and 1094
+1077 is supporting: 1085
+1074 is supporting: 1086 and 1088
+1073 is supporting: 1087
+1085 is supporting: 1090
+1088 is supporting: 1091 and 1092
+1086 is supporting: 1093 and 1095
+1087 is supporting: 1096
+1090 is supporting: 1098 and 1102
+1094 is supporting: 1099 and 1100 and 1105 and 1107
+1084 is supporting: 1101 and 1110
+1100 is supporting: 1103 and 1117 and 1119
+1097 is supporting: 1104
+1089 is supporting: 1105 and 1107
+1102 is supporting: 1106 and 1109 and 1120 and 1123
+1104 is supporting: 1108 and 1116
+1093 is supporting: 1109
+1098 is supporting: 1111
+1107 is supporting: 1112
+1099 is supporting: 1113
+1105 is supporting: 1114 and 1119
+1103 is supporting: 1115 and 1130
+1095 is supporting: 1118
+1110 is supporting: 1121 and 1128
+1109 is supporting: 1122
+1113 is supporting: 1124
+1124 is supporting: 1125 and 1142
+1114 is supporting: 1126 and 1129
+1112 is supporting: 1126 and 1133
+1121 is supporting: 1127
+1117 is supporting: 1130 and 1132
+1118 is supporting: 1131
+1122 is supporting: 1134
+1115 is supporting: 1135
+1128 is supporting: 1136
+1129 is supporting: 1137
+1130 is supporting: 1138
+1134 is supporting: 1139
+1136 is supporting: 1140
+1131 is supporting: 1141 and 1150 and 1152
+1125 is supporting: 1141 and 1152
+1119 is supporting: 1143
+1106 is supporting: 1144
+1133 is supporting: 1145
+1127 is supporting: 1146
+1135 is supporting: 1147
+1145 is supporting: 1148
+1132 is supporting: 1149
+1126 is supporting: 1151
+1147 is supporting: 1153 and 1166
+1142 is supporting: 1154 and 1159
+1137 is supporting: 1155 and 1161
+1146 is supporting: 1155 and 1169
+1138 is supporting: 1156
+1152 is supporting: 1157
+1140 is supporting: 1158
+1144 is supporting: 1158
+1139 is supporting: 1160
+1153 is supporting: 1162
+1158 is supporting: 1163
+1150 is supporting: 1164 and 1165
+1149 is supporting: 1167
+1160 is supporting: 1168
+1157 is supporting: 1170
+1164 is supporting: 1171
+1162 is supporting: 1172
+1161 is supporting: 1173 and 1184
+1169 is supporting: 1174
+1168 is supporting: 1175 and 1181
+1156 is supporting: 1176
+1163 is supporting: 1177
+1154 is supporting: 1178
+1167 is supporting: 1179
+1165 is supporting: 1180
+1179 is supporting: 1182 and 1185
+1170 is supporting: 1183
+1174 is supporting: 1186
+1183 is supporting: 1187
+1177 is supporting: 1188 and 1195
+1175 is supporting: 1189
+1176 is supporting: 1190
+1171 is supporting: 1191 and 1193
+1186 is supporting: 1192 and 1197 and 1199
+1182 is supporting: 1194 and 1198
+1184 is supporting: 1196
+1173 is supporting: 1196
+1181 is supporting: 1200
+1200 is supporting: 1201
+1192 is supporting: 1202 and 1204
+1189 is supporting: 1203
+1195 is supporting: 1205 and 1206
+1199 is supporting: 1207
+1197 is supporting: 1207 and 1211
+1207 is supporting: 1208
+1206 is supporting: 1208 and 1215
+1201 is supporting: 1209 and 1213
+1198 is supporting: 1210 and 1217
+1193 is supporting: 1211
+1166 is supporting: 1212
+1178 is supporting: 1212
+1212 is supporting: 1214 and 1221 and 1225
+1191 is supporting: 1216
+1208 is supporting: 1218
+1211 is supporting: 1219 and 1222 and 1228
+1215 is supporting: 1220 and 1236
+1216 is supporting: 1223 and 1254
+1217 is supporting: 1224
+1210 is supporting: 1224
+1220 is supporting: 1226
+1202 is supporting: 1227
+1219 is supporting: 1229 and 1231
+1225 is supporting: 1230 and 1235
+1228 is supporting: 1231
+1224 is supporting: 1232 and 1234
+1204 is supporting: 1233
+1221 is supporting: 1237
+1236 is supporting: 1238
+1222 is supporting: 1239 and 1241
+1235 is supporting: 1240
+1218 is supporting: 1242
+1229 is supporting: 1243
+1238 is supporting: 1244
+1233 is supporting: 1245 and 1250 and 1253
+1237 is supporting: 1246
+1240 is supporting: 1247 and 1252
+1230 is supporting: 1248
+1244 is supporting: 1249
+1243 is supporting: 1251 and 1257
+1214 is supporting: 1252
+1241 is supporting: 1254
+1226 is supporting: 1255
+1242 is supporting: 1256
+1249 is supporting: 1258 and 1266
+1253 is supporting: 1259 and 1262 and 1264
+1254 is supporting: 1260
+1259 is supporting: 1261
+1250 is supporting: 1262
+1251 is supporting: 1263 and 1265
+1255 is supporting: 1267
+1266 is supporting: 1268 and 1269 and 1272
+1264 is supporting: 1270
+1263 is supporting: 1271
+1256 is supporting: 1273
+1270 is supporting: 1274
+1274 is supporting: 1275 and 1277 and 1279
+1271 is supporting: 1276
+1269 is supporting: 1278
+1272 is supporting: 1280
+1276 is supporting: 1281
+1279 is supporting: 1282 and 1283
+1277 is supporting: 1283
+1281 is supporting: 1284 and 1287
+1284 is supporting: 1285 and 1289
+1282 is supporting: 1286 and 1288 and 1290
+1287 is supporting: 1291 and 1293 and 1295
+1285 is supporting: 1292 and 1294
+1293 is supporting: 1296
+1291 is supporting: 1297
+1295 is supporting: 1298 and 1300
+1298 is supporting: 1299
+1297 is supporting: 1301 and 1302
+1292 is supporting: 1302
+1299 is supporting: 1303
+1289 is supporting: 1304
+1296 is supporting: 1305
+1303 is supporting: 1306 and 1310
+1300 is supporting: 1307
+1302 is supporting: 1308
+1307 is supporting: 1309
+1301 is supporting: 1311
+1304 is supporting: 1312
+1311 is supporting: 1313 and 1314
+1310 is supporting: 1315
+1315 is supporting: 1316 and 1317
+1317 is supporting: 1318
+1313 is supporting: 1319
+1316 is supporting: 1320
+1319 is supporting: 1321
+1321 is supporting: 1322
+cannotBeDestroyed: 875
+There are 352 bricks on top
+We can destroy 448 bricks
+File processing completed.
