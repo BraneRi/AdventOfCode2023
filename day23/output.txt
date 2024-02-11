@@ -1,0 +1,24 @@
+Longest walk: 91
+#O#####################
+#OOOOOOO#########OOO###
+#######O#########O#O###
+###OOOOO#OOOOO###O#O###
+###O#####O#O#O###O#O###
+###OOOOO#O#O#OOOOO#OOO#
+###O###O#O#O#########O#
+###OOO#O#O#OOOOOOO#OOO#
+#####O#O#O#######O#O###
+#OOOOO#O#O#OOOOOOO#OOO#
+#O#####O#O#O#########O#
+#O#OOO#OOO#OOO###OOOOO#
+#O#O#O#######O###O###O#
+#OOO#OOO#OOOOOOO#O###O#
+#####O#O#O###O#O#O###O#
+#OOOOO#OOO#OOO#O#O#OOO#
+#O#########O###O#O#O###
+#OOO###OOO#OOO#OOO#O###
+###O###O#O###O#####O###
+#OOO#OOO#O#OOOOO#OOO###
+#O###O###O#O###O#O#O###
+#OOOOO###OOO###OOO#OOO#
+File processing completed.
