@@ -45,16 +45,16 @@ async function processFile(filePath: string): Promise<void> {
   freeFall(bricks, bricksOnTop);
 
   // switch to letters for easy comparing
-  const debugResult = Array.from(bricksOnTop.entries()).map((entry) => {
-    return (
-      // String.fromCharCode(entry[0] + 64) +
-      entry[0] +
-      " is supporting: " +
-      entry[1].reduce((str, num) => str + num + " and ", "").slice(0, -5)
-    );
-  });
-  process.stdout.write(debugResult.join("\n"));
-  console.log();
+  // const debugResult = Array.from(bricksOnTop.entries()).map((entry) => {
+  //   return (
+  //     // String.fromCharCode(entry[0] + 64) +
+  //     entry[0] +
+  //     " is supporting: " +
+  //     entry[1].reduce((str, num) => str + num + " and ", "").slice(0, -5)
+  //   );
+  // });
+  // process.stdout.write(debugResult.join("\n"));
+  // console.log();
 
   const supportedBricks: Map<number, number> = new Map();
   const keys = Array.from(bricksOnTop.keys());
@@ -72,7 +72,7 @@ async function processFile(filePath: string): Promise<void> {
     }
   }
 
-  var cannotBeDestroyed = 0;
+  var cannotBeDestroyedKeys: Set<number> = new Set();
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
     const valuesForKey = bricksOnTop.get(key)!;
@@ -80,20 +80,68 @@ async function processFile(filePath: string): Promise<void> {
     for (let value of valuesForKey) {
       const numberOfValue = supportedBricks.get(value)!;
       if (numberOfValue == 1) {
-        cannotBeDestroyed += 1;
+        cannotBeDestroyedKeys.add(key);
         break;
       }
     }
   }
 
-  console.log("cannotBeDestroyed: " + cannotBeDestroyed);
+  var sum = 0;
+  console.log(supportedBricks);
+  cannotBeDestroyedKeys.forEach((key) => {
+    alreadyDestroyed.clear();
+    // -1 because we count only bricks that are effect of destroying botto one
+    let currentChain =
+      countChainBricks(key, bricksOnTop, new Map(supportedBricks)) - 1;
+    // console.log(currentChain);
+    sum += currentChain;
+    console.log("---------------------");
+  });
+
+  console.log("Part two: " + sum);
+
+  console.log("cannotBeDestroyed: " + cannotBeDestroyedKeys.size);
   const topOnes = bricks.filter((_, index) => !bricksOnTop.has(index)).length;
 
   // not even using top ones if we count cannot's
   console.log("There are " + topOnes + " bricks on top");
   console.log(
-    "We can destroy " + (bricks.length - cannotBeDestroyed) + " bricks"
+    "We can destroy " + (bricks.length - cannotBeDestroyedKeys.size) + " bricks"
   );
+}
+
+const alreadyDestroyed: Set<number> = new Set();
+
+function countChainBricks(
+  currentKey: number,
+  bricksOnTop: Map<number, number[]>,
+  supportedBricks: Map<number, number>
+): number {
+  console.log("key: " + currentKey);
+  const supportedKeys = bricksOnTop.get(currentKey);
+  console.log("supportedKeys: " + supportedKeys);
+  if (!supportedKeys) {
+    console.log("Adding one for top key: " + currentKey);
+    return 1;
+  }
+
+  console.log("Adding 1 for: " + currentKey);
+  var sum = 1;
+  for (let key of supportedKeys) {
+    const bricksSupporting = supportedBricks.get(key)! - 1;
+    supportedBricks.set(key, bricksSupporting);
+
+    if (!alreadyDestroyed.has(key)) {
+      if (bricksSupporting == 0) {
+        alreadyDestroyed.add(key);
+        console.log("Entering new chain for: " + key);
+        sum += countChainBricks(key, bricksOnTop, supportedBricks);
+      } else {
+        console.log("Other brick is holding this one: " + key);
+      }
+    }
+  }
+  return sum;
 }
 
 type Coordinate2D = { x: number; y: number };
@@ -191,7 +239,6 @@ function resolveVerticalBricks(
   bricksOnTop: Map<number, number[]>,
   index: number
 ) {
-  console.log("vertical brick index: " + (index + 1));
   var lowestSection: Coordinate;
   var highestSection: Coordinate;
   if (brick.start.z < brick.end.z) {

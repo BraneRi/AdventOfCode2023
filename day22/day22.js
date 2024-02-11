@@ -57,7 +57,7 @@ var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1, bricksOnTop, debugResult, supportedBricks, keys, i, key, valuesForKey, _i, valuesForKey_1, value, numberOfValue, cannotBeDestroyed, i, key, valuesForKey, _g, valuesForKey_2, value, numberOfValue, topOnes;
+        var fileStream, rl, bricks, _d, rl_1, rl_1_1, line, startEnd, _e, startX, startY, startZ, _f, endX, endY, endZ, e_1_1, bricksOnTop, supportedBricks, keys, i, key, valuesForKey, _i, valuesForKey_1, value, numberOfValue, cannotBeDestroyedKeys, i, key, valuesForKey, _g, valuesForKey_2, value, numberOfValue, sum, topOnes;
         return __generator(this, function (_h) {
             switch (_h.label) {
                 case 0:
@@ -109,18 +109,8 @@ function processFile(filePath) {
                 case 12:
                     // sort them from lowest to highest
                     bricks = bricks.sort(function (a, b) { return Math.min(a.start.z, a.end.z) - Math.min(b.start.z, b.end.z); });
-                    console.log(bricks);
                     bricksOnTop = new Map();
                     freeFall(bricks, bricksOnTop);
-                    debugResult = Array.from(bricksOnTop.entries()).map(function (entry) {
-                        return (
-                        // String.fromCharCode(entry[0] + 64) +
-                        entry[0] +
-                            " is supporting: " +
-                            entry[1].reduce(function (str, num) { return str + num + " and "; }, "").slice(0, -5));
-                    });
-                    process.stdout.write(debugResult.join("\n"));
-                    console.log();
                     supportedBricks = new Map();
                     keys = Array.from(bricksOnTop.keys());
                     for (i = 0; i < keys.length; i++) {
@@ -137,7 +127,7 @@ function processFile(filePath) {
                             }
                         }
                     }
-                    cannotBeDestroyed = 0;
+                    cannotBeDestroyedKeys = new Set();
                     for (i = 0; i < keys.length; i++) {
                         key = keys[i];
                         valuesForKey = bricksOnTop.get(key);
@@ -145,20 +135,63 @@ function processFile(filePath) {
                             value = valuesForKey_2[_g];
                             numberOfValue = supportedBricks.get(value);
                             if (numberOfValue == 1) {
-                                cannotBeDestroyed += 1;
+                                cannotBeDestroyedKeys.add(key);
                                 break;
                             }
                         }
                     }
-                    console.log("cannotBeDestroyed: " + cannotBeDestroyed);
+                    sum = 0;
+                    console.log(supportedBricks);
+                    cannotBeDestroyedKeys.forEach(function (key) {
+                        alreadyDestroyed.clear();
+                        var currentChain = countChainBricks(key, bricksOnTop, new Map(supportedBricks)) - 1;
+                        // console.log(currentChain);
+                        sum += currentChain;
+                        console.log("---------------------");
+                    });
+                    // 16269
+                    // 27454 - too low
+                    // 43246 - not correct
+                    // 102227 - too high
+                    // 103102 - too hgh
+                    console.log("Part two: " + sum);
+                    console.log("cannotBeDestroyed: " + cannotBeDestroyedKeys.size);
                     topOnes = bricks.filter(function (_, index) { return !bricksOnTop.has(index); }).length;
                     // not even using top ones if we count cannot's
                     console.log("There are " + topOnes + " bricks on top");
-                    console.log("We can destroy " + (bricks.length - cannotBeDestroyed) + " bricks");
+                    console.log("We can destroy " + (bricks.length - cannotBeDestroyedKeys.size) + " bricks");
                     return [2 /*return*/];
             }
         });
     });
+}
+var alreadyDestroyed = new Set();
+function countChainBricks(currentKey, bricksOnTop, supportedBricks) {
+    console.log("key: " + currentKey);
+    var supportedKeys = bricksOnTop.get(currentKey);
+    console.log("supportedKeys: " + supportedKeys);
+    if (!supportedKeys) {
+        console.log("dodajem 1 za top key: " + currentKey);
+        return 1;
+    }
+    console.log("dodajem 1 za: " + currentKey);
+    var sum = 1;
+    for (var _i = 0, supportedKeys_1 = supportedKeys; _i < supportedKeys_1.length; _i++) {
+        var key = supportedKeys_1[_i];
+        var bricksSupporting = supportedBricks.get(key) - 1;
+        supportedBricks.set(key, bricksSupporting);
+        if (!alreadyDestroyed.has(key)) {
+            if (bricksSupporting == 0) {
+                alreadyDestroyed.add(key);
+                console.log("Ulazim u novi chain za: " + key);
+                sum += countChainBricks(key, bricksOnTop, supportedBricks);
+            }
+            else {
+                console.log("Netko drugi drzi za ovog: " + key);
+            }
+        }
+    }
+    return sum;
 }
 function freeFall(bricks, bricksOnTop) {
     var index = 0;
@@ -233,7 +266,6 @@ function updateBricksOnTop(bricksOnTop, tallestBelow, index) {
     }
 }
 function resolveVerticalBricks(brick, tallestCoordinates, bricksOnTop, index) {
-    console.log("vertical brick index: " + (index + 1));
     var lowestSection;
     var highestSection;
     if (brick.start.z < brick.end.z) {
