@@ -136,9 +136,12 @@ function processFile(filePath) {
 function longestWalk(row, column, island, finishRow) {
     var key = pathToKey({ row: row, column: column });
     var value = island.get(pathToKey({ row: row, column: column }));
+    if (value.walked)
+        return Number.NEGATIVE_INFINITY;
     island.set(key, { pathType: value.pathType, walked: true });
-    if (row == finishRow)
-        return 1;
+    if (row == finishRow) {
+        return 0;
+    }
     switch (value.pathType) {
         case UP:
             return longestWalk(row - 1, column, island, finishRow) + 1;
@@ -167,8 +170,8 @@ function longestWalk(row, column, island, finishRow) {
             }
             return (1 +
                 options.reduce(function (max, option) {
-                    return Math.max(max, longestWalk(option.row, option.column, island, finishRow));
-                }, 0));
+                    return Math.max(max, longestWalk(option.row, option.column, new Map(island), finishRow));
+                }, Number.NEGATIVE_INFINITY));
         }
     }
 }

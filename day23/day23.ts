@@ -71,8 +71,12 @@ function longestWalk(
 ): number {
   const key = pathToKey({ row, column });
   const value = island.get(pathToKey({ row, column }))!;
+  if (value.walked) return Number.NEGATIVE_INFINITY;
+
   island.set(key, { pathType: value.pathType, walked: true });
-  if (row == finishRow) return 1;
+  if (row == finishRow) {
+    return 0;
+  }
 
   switch (value.pathType) {
     case UP:
@@ -106,9 +110,9 @@ function longestWalk(
           (max, option) =>
             Math.max(
               max,
-              longestWalk(option.row, option.column, island, finishRow)
+              longestWalk(option.row, option.column, new Map(island), finishRow)
             ),
-          0
+          Number.NEGATIVE_INFINITY
         )
       );
     }
