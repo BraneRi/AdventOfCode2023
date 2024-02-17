@@ -57,7 +57,7 @@ function pathToKey(p) {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1, result;
+        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -112,13 +112,45 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    result = longestWalk(0, startingColumn, island, row - 1);
-                    console.log("Longest walk: " + result);
+                    removeDeadEnds(row, numberOfColumns, island);
                     printIsland(row, numberOfColumns, island);
                     return [2 /*return*/];
             }
         });
     });
+}
+function removeDeadEnds(row, numberOfColumns, island) {
+    var hasDeadEnds = true;
+    while (hasDeadEnds) {
+        hasDeadEnds = false;
+        for (var r = 1; r < row - 1; r++) {
+            for (var c = 0; c < numberOfColumns; c++) {
+                var value = island.get(pathToKey({ row: r, column: c }));
+                if (value.pathType != FOREST) {
+                    var availableOptions = 0;
+                    for (var _i = 0, _a = [
+                        { rowStep: 1, columnStep: 0 },
+                        { rowStep: 0, columnStep: 1 },
+                        { rowStep: -1, columnStep: 0 },
+                        { rowStep: 0, columnStep: -1 },
+                    ]; _i < _a.length; _i++) {
+                        var steps = _a[_i];
+                        var optionPath = {
+                            row: r + steps.rowStep,
+                            column: c + steps.columnStep,
+                        };
+                        var option = island.get(pathToKey(optionPath));
+                        if (option && option.pathType != FOREST)
+                            availableOptions++;
+                    }
+                    if (availableOptions <= 1) {
+                        value.pathType = FOREST;
+                        hasDeadEnds = true;
+                    }
+                }
+            }
+        }
+    }
 }
 function printIsland(row, numberOfColumns, island) {
     for (var r = 0; r < row; r++) {

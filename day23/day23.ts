@@ -45,9 +45,48 @@ async function processFile(filePath: string): Promise<void> {
     row++;
   }
 
-  const result = longestWalk(0, startingColumn!, island, row - 1);
-  console.log("Longest walk: " + result);
+  removeDeadEnds(row, numberOfColumns!, island);
   printIsland(row, numberOfColumns!, island);
+
+  // const result = longestWalk(0, startingColumn!, island, row - 1);
+  // console.log("Longest walk: " + result);
+  // printIsland(row, numberOfColumns!, island);
+}
+
+function removeDeadEnds(
+  row: number,
+  numberOfColumns: number,
+  island: Map<string, { pathType: string; walked: boolean }>
+) {
+  var hasDeadEnds = true;
+  while (hasDeadEnds) {
+    hasDeadEnds = false;
+    for (let r = 1; r < row - 1; r++) {
+      for (let c = 0; c < numberOfColumns; c++) {
+        let value = island.get(pathToKey({ row: r, column: c }))!;
+        if (value.pathType != FOREST) {
+          var availableOptions = 0;
+          for (let steps of [
+            { rowStep: 1, columnStep: 0 },
+            { rowStep: 0, columnStep: 1 },
+            { rowStep: -1, columnStep: 0 },
+            { rowStep: 0, columnStep: -1 },
+          ]) {
+            let optionPath = {
+              row: r + steps.rowStep,
+              column: c + steps.columnStep,
+            };
+            let option = island.get(pathToKey(optionPath));
+            if (option && option.pathType != FOREST) availableOptions++;
+          }
+          if (availableOptions <= 1) {
+            value.pathType = FOREST;
+            hasDeadEnds = true;
+          }
+        }
+      }
+    }
+  }
 }
 
 function printIsland(
@@ -56,7 +95,7 @@ function printIsland(
   island: Map<string, { pathType: string; walked: boolean }>
 ) {
   for (let r = 0; r < row; r++) {
-    for (let c = 0; c < numberOfColumns!; c++) {
+    for (let c = 0; c < numberOfColumns; c++) {
       let value = island.get(pathToKey({ row: r, column: c }))!;
       let valuePrint: string;
       if (value.walked) {
