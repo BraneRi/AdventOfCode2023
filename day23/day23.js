@@ -57,7 +57,7 @@ function pathToKey(p) {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1, result, r, c, value, valuePrint;
+        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1, result;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -114,24 +114,27 @@ function processFile(filePath) {
                 case 12:
                     result = longestWalk(0, startingColumn, island, row - 1);
                     console.log("Longest walk: " + result);
-                    for (r = 0; r < row - 1; r++) {
-                        for (c = 0; c < numberOfColumns; c++) {
-                            value = island.get(pathToKey({ row: r, column: c }));
-                            valuePrint = void 0;
-                            if (value.walked) {
-                                valuePrint = "O";
-                            }
-                            else {
-                                valuePrint = value.pathType;
-                            }
-                            process.stdout.write(valuePrint);
-                        }
-                        console.log();
-                    }
+                    printIsland(row, numberOfColumns, island);
                     return [2 /*return*/];
             }
         });
     });
+}
+function printIsland(row, numberOfColumns, island) {
+    for (var r = 0; r < row; r++) {
+        for (var c = 0; c < numberOfColumns; c++) {
+            var value = island.get(pathToKey({ row: r, column: c }));
+            var valuePrint = void 0;
+            if (value.walked) {
+                valuePrint = "O";
+            }
+            else {
+                valuePrint = value.pathType;
+            }
+            process.stdout.write(valuePrint);
+        }
+        console.log();
+    }
 }
 function longestWalk(row, column, island, finishRow) {
     var key = pathToKey({ row: row, column: column });

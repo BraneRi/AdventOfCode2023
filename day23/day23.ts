@@ -47,8 +47,15 @@ async function processFile(filePath: string): Promise<void> {
 
   const result = longestWalk(0, startingColumn!, island, row - 1);
   console.log("Longest walk: " + result);
+  printIsland(row, numberOfColumns!, island);
+}
 
-  for (let r = 0; r < row - 1; r++) {
+function printIsland(
+  row: number,
+  numberOfColumns: number,
+  island: Map<string, { pathType: string; walked: boolean }>
+) {
+  for (let r = 0; r < row; r++) {
     for (let c = 0; c < numberOfColumns!; c++) {
       let value = island.get(pathToKey({ row: r, column: c }))!;
       let valuePrint: string;
