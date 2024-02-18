@@ -1,2 +1,14 @@
-Longest walk: 2414
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Reached
+Longest walk: 154
 File processing completed.

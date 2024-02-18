@@ -3,10 +3,12 @@ import * as fs from "fs";
 
 const FOREST = "#";
 const WALK = ".";
-const DOWN = "v";
-const UP = "^";
-const LEFT = "<";
-const RIGHT = ">";
+
+// PART 1
+// const DOWN = "v";
+// const UP = "^";
+// const LEFT = "<";
+// const RIGHT = ">";
 
 type Path = {
   row: number;
@@ -70,6 +72,8 @@ function longestWalk(
   branchIds: number[] = [1]
 ): number {
   if (path.row == finishRow) {
+    // console.log(walkedByBranch);
+    console.log("Reached");
     return 0;
   }
 
@@ -79,8 +83,9 @@ function longestWalk(
   const branchesThatWalkedHere = walkedByBranch.get(key);
   if (
     branchesThatWalkedHere &&
-    branchesThatWalkedHere.every((id) => branchIds.includes(id))
+    branchesThatWalkedHere.find((id) => branchIds.includes(id))
   ) {
+    walkedByBranch.set(key, []);
     return Number.NEGATIVE_INFINITY;
   } else if (branchesThatWalkedHere) {
     walkedByBranch.set(key, uniqueUnion(branchesThatWalkedHere, branchIds));
@@ -88,21 +93,21 @@ function longestWalk(
     walkedByBranch.set(key, branchIds);
   }
 
-  // forced paths
-  var newPath: Path;
+  // forced paths - only part 1
+  // var newPath: Path;
   switch (pathType) {
-    case UP:
-      newPath = { row: path.row - 1, column: path.column };
-      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-    case DOWN:
-      newPath = { row: path.row + 1, column: path.column };
-      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-    case LEFT:
-      newPath = { row: path.row, column: path.column - 1 };
-      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-    case RIGHT:
-      newPath = { row: path.row, column: path.column + 1 };
-      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
+    // case UP:
+    //   newPath = { row: path.row - 1, column: path.column };
+    //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
+    // case DOWN:
+    //   newPath = { row: path.row + 1, column: path.column };
+    //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
+    // case LEFT:
+    //   newPath = { row: path.row, column: path.column - 1 };
+    //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
+    // case RIGHT:
+    //   newPath = { row: path.row, column: path.column + 1 };
+    //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
     default: {
       let options: Path[] = [];
       for (let steps of [
@@ -122,13 +127,14 @@ function longestWalk(
         );
         if (
           pathType &&
-          pathType != FOREST &&
-          isAllowed(path, optionPath, pathType)
+          pathType != FOREST
+          // PART 1
+          // isAllowed(path, optionPath, pathType)
         ) {
           if (
             (!previousStep ||
               (previousStep && !samePath(optionPath, previousStep))) &&
-            (branchesThatWalkedHere?.find((id) => !branchIds.includes(id)) ??
+            (branchesThatWalkedHere?.every((id) => !branchIds.includes(id)) ??
               true)
           )
             options.push(optionPath);
@@ -136,14 +142,18 @@ function longestWalk(
       }
 
       if (options.length == 0) {
+        walkedByBranch.set(key, []);
         return Number.NEGATIVE_INFINITY;
       }
 
       if (options.length == 1) {
-        return longestWalk(options[0], island, finishRow, path, branchIds) + 1;
+        const sum =
+          longestWalk(options[0], island, finishRow, path, branchIds) + 1;
+        walkedByBranch.set(key, []);
+        return sum;
       }
 
-      return (
+      const sum =
         1 +
         options.reduce((max, option) => {
           branchCounter++;
@@ -154,26 +164,29 @@ function longestWalk(
               branchCounter,
             ])
           );
-        }, Number.NEGATIVE_INFINITY)
-      );
+        }, Number.NEGATIVE_INFINITY);
+
+      walkedByBranch.set(key, []);
+      return sum;
     }
   }
 }
 
-function isAllowed(path: Path, nextPath: Path, nextPathValue: string): boolean {
-  switch (nextPathValue) {
-    case UP:
-      return nextPath.row != path.row + 1;
-    case DOWN:
-      return nextPath.row != path.row - 1;
-    case LEFT:
-      return nextPath.column != path.column + 1;
-    case RIGHT:
-      return nextPath.column != path.column - 1;
-    default:
-      return true;
-  }
-}
+// PART 1
+// function isAllowed(path: Path, nextPath: Path, nextPathValue: string): boolean {
+//   switch (nextPathValue) {
+//     case UP:
+//       return nextPath.row != path.row + 1;
+//     case DOWN:
+//       return nextPath.row != path.row - 1;
+//     case LEFT:
+//       return nextPath.column != path.column + 1;
+//     case RIGHT:
+//       return nextPath.column != path.column - 1;
+//     default:
+//       return true;
+//   }
+// }
 
 // Usage: node build/your-script.js your-text-file.txt
 const args = process.argv.slice(2);
