@@ -27,115 +27,82 @@ async function processFile(filePath: string): Promise<void> {
     crlfDelay: Infinity, // Treats each line as a separate data event
   });
 
-  const island: Map<string, { pathType: string; walked: boolean }> = new Map();
+  const island: Map<string, string> = new Map();
 
   var row = 0;
   var startingColumn: number;
-  var numberOfColumns: number;
   for await (const line of rl) {
     let lineElements = line.split("");
-    numberOfColumns = lineElements.length;
-    lineElements.forEach((c, index) => {
-      if (row == 0 && c == WALK) startingColumn = index;
-      island.set(pathToKey({ row: row, column: index }), {
-        pathType: c,
-        walked: false,
-      });
+    lineElements.forEach((pathType, index) => {
+      if (row == 0 && pathType == WALK) startingColumn = index;
+      island.set(pathToKey({ row: row, column: index }), pathType);
     });
     row++;
   }
 
-  // probably not needed
-  // removeDeadEnds(row, numberOfColumns!, island);
-  // printIsland(row, numberOfColumns!, island);
-
-  const result = longestWalk(0, startingColumn!, island, row - 1);
+  const result = longestWalk(
+    { row: 0, column: startingColumn! },
+    island,
+    row - 1
+  );
   console.log("Longest walk: " + result);
-  printIsland(row, numberOfColumns!, island);
 }
 
-function removeDeadEnds(
-  row: number,
-  numberOfColumns: number,
-  island: Map<string, { pathType: string; walked: boolean }>
-) {
-  var hasDeadEnds = true;
-  while (hasDeadEnds) {
-    hasDeadEnds = false;
-    for (let r = 1; r < row - 1; r++) {
-      for (let c = 0; c < numberOfColumns; c++) {
-        let value = island.get(pathToKey({ row: r, column: c }))!;
-        if (value.pathType != FOREST) {
-          var availableOptions = 0;
-          for (let steps of [
-            { rowStep: 1, columnStep: 0 },
-            { rowStep: 0, columnStep: 1 },
-            { rowStep: -1, columnStep: 0 },
-            { rowStep: 0, columnStep: -1 },
-          ]) {
-            let optionPath = {
-              row: r + steps.rowStep,
-              column: c + steps.columnStep,
-            };
-            let option = island.get(pathToKey(optionPath));
-            if (option && option.pathType != FOREST) availableOptions++;
-          }
-          if (availableOptions <= 1) {
-            value.pathType = FOREST;
-            hasDeadEnds = true;
-          }
-        }
-      }
-    }
-  }
+const walkedByBranch: Map<string, number[]> = new Map();
+var branchCounter = 1;
+
+function uniqueUnion(arr1: number[], arr2: number[]): number[] {
+  const resultSet = new Set<number>();
+  arr1.forEach((num) => resultSet.add(num));
+  arr2.forEach((num) => resultSet.add(num));
+  return Array.from(resultSet.values());
 }
 
-function printIsland(
-  row: number,
-  numberOfColumns: number,
-  island: Map<string, { pathType: string; walked: boolean }>
-) {
-  for (let r = 0; r < row; r++) {
-    for (let c = 0; c < numberOfColumns; c++) {
-      let value = island.get(pathToKey({ row: r, column: c }))!;
-      let valuePrint: string;
-      if (value.walked) {
-        valuePrint = "O";
-      } else {
-        valuePrint = value.pathType;
-      }
-      process.stdout.write(valuePrint);
-    }
-    console.log();
-  }
+function samePath(path1: Path, path2: Path): boolean {
+  return path1.row == path2.row && path1.column == path2.column;
 }
 
 function longestWalk(
-  row: number,
-  column: number,
-  island: Map<string, { pathType: string; walked: boolean }>,
+  path: Path,
+  island: Map<string, string>,
   finishRow: number,
-  previousStep: Path | null = null
+  previousStep: Path | undefined = undefined,
+  branchIds: number[] = [1]
 ): number {
-  const key = pathToKey({ row, column });
-  const value = island.get(pathToKey({ row, column }))!;
-  previousStep = { row: row, column: column };
-  if (value.walked) return Number.NEGATIVE_INFINITY;
-
-  island.set(key, { pathType: value.pathType, walked: true });
-  if (row == finishRow) {
+  if (path.row == finishRow) {
     return 0;
   }
 
-  switch (value.pathType) {
+  const key = pathToKey(path);
+  const pathType = island.get(key)!;
+
+  const branchesThatWalkedHere = walkedByBranch.get(key);
+  if (
+    branchesThatWalkedHere &&
+    branchesThatWalkedHere.every((id) => branchIds.includes(id))
+  ) {
+    return Number.NEGATIVE_INFINITY;
+  } else if (branchesThatWalkedHere) {
+    walkedByBranch.set(key, uniqueUnion(branchesThatWalkedHere, branchIds));
+  } else {
+    walkedByBranch.set(key, branchIds);
+  }
+
+  // forced paths
+  var newPath: Path;
+  switch (pathType) {
     case UP:
-      return longestWalk(row - 1, column, island, finishRow, previousStep) + 1;
+      newPath = { row: path.row - 1, column: path.column };
+      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
     case DOWN:
-      return longestWalk(row + 1, column, island, finishRow, previousStep) + 1;
+      newPath = { row: path.row + 1, column: path.column };
+      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
     case LEFT:
-      return longestWalk(row, column - 1, island, finishRow, previousStep) + 1;
+      newPath = { row: path.row, column: path.column - 1 };
+      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
     case RIGHT:
-      return longestWalk(row, column + 1, island, finishRow, previousStep) + 1;
+      newPath = { row: path.row, column: path.column + 1 };
+      return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
     default: {
       let options: Path[] = [];
       for (let steps of [
@@ -145,34 +112,66 @@ function longestWalk(
         { rowStep: 0, columnStep: -1 },
       ]) {
         let optionPath = {
-          row: row + steps.rowStep,
-          column: column + steps.columnStep,
+          row: path.row + steps.rowStep,
+          column: path.column + steps.columnStep,
         };
-        let option = island.get(pathToKey(optionPath));
-        if (option && !option.walked && option.pathType != FOREST) {
-          if (!previousStep || (previousStep && optionPath != previousStep))
+        let pathType = island.get(pathToKey(optionPath));
+
+        const branchesThatWalkedHere = walkedByBranch.get(
+          pathToKey(optionPath)
+        );
+        if (
+          pathType &&
+          pathType != FOREST &&
+          isAllowed(path, optionPath, pathType)
+        ) {
+          if (
+            (!previousStep ||
+              (previousStep && !samePath(optionPath, previousStep))) &&
+            (branchesThatWalkedHere?.find((id) => !branchIds.includes(id)) ??
+              true)
+          )
             options.push(optionPath);
         }
       }
 
+      if (options.length == 0) {
+        return Number.NEGATIVE_INFINITY;
+      }
+
+      if (options.length == 1) {
+        return longestWalk(options[0], island, finishRow, path, branchIds) + 1;
+      }
+
       return (
         1 +
-        options.reduce(
-          (max, option) =>
-            Math.max(
-              max,
-              longestWalk(
-                option.row,
-                option.column,
-                new Map(island),
-                finishRow,
-                previousStep
-              )
-            ),
-          Number.NEGATIVE_INFINITY
-        )
+        options.reduce((max, option) => {
+          branchCounter++;
+          return Math.max(
+            max,
+            longestWalk(option, island, finishRow, path, [
+              ...branchIds,
+              branchCounter,
+            ])
+          );
+        }, Number.NEGATIVE_INFINITY)
       );
     }
+  }
+}
+
+function isAllowed(path: Path, nextPath: Path, nextPathValue: string): boolean {
+  switch (nextPathValue) {
+    case UP:
+      return nextPath.row != path.row + 1;
+    case DOWN:
+      return nextPath.row != path.row - 1;
+    case LEFT:
+      return nextPath.column != path.column + 1;
+    case RIGHT:
+      return nextPath.column != path.column - 1;
+    default:
+      return true;
   }
 }
 
