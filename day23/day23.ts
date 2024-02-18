@@ -45,12 +45,13 @@ async function processFile(filePath: string): Promise<void> {
     row++;
   }
 
-  removeDeadEnds(row, numberOfColumns!, island);
-  printIsland(row, numberOfColumns!, island);
-
-  // const result = longestWalk(0, startingColumn!, island, row - 1);
-  // console.log("Longest walk: " + result);
+  // probably not needed
+  // removeDeadEnds(row, numberOfColumns!, island);
   // printIsland(row, numberOfColumns!, island);
+
+  const result = longestWalk(0, startingColumn!, island, row - 1);
+  console.log("Longest walk: " + result);
+  printIsland(row, numberOfColumns!, island);
 }
 
 function removeDeadEnds(

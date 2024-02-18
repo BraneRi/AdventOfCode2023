@@ -57,7 +57,7 @@ function pathToKey(p) {
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1;
+        var fileStream, rl, island, row, startingColumn, numberOfColumns, _d, rl_1, rl_1_1, line, lineElements, e_1_1, result;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -112,7 +112,8 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    removeDeadEnds(row, numberOfColumns, island);
+                    result = longestWalk(0, startingColumn, island, row - 1);
+                    console.log("Longest walk: " + result);
                     printIsland(row, numberOfColumns, island);
                     return [2 /*return*/];
             }
