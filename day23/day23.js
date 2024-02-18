@@ -169,9 +169,11 @@ function printIsland(row, numberOfColumns, island) {
         console.log();
     }
 }
-function longestWalk(row, column, island, finishRow) {
+function longestWalk(row, column, island, finishRow, previousStep) {
+    if (previousStep === void 0) { previousStep = null; }
     var key = pathToKey({ row: row, column: column });
     var value = island.get(pathToKey({ row: row, column: column }));
+    previousStep = { row: row, column: column };
     if (value.walked)
         return Number.NEGATIVE_INFINITY;
     island.set(key, { pathType: value.pathType, walked: true });
@@ -180,13 +182,13 @@ function longestWalk(row, column, island, finishRow) {
     }
     switch (value.pathType) {
         case UP:
-            return longestWalk(row - 1, column, island, finishRow) + 1;
+            return longestWalk(row - 1, column, island, finishRow, previousStep) + 1;
         case DOWN:
-            return longestWalk(row + 1, column, island, finishRow) + 1;
+            return longestWalk(row + 1, column, island, finishRow, previousStep) + 1;
         case LEFT:
-            return longestWalk(row, column - 1, island, finishRow) + 1;
+            return longestWalk(row, column - 1, island, finishRow, previousStep) + 1;
         case RIGHT:
-            return longestWalk(row, column + 1, island, finishRow) + 1;
+            return longestWalk(row, column + 1, island, finishRow, previousStep) + 1;
         default: {
             var options = [];
             for (var _i = 0, _a = [
@@ -201,12 +203,14 @@ function longestWalk(row, column, island, finishRow) {
                     column: column + steps.columnStep,
                 };
                 var option = island.get(pathToKey(optionPath));
-                if (option && !option.walked && option.pathType != FOREST)
-                    options.push(optionPath);
+                if (option && !option.walked && option.pathType != FOREST) {
+                    if (!previousStep || (previousStep && optionPath != previousStep))
+                        options.push(optionPath);
+                }
             }
             return (1 +
                 options.reduce(function (max, option) {
-                    return Math.max(max, longestWalk(option.row, option.column, new Map(island), finishRow));
+                    return Math.max(max, longestWalk(option.row, option.column, new Map(island), finishRow, previousStep));
                 }, Number.NEGATIVE_INFINITY));
         }
     }

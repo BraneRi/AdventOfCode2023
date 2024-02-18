@@ -114,10 +114,12 @@ function longestWalk(
   row: number,
   column: number,
   island: Map<string, { pathType: string; walked: boolean }>,
-  finishRow: number
+  finishRow: number,
+  previousStep: Path | null = null
 ): number {
   const key = pathToKey({ row, column });
   const value = island.get(pathToKey({ row, column }))!;
+  previousStep = { row: row, column: column };
   if (value.walked) return Number.NEGATIVE_INFINITY;
 
   island.set(key, { pathType: value.pathType, walked: true });
@@ -127,13 +129,13 @@ function longestWalk(
 
   switch (value.pathType) {
     case UP:
-      return longestWalk(row - 1, column, island, finishRow) + 1;
+      return longestWalk(row - 1, column, island, finishRow, previousStep) + 1;
     case DOWN:
-      return longestWalk(row + 1, column, island, finishRow) + 1;
+      return longestWalk(row + 1, column, island, finishRow, previousStep) + 1;
     case LEFT:
-      return longestWalk(row, column - 1, island, finishRow) + 1;
+      return longestWalk(row, column - 1, island, finishRow, previousStep) + 1;
     case RIGHT:
-      return longestWalk(row, column + 1, island, finishRow) + 1;
+      return longestWalk(row, column + 1, island, finishRow, previousStep) + 1;
     default: {
       let options: Path[] = [];
       for (let steps of [
@@ -147,8 +149,10 @@ function longestWalk(
           column: column + steps.columnStep,
         };
         let option = island.get(pathToKey(optionPath));
-        if (option && !option.walked && option.pathType != FOREST)
-          options.push(optionPath);
+        if (option && !option.walked && option.pathType != FOREST) {
+          if (!previousStep || (previousStep && optionPath != previousStep))
+            options.push(optionPath);
+        }
       }
 
       return (
@@ -157,7 +161,13 @@ function longestWalk(
           (max, option) =>
             Math.max(
               max,
-              longestWalk(option.row, option.column, new Map(island), finishRow)
+              longestWalk(
+                option.row,
+                option.column,
+                new Map(island),
+                finishRow,
+                previousStep
+              )
             ),
           Number.NEGATIVE_INFINITY
         )
