@@ -50,6 +50,7 @@ var WALK = ".";
 function pathToKey(p) {
     return p.row + "," + p.column;
 }
+var numberOfColumns;
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
@@ -76,6 +77,7 @@ function processFile(filePath) {
                     _d = false;
                     line = _c;
                     lineElements = line.split("");
+                    numberOfColumns = lineElements.length;
                     lineElements.forEach(function (pathType, index) {
                         if (row == 0 && pathType == WALK)
                             startingColumn = index;
@@ -114,12 +116,31 @@ function processFile(filePath) {
 function samePath(path1, path2) {
     return path1.row == path2.row && path1.column == path2.column;
 }
-function longestWalk(path, island, finishRow, previousStep, visitedPaths) {
+function printIsland(row, island, visitedPaths) {
+    for (var r = 0; r < row; r++) {
+        for (var c = 0; c < numberOfColumns; c++) {
+            var key = pathToKey({ row: r, column: c });
+            var value = island.get(key);
+            var valuePrint = void 0;
+            if (visitedPaths.has(key)) {
+                valuePrint = "O";
+            }
+            else {
+                valuePrint = value;
+            }
+            process.stdout.write(valuePrint);
+        }
+        console.log();
+    }
+}
+function longestWalk(path, island, finishRow, previousStep, visitedPaths, steps) {
     if (previousStep === void 0) { previousStep = undefined; }
     if (visitedPaths === void 0) { visitedPaths = new Map(); }
+    if (steps === void 0) { steps = 0; }
     if (path.row == finishRow) {
-        // console.log(walkedByBranch);
-        // console.log("Reached");
+        console.log("End: " + steps);
+        printIsland(finishRow, island, visitedPaths);
+        console.log();
         return 0;
     }
     var key = pathToKey(path);
@@ -152,10 +173,10 @@ function longestWalk(path, island, finishRow, previousStep, visitedPaths) {
                 { rowStep: -1, columnStep: 0 },
                 { rowStep: 0, columnStep: -1 },
             ]; _i < _a.length; _i++) {
-                var steps = _a[_i];
+                var steps_1 = _a[_i];
                 var optionPath = {
-                    row: path.row + steps.rowStep,
-                    column: path.column + steps.columnStep,
+                    row: path.row + steps_1.rowStep,
+                    column: path.column + steps_1.columnStep,
                 };
                 var pathType_1 = island.get(pathToKey(optionPath));
                 if (pathType_1 &&
@@ -172,12 +193,12 @@ function longestWalk(path, island, finishRow, previousStep, visitedPaths) {
                 return Number.NEGATIVE_INFINITY;
             }
             if (options.length == 1) {
-                var sum_1 = longestWalk(options[0], island, finishRow, path, new Map(visitedPaths)) + 1;
+                var sum_1 = longestWalk(options[0], island, finishRow, path, visitedPaths, steps + 1) + 1;
                 return sum_1;
             }
             var sum = 1 +
                 options.reduce(function (max, option) {
-                    return Math.max(max, longestWalk(option, island, finishRow, path, new Map(visitedPaths)));
+                    return Math.max(max, longestWalk(option, island, finishRow, path, new Map(visitedPaths), steps + 1));
                 }, Number.NEGATIVE_INFINITY);
             return sum;
         }

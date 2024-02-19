@@ -19,6 +19,8 @@ function pathToKey(p: Path): string {
   return p.row + "," + p.column;
 }
 
+var numberOfColumns: number;
+
 async function processFile(filePath: string): Promise<void> {
   // Create a readable stream from the file
   const fileStream = fs.createReadStream(filePath);
@@ -35,6 +37,7 @@ async function processFile(filePath: string): Promise<void> {
   var startingColumn: number;
   for await (const line of rl) {
     let lineElements = line.split("");
+    numberOfColumns = lineElements.length;
     lineElements.forEach((pathType, index) => {
       if (row == 0 && pathType == WALK) startingColumn = index;
       island.set(pathToKey({ row: row, column: index }), pathType);
@@ -54,16 +57,39 @@ function samePath(path1: Path, path2: Path): boolean {
   return path1.row == path2.row && path1.column == path2.column;
 }
 
+function printIsland(
+  row: number,
+  island: Map<string, string>,
+  visitedPaths: Map<string, boolean>
+) {
+  for (let r = 0; r < row; r++) {
+    for (let c = 0; c < numberOfColumns; c++) {
+      const key = pathToKey({ row: r, column: c });
+      let value = island.get(key)!;
+      let valuePrint: string;
+      if (visitedPaths.has(key)) {
+        valuePrint = "O";
+      } else {
+        valuePrint = value;
+      }
+      process.stdout.write(valuePrint);
+    }
+    console.log();
+  }
+}
+
 function longestWalk(
   path: Path,
   island: Map<string, string>,
   finishRow: number,
   previousStep: Path | undefined = undefined,
-  visitedPaths: Map<string, boolean> = new Map()
+  visitedPaths: Map<string, boolean> = new Map(),
+  steps: number = 0
 ): number {
   if (path.row == finishRow) {
-    // console.log(walkedByBranch);
-    // console.log("Reached");
+    console.log("End: " + steps);
+    printIsland(finishRow, island, visitedPaths);
+    console.log();
     return 0;
   }
 
@@ -129,7 +155,8 @@ function longestWalk(
             island,
             finishRow,
             path,
-            new Map(visitedPaths)
+            visitedPaths,
+            steps + 1
           ) + 1;
         return sum;
       }
@@ -139,7 +166,14 @@ function longestWalk(
         options.reduce((max, option) => {
           return Math.max(
             max,
-            longestWalk(option, island, finishRow, path, new Map(visitedPaths))
+            longestWalk(
+              option,
+              island,
+              finishRow,
+              path,
+              new Map(visitedPaths),
+              steps + 1
+            )
           );
         }, Number.NEGATIVE_INFINITY);
       return sum;
