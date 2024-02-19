@@ -42,15 +42,6 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
@@ -120,39 +111,23 @@ function processFile(filePath) {
         });
     });
 }
-var walkedByBranch = new Map();
-var branchCounter = 1;
-function uniqueUnion(arr1, arr2) {
-    var resultSet = new Set();
-    arr1.forEach(function (num) { return resultSet.add(num); });
-    arr2.forEach(function (num) { return resultSet.add(num); });
-    return Array.from(resultSet.values());
-}
 function samePath(path1, path2) {
     return path1.row == path2.row && path1.column == path2.column;
 }
-function longestWalk(path, island, finishRow, previousStep, branchIds) {
-    var _a;
+function longestWalk(path, island, finishRow, previousStep, visitedPaths) {
     if (previousStep === void 0) { previousStep = undefined; }
-    if (branchIds === void 0) { branchIds = [1]; }
+    if (visitedPaths === void 0) { visitedPaths = new Map(); }
     if (path.row == finishRow) {
         // console.log(walkedByBranch);
-        console.log("Reached");
+        // console.log("Reached");
         return 0;
     }
     var key = pathToKey(path);
     var pathType = island.get(key);
-    var branchesThatWalkedHere = walkedByBranch.get(key);
-    if (branchesThatWalkedHere &&
-        branchesThatWalkedHere.find(function (id) { return branchIds.includes(id); })) {
-        walkedByBranch.set(key, []);
+    var visited = visitedPaths.get(key);
+    visitedPaths.set(key, true);
+    if (visited) {
         return Number.NEGATIVE_INFINITY;
-    }
-    else if (branchesThatWalkedHere) {
-        walkedByBranch.set(key, uniqueUnion(branchesThatWalkedHere, branchIds));
-    }
-    else {
-        walkedByBranch.set(key, branchIds);
     }
     // forced paths - only part 1
     // var newPath: Path;
@@ -171,47 +146,39 @@ function longestWalk(path, island, finishRow, previousStep, branchIds) {
         //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
         default: {
             var options = [];
-            for (var _i = 0, _b = [
+            for (var _i = 0, _a = [
                 { rowStep: 1, columnStep: 0 },
                 { rowStep: 0, columnStep: 1 },
                 { rowStep: -1, columnStep: 0 },
                 { rowStep: 0, columnStep: -1 },
-            ]; _i < _b.length; _i++) {
-                var steps = _b[_i];
+            ]; _i < _a.length; _i++) {
+                var steps = _a[_i];
                 var optionPath = {
                     row: path.row + steps.rowStep,
                     column: path.column + steps.columnStep,
                 };
                 var pathType_1 = island.get(pathToKey(optionPath));
-                var branchesThatWalkedHere_1 = walkedByBranch.get(pathToKey(optionPath));
                 if (pathType_1 &&
                     pathType_1 != FOREST
                 // PART 1
                 // isAllowed(path, optionPath, pathType)
                 ) {
-                    if ((!previousStep ||
-                        (previousStep && !samePath(optionPath, previousStep))) &&
-                        ((_a = branchesThatWalkedHere_1 === null || branchesThatWalkedHere_1 === void 0 ? void 0 : branchesThatWalkedHere_1.every(function (id) { return !branchIds.includes(id); })) !== null && _a !== void 0 ? _a : true))
+                    if (!previousStep ||
+                        (previousStep && !samePath(optionPath, previousStep)))
                         options.push(optionPath);
                 }
             }
             if (options.length == 0) {
-                walkedByBranch.set(key, []);
                 return Number.NEGATIVE_INFINITY;
             }
             if (options.length == 1) {
-                var sum_1 = longestWalk(options[0], island, finishRow, path, branchIds) + 1;
-                walkedByBranch.set(key, []);
+                var sum_1 = longestWalk(options[0], island, finishRow, path, new Map(visitedPaths)) + 1;
                 return sum_1;
             }
             var sum = 1 +
                 options.reduce(function (max, option) {
-                    branchCounter++;
-                    return Math.max(max, longestWalk(option, island, finishRow, path, __spreadArray(__spreadArray([], branchIds, true), [
-                        branchCounter,
-                    ], false)));
+                    return Math.max(max, longestWalk(option, island, finishRow, path, new Map(visitedPaths)));
                 }, Number.NEGATIVE_INFINITY);
-            walkedByBranch.set(key, []);
             return sum;
         }
     }

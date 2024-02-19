@@ -50,16 +50,6 @@ async function processFile(filePath: string): Promise<void> {
   console.log("Longest walk: " + result);
 }
 
-const walkedByBranch: Map<string, number[]> = new Map();
-var branchCounter = 1;
-
-function uniqueUnion(arr1: number[], arr2: number[]): number[] {
-  const resultSet = new Set<number>();
-  arr1.forEach((num) => resultSet.add(num));
-  arr2.forEach((num) => resultSet.add(num));
-  return Array.from(resultSet.values());
-}
-
 function samePath(path1: Path, path2: Path): boolean {
   return path1.row == path2.row && path1.column == path2.column;
 }
@@ -69,28 +59,21 @@ function longestWalk(
   island: Map<string, string>,
   finishRow: number,
   previousStep: Path | undefined = undefined,
-  branchIds: number[] = [1]
+  visitedPaths: Map<string, boolean> = new Map()
 ): number {
   if (path.row == finishRow) {
     // console.log(walkedByBranch);
-    console.log("Reached");
+    // console.log("Reached");
     return 0;
   }
 
   const key = pathToKey(path);
   const pathType = island.get(key)!;
 
-  const branchesThatWalkedHere = walkedByBranch.get(key);
-  if (
-    branchesThatWalkedHere &&
-    branchesThatWalkedHere.find((id) => branchIds.includes(id))
-  ) {
-    walkedByBranch.set(key, []);
+  const visited = visitedPaths.get(key);
+  visitedPaths.set(key, true);
+  if (visited) {
     return Number.NEGATIVE_INFINITY;
-  } else if (branchesThatWalkedHere) {
-    walkedByBranch.set(key, uniqueUnion(branchesThatWalkedHere, branchIds));
-  } else {
-    walkedByBranch.set(key, branchIds);
   }
 
   // forced paths - only part 1
@@ -121,10 +104,6 @@ function longestWalk(
           column: path.column + steps.columnStep,
         };
         let pathType = island.get(pathToKey(optionPath));
-
-        const branchesThatWalkedHere = walkedByBranch.get(
-          pathToKey(optionPath)
-        );
         if (
           pathType &&
           pathType != FOREST
@@ -132,41 +111,37 @@ function longestWalk(
           // isAllowed(path, optionPath, pathType)
         ) {
           if (
-            (!previousStep ||
-              (previousStep && !samePath(optionPath, previousStep))) &&
-            (branchesThatWalkedHere?.every((id) => !branchIds.includes(id)) ??
-              true)
+            !previousStep ||
+            (previousStep && !samePath(optionPath, previousStep))
           )
             options.push(optionPath);
         }
       }
 
       if (options.length == 0) {
-        walkedByBranch.set(key, []);
         return Number.NEGATIVE_INFINITY;
       }
 
       if (options.length == 1) {
         const sum =
-          longestWalk(options[0], island, finishRow, path, branchIds) + 1;
-        walkedByBranch.set(key, []);
+          longestWalk(
+            options[0],
+            island,
+            finishRow,
+            path,
+            new Map(visitedPaths)
+          ) + 1;
         return sum;
       }
 
       const sum =
         1 +
         options.reduce((max, option) => {
-          branchCounter++;
           return Math.max(
             max,
-            longestWalk(option, island, finishRow, path, [
-              ...branchIds,
-              branchCounter,
-            ])
+            longestWalk(option, island, finishRow, path, new Map(visitedPaths))
           );
         }, Number.NEGATIVE_INFINITY);
-
-      walkedByBranch.set(key, []);
       return sum;
     }
   }
