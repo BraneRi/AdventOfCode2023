@@ -50,13 +50,20 @@ var WALK = ".";
 function pathToKey(p) {
     return p.row + "," + p.column;
 }
-var numberOfColumns;
+function keyToPath(p) {
+    var elements = p.split(",");
+    return {
+        row: Number.parseInt(elements[0]),
+        column: Number.parseInt(elements[1]),
+    };
+}
 function processFile(filePath) {
     var _a, e_1, _b, _c;
+    var _d;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, island, row, startingColumn, _d, rl_1, rl_1_1, line, lineElements, e_1_1, result;
-        return __generator(this, function (_e) {
-            switch (_e.label) {
+        var fileStream, rl, island, row, startingColumn, _e, rl_1, rl_1_1, line, lineElements, e_1_1, finish, nodes, connections;
+        return __generator(this, function (_f) {
+            switch (_f.label) {
                 case 0:
                     fileStream = fs.createReadStream(filePath);
                     rl = readline.createInterface({
@@ -65,160 +72,140 @@ function processFile(filePath) {
                     });
                     island = new Map();
                     row = 0;
-                    _e.label = 1;
+                    _f.label = 1;
                 case 1:
-                    _e.trys.push([1, 6, 7, 12]);
-                    _d = true, rl_1 = __asyncValues(rl);
-                    _e.label = 2;
+                    _f.trys.push([1, 6, 7, 12]);
+                    _e = true, rl_1 = __asyncValues(rl);
+                    _f.label = 2;
                 case 2: return [4 /*yield*/, rl_1.next()];
                 case 3:
-                    if (!(rl_1_1 = _e.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
+                    if (!(rl_1_1 = _f.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
                     _c = rl_1_1.value;
-                    _d = false;
+                    _e = false;
                     line = _c;
                     lineElements = line.split("");
-                    numberOfColumns = lineElements.length;
                     lineElements.forEach(function (pathType, index) {
                         if (row == 0 && pathType == WALK)
                             startingColumn = index;
                         island.set(pathToKey({ row: row, column: index }), pathType);
                     });
                     row++;
-                    _e.label = 4;
+                    _f.label = 4;
                 case 4:
-                    _d = true;
+                    _e = true;
                     return [3 /*break*/, 2];
                 case 5: return [3 /*break*/, 12];
                 case 6:
-                    e_1_1 = _e.sent();
+                    e_1_1 = _f.sent();
                     e_1 = { error: e_1_1 };
                     return [3 /*break*/, 12];
                 case 7:
-                    _e.trys.push([7, , 10, 11]);
-                    if (!(!_d && !_a && (_b = rl_1.return))) return [3 /*break*/, 9];
+                    _f.trys.push([7, , 10, 11]);
+                    if (!(!_e && !_a && (_b = rl_1.return))) return [3 /*break*/, 9];
                     return [4 /*yield*/, _b.call(rl_1)];
                 case 8:
-                    _e.sent();
-                    _e.label = 9;
+                    _f.sent();
+                    _f.label = 9;
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     if (e_1) throw e_1.error;
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    result = longestWalk({ row: 0, column: startingColumn }, island, row - 1);
-                    console.log("Longest walk: " + result);
+                    finish = keyToPath((_d = Array.from(island.entries()).find(function (e) { return keyToPath(e[0]).row == row - 1 && e[1] != FOREST; })) === null || _d === void 0 ? void 0 : _d[0]);
+                    nodes = generateNodes({ row: 0, column: startingColumn }, finish, island);
+                    connections = generateConnections(nodes, island);
+                    console.log(connections);
                     return [2 /*return*/];
             }
         });
     });
 }
-function samePath(path1, path2) {
-    return path1.row == path2.row && path1.column == path2.column;
+function generateConnections(nodes, island) {
+    var connections = [];
+    var visited = new Map();
+    nodes.forEach(function (node) {
+        var options = getOptions(node.path, island);
+        options.forEach(function (option) {
+            if (!visited.has(pathToKey(option))) {
+                visited.set(pathToKey(option), true);
+                var connection = findNode(node.id, option, nodes, island, visited);
+                if (connection) {
+                    connections.push(connection);
+                }
+            }
+        });
+    });
+    return connections;
 }
-function printIsland(row, island, visitedPaths) {
-    for (var r = 0; r < row; r++) {
-        for (var c = 0; c < numberOfColumns; c++) {
-            var key = pathToKey({ row: r, column: c });
-            var value = island.get(key);
-            var valuePrint = void 0;
-            if (visitedPaths.has(key)) {
-                valuePrint = "O";
-            }
-            else {
-                valuePrint = value;
-            }
-            process.stdout.write(valuePrint);
+function getOptions(path, island) {
+    var options = [];
+    for (var _i = 0, _a = [
+        { rowStep: 1, columnStep: 0 },
+        { rowStep: 0, columnStep: 1 },
+        { rowStep: -1, columnStep: 0 },
+        { rowStep: 0, columnStep: -1 },
+    ]; _i < _a.length; _i++) {
+        var steps = _a[_i];
+        var optionPath = {
+            row: path.row + steps.rowStep,
+            column: path.column + steps.columnStep,
+        };
+        var optionPathType = island.get(pathToKey(optionPath));
+        if (optionPathType && optionPathType != FOREST) {
+            options.push(optionPath);
         }
-        console.log();
     }
+    return [];
 }
-function longestWalk(path, island, finishRow, previousStep, visitedPaths, steps) {
-    if (previousStep === void 0) { previousStep = undefined; }
-    if (visitedPaths === void 0) { visitedPaths = new Map(); }
-    if (steps === void 0) { steps = 0; }
-    if (path.row == finishRow) {
-        console.log("End: " + steps);
-        printIsland(finishRow, island, visitedPaths);
-        console.log();
-        return 0;
+function findNode(id1, optionPath, nodes, island, visited) {
+    var currentPath = optionPath;
+    var steps = 0;
+    var nodeCandidate = reachedNode(currentPath, nodes);
+    while (!nodeCandidate) {
+        currentPath = getOptions(currentPath, island).filter(function (option) { return !visited.has(pathToKey(option)); })[0];
+        steps += 1;
+        nodeCandidate = reachedNode(currentPath, nodes);
     }
-    var key = pathToKey(path);
-    var pathType = island.get(key);
-    var visited = visitedPaths.get(key);
-    visitedPaths.set(key, true);
-    if (visited) {
-        return Number.NEGATIVE_INFINITY;
-    }
-    // forced paths - only part 1
-    // var newPath: Path;
-    switch (pathType) {
-        // case UP:
-        //   newPath = { row: path.row - 1, column: path.column };
-        //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-        // case DOWN:
-        //   newPath = { row: path.row + 1, column: path.column };
-        //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-        // case LEFT:
-        //   newPath = { row: path.row, column: path.column - 1 };
-        //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-        // case RIGHT:
-        //   newPath = { row: path.row, column: path.column + 1 };
-        //   return longestWalk(newPath, island, finishRow, path, branchIds) + 1;
-        default: {
-            var options = [];
+    return { steps: steps, id1: id1, id2: nodeCandidate.id };
+}
+function reachedNode(path, nodes) {
+    return nodes.find(function (node) { return node.path == path; });
+}
+function generateNodes(start, finish, island) {
+    // add start and finish
+    var nodes = [
+        { path: start, id: 0 },
+        { path: finish, id: 1 },
+    ];
+    var nodeIdCounter = 2;
+    Array.from(island.entries()).forEach(function (e) {
+        if (e[1] != FOREST) {
+            var path = keyToPath(e[0]);
+            var optionCount = 0;
             for (var _i = 0, _a = [
                 { rowStep: 1, columnStep: 0 },
                 { rowStep: 0, columnStep: 1 },
                 { rowStep: -1, columnStep: 0 },
                 { rowStep: 0, columnStep: -1 },
             ]; _i < _a.length; _i++) {
-                var steps_1 = _a[_i];
-                var optionPath = {
-                    row: path.row + steps_1.rowStep,
-                    column: path.column + steps_1.columnStep,
-                };
-                var pathType_1 = island.get(pathToKey(optionPath));
-                if (pathType_1 &&
-                    pathType_1 != FOREST
-                // PART 1
-                // isAllowed(path, optionPath, pathType)
-                ) {
-                    if (!previousStep ||
-                        (previousStep && !samePath(optionPath, previousStep)))
-                        options.push(optionPath);
+                var steps = _a[_i];
+                var optionCandidate = island.get(pathToKey({
+                    row: path.row + steps.rowStep,
+                    column: path.column + steps.columnStep,
+                }));
+                if (optionCandidate && optionCandidate != FOREST) {
+                    optionCount++;
                 }
             }
-            if (options.length == 0) {
-                return Number.NEGATIVE_INFINITY;
+            if (optionCount > 2) {
+                nodeIdCounter += 1;
+                nodes.push({ path: path, id: nodeIdCounter });
             }
-            if (options.length == 1) {
-                var sum_1 = longestWalk(options[0], island, finishRow, path, visitedPaths, steps + 1) + 1;
-                return sum_1;
-            }
-            var sum = 1 +
-                options.reduce(function (max, option) {
-                    return Math.max(max, longestWalk(option, island, finishRow, path, new Map(visitedPaths), steps + 1));
-                }, Number.NEGATIVE_INFINITY);
-            return sum;
         }
-    }
+    });
+    return nodes;
 }
-// PART 1
-// function isAllowed(path: Path, nextPath: Path, nextPathValue: string): boolean {
-//   switch (nextPathValue) {
-//     case UP:
-//       return nextPath.row != path.row + 1;
-//     case DOWN:
-//       return nextPath.row != path.row - 1;
-//     case LEFT:
-//       return nextPath.column != path.column + 1;
-//     case RIGHT:
-//       return nextPath.column != path.column - 1;
-//     default:
-//       return true;
-//   }
-// }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
 if (args.length !== 1) {
