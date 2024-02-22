@@ -54,10 +54,56 @@ async function processFile(filePath: string): Promise<void> {
     finish,
     island
   );
+  console.log(nodes);
 
   const connections = generateConnections(nodes, island);
   console.log(connections);
+
+  console.log("traversing graph");
+  const result = longestPath(connections);
+  console.log("Done");
+  console.log(result);
 }
+
+function longestPath(
+  connections: Connection[],
+  currentNodeId: number = 0,
+  visitedNodes: Map<number, boolean> = new Map()
+): number {
+  // id = 1 for finish node
+  if (currentNodeId == 1) return 0;
+
+  const optionConnections = connections.filter((c) => {
+    return (
+      (c.id1 == currentNodeId && !visitedNodes.has(c.id2)) ||
+      (c.id2 == currentNodeId && !visitedNodes.has(c.id1))
+    );
+  });
+  visitedNodes.set(currentNodeId, true);
+
+  return optionConnections.reduce((max, connection) => {
+    return Math.max(
+      max,
+      1 +
+        connection.steps +
+        longestPath(
+          connections,
+          connection.id1 == currentNodeId ? connection.id2 : connection.id1,
+          new Map(visitedNodes)
+        )
+    );
+  }, 0);
+}
+
+// const sum =
+//   1 +
+//   options.reduce((max, option) => {
+//     return Math.max(
+//       max,
+//       longestWalk(option, island, finishRow, path, new Map(visitedPaths))
+//     );
+//   }, Number.NEGATIVE_INFINITY);
+// return sum;
 
 type Node = {
   path: Path;
@@ -76,7 +122,6 @@ function generateConnections(
 ): Connection[] {
   const connections: Connection[] = [];
   const visited: Map<string, boolean> = new Map();
-  console.log(nodes);
   nodes.forEach((node) => {
     visited.set(pathToKey(node.path), true);
     var options = getOptions(node.path, island, visited);

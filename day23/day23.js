@@ -61,7 +61,7 @@ function processFile(filePath) {
     var _a, e_1, _b, _c;
     var _d;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, island, row, startingColumn, _e, rl_1, rl_1_1, line, lineElements, e_1_1, finish, nodes, connections;
+        var fileStream, rl, island, row, startingColumn, _e, rl_1, rl_1_1, line, lineElements, e_1_1, finish, nodes, connections, result;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
@@ -114,17 +114,38 @@ function processFile(filePath) {
                 case 12:
                     finish = keyToPath((_d = Array.from(island.entries()).find(function (e) { return keyToPath(e[0]).row == row - 1 && e[1] != FOREST; })) === null || _d === void 0 ? void 0 : _d[0]);
                     nodes = generateNodes({ row: 0, column: startingColumn }, finish, island);
+                    console.log(nodes);
                     connections = generateConnections(nodes, island);
                     console.log(connections);
+                    console.log("traversing graph");
+                    result = longestPath(connections);
+                    console.log("Done");
+                    console.log(result);
                     return [2 /*return*/];
             }
         });
     });
 }
+function longestPath(connections, currentNodeId, visitedNodes) {
+    if (currentNodeId === void 0) { currentNodeId = 0; }
+    if (visitedNodes === void 0) { visitedNodes = new Map(); }
+    // id = 1 for finish node
+    if (currentNodeId == 1)
+        return 0;
+    var optionConnections = connections.filter(function (c) {
+        return ((c.id1 == currentNodeId && !visitedNodes.has(c.id2)) ||
+            (c.id2 == currentNodeId && !visitedNodes.has(c.id1)));
+    });
+    visitedNodes.set(currentNodeId, true);
+    return optionConnections.reduce(function (max, connection) {
+        return Math.max(max, 1 +
+            connection.steps +
+            longestPath(connections, connection.id1 == currentNodeId ? connection.id2 : connection.id1, new Map(visitedNodes)));
+    }, 0);
+}
 function generateConnections(nodes, island) {
     var connections = [];
     var visited = new Map();
-    console.log(nodes);
     nodes.forEach(function (node) {
         visited.set(pathToKey(node.path), true);
         var options = getOptions(node.path, island, visited);
