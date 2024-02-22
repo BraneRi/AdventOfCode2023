@@ -76,15 +76,20 @@ function generateConnections(
 ): Connection[] {
   const connections: Connection[] = [];
   const visited: Map<string, boolean> = new Map();
+  console.log(nodes);
   nodes.forEach((node) => {
-    var options = getOptions(node.path, island);
+    visited.set(pathToKey(node.path), true);
+    var options = getOptions(node.path, island, visited);
     options.forEach((option) => {
-      if (!visited.has(pathToKey(option))) {
-        visited.set(pathToKey(option), true);
-        const connection = findNode(node.id, option, nodes, island, visited);
-        if (connection) {
-          connections.push(connection);
-        }
+      const connection = findNode(
+        node.id,
+        option,
+        nodes.filter((n) => n != node),
+        island,
+        visited
+      );
+      if (connection) {
+        connections.push(connection);
       }
     });
   });
@@ -92,7 +97,11 @@ function generateConnections(
   return connections;
 }
 
-function getOptions(path: Path, island: Map<string, string>): Path[] {
+function getOptions(
+  path: Path,
+  island: Map<string, string>,
+  visited: Map<string, boolean>
+): Path[] {
   const options: Path[] = [];
   for (let steps of [
     { rowStep: 1, columnStep: 0 },
@@ -105,11 +114,15 @@ function getOptions(path: Path, island: Map<string, string>): Path[] {
       column: path.column + steps.columnStep,
     };
     const optionPathType = island.get(pathToKey(optionPath));
-    if (optionPathType && optionPathType != FOREST) {
+    if (
+      optionPathType &&
+      optionPathType != FOREST &&
+      !visited.has(pathToKey(optionPath))
+    ) {
       options.push(optionPath);
     }
   }
-  return [];
+  return options;
 }
 
 function findNode(
@@ -122,20 +135,36 @@ function findNode(
   var currentPath: Path = optionPath;
   var steps: number = 0;
 
-  var nodeCandidate = reachedNode(currentPath, nodes);
+  visited.set(pathToKey(currentPath), true);
+  var nodeCandidate: Node | undefined = undefined;
   while (!nodeCandidate) {
-    currentPath = getOptions(currentPath, island).filter(
-      (option) => !visited.has(pathToKey(option))
-    )[0];
-    steps += 1;
     nodeCandidate = reachedNode(currentPath, nodes);
+    if (nodeCandidate) break;
+    steps += 1;
+
+    let newCurrent = getOptions(currentPath, island, visited)[0];
+    if (!newCurrent) {
+      // we ignore visited paths if reached node
+      // we need to know which node is it
+      const nodeOptions = getOptions(currentPath, island, new Map());
+      nodeCandidate = nodeOptions
+        .map((n) => reachedNode(n, nodes))
+        .filter((n) => n != undefined)[0];
+      break;
+    }
+    currentPath = newCurrent;
+    visited.set(pathToKey(currentPath), true);
   }
+
+  if (!nodeCandidate) return undefined;
 
   return { steps: steps, id1: id1, id2: nodeCandidate.id };
 }
 
 function reachedNode(path: Path, nodes: Node[]): Node | undefined {
-  return nodes.find((node) => node.path == path);
+  return nodes.find(
+    (node) => node.path.row == path.row && node.path.column == path.column
+  );
 }
 
 function generateNodes(
@@ -148,7 +177,7 @@ function generateNodes(
     { path: start, id: 0 },
     { path: finish, id: 1 },
   ];
-  var nodeIdCounter = 2;
+  var nodeIdCounter = 1;
   Array.from(island.entries()).forEach((e) => {
     if (e[1] != FOREST) {
       var path = keyToPath(e[0]);

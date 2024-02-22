@@ -124,21 +124,20 @@ function processFile(filePath) {
 function generateConnections(nodes, island) {
     var connections = [];
     var visited = new Map();
+    console.log(nodes);
     nodes.forEach(function (node) {
-        var options = getOptions(node.path, island);
+        visited.set(pathToKey(node.path), true);
+        var options = getOptions(node.path, island, visited);
         options.forEach(function (option) {
-            if (!visited.has(pathToKey(option))) {
-                visited.set(pathToKey(option), true);
-                var connection = findNode(node.id, option, nodes, island, visited);
-                if (connection) {
-                    connections.push(connection);
-                }
+            var connection = findNode(node.id, option, nodes.filter(function (n) { return n != node; }), island, visited);
+            if (connection) {
+                connections.push(connection);
             }
         });
     });
     return connections;
 }
-function getOptions(path, island) {
+function getOptions(path, island, visited) {
     var options = [];
     for (var _i = 0, _a = [
         { rowStep: 1, columnStep: 0 },
@@ -152,25 +151,43 @@ function getOptions(path, island) {
             column: path.column + steps.columnStep,
         };
         var optionPathType = island.get(pathToKey(optionPath));
-        if (optionPathType && optionPathType != FOREST) {
+        if (optionPathType &&
+            optionPathType != FOREST &&
+            !visited.has(pathToKey(optionPath))) {
             options.push(optionPath);
         }
     }
-    return [];
+    return options;
 }
 function findNode(id1, optionPath, nodes, island, visited) {
     var currentPath = optionPath;
     var steps = 0;
-    var nodeCandidate = reachedNode(currentPath, nodes);
+    visited.set(pathToKey(currentPath), true);
+    var nodeCandidate = undefined;
     while (!nodeCandidate) {
-        currentPath = getOptions(currentPath, island).filter(function (option) { return !visited.has(pathToKey(option)); })[0];
-        steps += 1;
         nodeCandidate = reachedNode(currentPath, nodes);
+        if (nodeCandidate)
+            break;
+        steps += 1;
+        var newCurrent = getOptions(currentPath, island, visited)[0];
+        if (!newCurrent) {
+            // we ignore visited paths if reached node
+            // we need to know which node is it
+            var nodeOptions = getOptions(currentPath, island, new Map());
+            nodeCandidate = nodeOptions
+                .map(function (n) { return reachedNode(n, nodes); })
+                .filter(function (n) { return n != undefined; })[0];
+            break;
+        }
+        currentPath = newCurrent;
+        visited.set(pathToKey(currentPath), true);
     }
+    if (!nodeCandidate)
+        return undefined;
     return { steps: steps, id1: id1, id2: nodeCandidate.id };
 }
 function reachedNode(path, nodes) {
-    return nodes.find(function (node) { return node.path == path; });
+    return nodes.find(function (node) { return node.path.row == path.row && node.path.column == path.column; });
 }
 function generateNodes(start, finish, island) {
     // add start and finish
@@ -178,7 +195,7 @@ function generateNodes(start, finish, island) {
         { path: start, id: 0 },
         { path: finish, id: 1 },
     ];
-    var nodeIdCounter = 2;
+    var nodeIdCounter = 1;
     Array.from(island.entries()).forEach(function (e) {
         if (e[1] != FOREST) {
             var path = keyToPath(e[0]);

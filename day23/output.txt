@@ -1,2 +1,36 @@
+[ { row: 1, column: 1 } ]
+[ { row: 21, column: 21 } ]
+[
+  { row: 4, column: 11 },
+  { row: 3, column: 12 },
+  { row: 3, column: 10 }
+]
+[ { row: 6, column: 3 }, { row: 5, column: 4 }, { row: 4, column: 3 } ]
+[
+  { row: 12, column: 21 },
+  { row: 10, column: 21 },
+  { row: 11, column: 20 }
+]
+[
+  { row: 14, column: 5 },
+  { row: 13, column: 6 },
+  { row: 12, column: 5 }
+]
+[
+  { row: 14, column: 13 },
+  { row: 13, column: 14 },
+  { row: 12, column: 13 },
+  { row: 13, column: 12 }
+]
+[
+  { row: 19, column: 14 },
+  { row: 18, column: 13 },
+  { row: 19, column: 12 }
+]
+[
+  { row: 20, column: 19 },
+  { row: 18, column: 19 },
+  { row: 19, column: 18 }
+]
 []
 File processing completed.
