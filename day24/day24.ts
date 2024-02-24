@@ -42,8 +42,8 @@ async function processFile(filePath: string): Promise<void> {
     }
   }
 
-  const areaStart = 7;
-  const areaEnd = 27;
+  const areaStart = 200000000000000;
+  const areaEnd = 400000000000000;
 
   var countFutureIntersections = 0;
 
@@ -54,32 +54,36 @@ async function processFile(filePath: string): Promise<void> {
       hailstone1 = hailstones[i];
       hailstone2 = hailstones[j];
 
-      console.log("Checking two hailstones:");
-      console.log(hailstone1);
-      console.log(hailstone2);
+      // console.log("Checking two hailstones:");
+      // console.log(hailstone1);
+      // console.log(hailstone2);
 
       const intersection = lineIntersection(hailstone1, hailstone2);
       switch (intersection) {
         case "parallel": {
-          console.log("Lines are parallel");
+          // console.log("Lines are parallel");
           break;
         }
-        case "past": {
-          console.log("Lines cross in the past");
+        case "past 1": {
+          // console.log("Lines cross in the past for hailstone 1");
+          break;
+        }
+        case "past 2": {
+          // console.log("Lines cross in the past for hailstone 2");
           break;
         }
         default: {
           if (insideArea(intersection, areaStart, areaEnd)) {
-            console.log("Intersection in the FUTURE:");
-            console.log(intersection);
+            // console.log("Intersection in the FUTURE:");
+            // console.log(intersection);
             countFutureIntersections++;
           } else {
-            console.log("Intersection OUTSIDE AREA:");
-            console.log(intersection);
+            // console.log("Intersection OUTSIDE AREA:");
+            // console.log(intersection);
           }
         }
       }
-      console.log();
+      // console.log();
     }
   }
 
@@ -111,7 +115,7 @@ function insideArea(
 function lineIntersection(
   hailstone1: Hailstone,
   hailstone2: Hailstone
-): Intersection | "past" | "parallel" {
+): Intersection | "past 1" | "past 2" | "parallel" {
   const dx = hailstone2.px - hailstone1.px;
   const dy = hailstone2.py - hailstone1.py;
 
@@ -119,9 +123,6 @@ function lineIntersection(
   if (det === 0) return "parallel";
 
   const t = (dx * hailstone2.vy - dy * hailstone2.vx) / det;
-  // TODO ovdje utvrditi za sve tri osi da je kolizija u budućnosti (u smjeru velocityja)
-  // trenutno nije tocno jer velocity moze ici u minus, to mu moze biti smjer
-  if (t < 0) return "past";
 
   const intersection = {
     x: hailstone1.px + hailstone1.vx * t,
@@ -129,7 +130,27 @@ function lineIntersection(
     z: hailstone1.pz + hailstone1.vz * t,
   };
 
+  if (isInThePast(intersection, hailstone1)) return "past 1";
+  if (isInThePast(intersection, hailstone2)) return "past 2";
+
   return intersection;
+}
+
+function isInThePast(
+  intersection: Intersection,
+  hailstone: Hailstone
+): boolean {
+  if (intersection.x < hailstone.px && hailstone.vx > 0) return true;
+  if (intersection.x > hailstone.px && hailstone.vx < 0) return true;
+
+  if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
+  if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
+
+  // Ignore for Part 1
+  // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+  // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+
+  return false;
 }
 
 // Usage: node build/your-script.js your-text-file.txt

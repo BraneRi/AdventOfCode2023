@@ -104,39 +104,40 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    areaStart = 7;
-                    areaEnd = 27;
+                    areaStart = 200000000000000;
+                    areaEnd = 400000000000000;
                     countFutureIntersections = 0;
                     for (i = 0; i < hailstones.length - 1; i++) {
                         for (j = i + 1; j < hailstones.length; j++) {
                             hailstone1 = hailstones[i];
                             hailstone2 = hailstones[j];
-                            console.log("Checking two hailstones:");
-                            console.log(hailstone1);
-                            console.log(hailstone2);
                             intersection = lineIntersection(hailstone1, hailstone2);
                             switch (intersection) {
                                 case "parallel": {
-                                    console.log("Lines are parallel");
+                                    // console.log("Lines are parallel");
                                     break;
                                 }
-                                case "past": {
-                                    console.log("Lines cross in the past");
+                                case "past 1": {
+                                    // console.log("Lines cross in the past for hailstone 1");
+                                    break;
+                                }
+                                case "past 2": {
+                                    // console.log("Lines cross in the past for hailstone 2");
                                     break;
                                 }
                                 default: {
                                     if (insideArea(intersection, areaStart, areaEnd)) {
-                                        console.log("Intersection in the FUTURE:");
-                                        console.log(intersection);
+                                        // console.log("Intersection in the FUTURE:");
+                                        // console.log(intersection);
                                         countFutureIntersections++;
                                     }
                                     else {
-                                        console.log("Intersection OUTSIDE AREA:");
-                                        console.log(intersection);
+                                        // console.log("Intersection OUTSIDE AREA:");
+                                        // console.log(intersection);
                                     }
                                 }
                             }
-                            console.log();
+                            // console.log();
                         }
                     }
                     // 31177 too high
@@ -161,14 +162,30 @@ function lineIntersection(hailstone1, hailstone2) {
     if (det === 0)
         return "parallel";
     var t = (dx * hailstone2.vy - dy * hailstone2.vx) / det;
-    if (t < 0)
-        return "past";
     var intersection = {
         x: hailstone1.px + hailstone1.vx * t,
         y: hailstone1.py + hailstone1.vy * t,
         z: hailstone1.pz + hailstone1.vz * t,
     };
+    if (isInThePast(intersection, hailstone1))
+        return "past 1";
+    if (isInThePast(intersection, hailstone2))
+        return "past 2";
     return intersection;
+}
+function isInThePast(intersection, hailstone) {
+    if (intersection.x < hailstone.px && hailstone.vx > 0)
+        return true;
+    if (intersection.x > hailstone.px && hailstone.vx < 0)
+        return true;
+    if (intersection.y < hailstone.py && hailstone.vy > 0)
+        return true;
+    if (intersection.y < hailstone.py && hailstone.vy > 0)
+        return true;
+    // Ignore for Part 1
+    // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+    // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+    return false;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
