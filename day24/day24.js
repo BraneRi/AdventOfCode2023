@@ -49,7 +49,7 @@ var INPUT_REGEX = /(\d+),\s*(\d+),\s*(\d+)\s*@\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)/;
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, hailstones, _d, rl_1, rl_1_1, line, match, _, px, py, pz, vx, vy, vz, e_1_1, areaStart, areaEnd, countFutureIntersections, hailstone1, hailstone2, i, j, intersection;
+        var fileStream, rl, hailstones, _d, rl_1, rl_1_1, line, match, _, px, py, pz, vx, vy, vz, e_1_1, hailstone1, hailstone2, i, j, intersection;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -104,54 +104,23 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    areaStart = 200000000000000;
-                    areaEnd = 400000000000000;
-                    countFutureIntersections = 0;
                     for (i = 0; i < hailstones.length - 1; i++) {
                         for (j = i + 1; j < hailstones.length; j++) {
                             hailstone1 = hailstones[i];
                             hailstone2 = hailstones[j];
+                            console.log("Checking two hailstones:");
+                            console.log(hailstone1);
+                            console.log(hailstone2);
                             intersection = lineIntersection(hailstone1, hailstone2);
-                            switch (intersection) {
-                                case "parallel": {
-                                    // console.log("Lines are parallel");
-                                    break;
-                                }
-                                case "past 1": {
-                                    // console.log("Lines cross in the past for hailstone 1");
-                                    break;
-                                }
-                                case "past 2": {
-                                    // console.log("Lines cross in the past for hailstone 2");
-                                    break;
-                                }
-                                default: {
-                                    if (insideArea(intersection, areaStart, areaEnd)) {
-                                        // console.log("Intersection in the FUTURE:");
-                                        // console.log(intersection);
-                                        countFutureIntersections++;
-                                    }
-                                    else {
-                                        // console.log("Intersection OUTSIDE AREA:");
-                                        // console.log(intersection);
-                                    }
-                                }
+                            if (typeof intersection !== "string") {
+                                console.log(intersection);
                             }
-                            // console.log();
                         }
                     }
-                    // 31177 too high
-                    console.log(countFutureIntersections);
                     return [2 /*return*/];
             }
         });
     });
-}
-function insideArea(intersection, areaStart, areaEnd) {
-    return (intersection.x <= areaEnd &&
-        intersection.x >= areaStart &&
-        intersection.y >= areaStart &&
-        intersection.y <= areaEnd);
 }
 // If there is no intersection, lines are parallel - we return undefined
 // Also, if intersection is in past - we return undefined
@@ -182,9 +151,10 @@ function isInThePast(intersection, hailstone) {
         return true;
     if (intersection.y < hailstone.py && hailstone.vy > 0)
         return true;
-    // Ignore for Part 1
-    // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
-    // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+    if (intersection.z < hailstone.px && hailstone.vz > 0)
+        return true;
+    if (intersection.z < hailstone.px && hailstone.vz > 0)
+        return true;
     return false;
 }
 // Usage: node build/your-script.js your-text-file.txt

@@ -42,11 +42,6 @@ async function processFile(filePath: string): Promise<void> {
     }
   }
 
-  const areaStart = 200000000000000;
-  const areaEnd = 400000000000000;
-
-  var countFutureIntersections = 0;
-
   var hailstone1: Hailstone;
   var hailstone2: Hailstone;
   for (let i = 0; i < hailstones.length - 1; i++) {
@@ -54,41 +49,16 @@ async function processFile(filePath: string): Promise<void> {
       hailstone1 = hailstones[i];
       hailstone2 = hailstones[j];
 
-      // console.log("Checking two hailstones:");
-      // console.log(hailstone1);
-      // console.log(hailstone2);
+      console.log("Checking two hailstones:");
+      console.log(hailstone1);
+      console.log(hailstone2);
 
       const intersection = lineIntersection(hailstone1, hailstone2);
-      switch (intersection) {
-        case "parallel": {
-          // console.log("Lines are parallel");
-          break;
-        }
-        case "past 1": {
-          // console.log("Lines cross in the past for hailstone 1");
-          break;
-        }
-        case "past 2": {
-          // console.log("Lines cross in the past for hailstone 2");
-          break;
-        }
-        default: {
-          if (insideArea(intersection, areaStart, areaEnd)) {
-            // console.log("Intersection in the FUTURE:");
-            // console.log(intersection);
-            countFutureIntersections++;
-          } else {
-            // console.log("Intersection OUTSIDE AREA:");
-            // console.log(intersection);
-          }
-        }
+      if (typeof intersection !== "string") {
+        console.log(intersection);
       }
-      // console.log();
     }
   }
-
-  // 31177 too high
-  console.log(countFutureIntersections);
 }
 
 type Intersection = {
@@ -96,19 +66,6 @@ type Intersection = {
   y: number;
   z: number;
 };
-
-function insideArea(
-  intersection: Intersection,
-  areaStart: number,
-  areaEnd: number
-): boolean {
-  return (
-    intersection.x <= areaEnd &&
-    intersection.x >= areaStart &&
-    intersection.y >= areaStart &&
-    intersection.y <= areaEnd
-  );
-}
 
 // If there is no intersection, lines are parallel - we return undefined
 // Also, if intersection is in past - we return undefined
@@ -146,9 +103,8 @@ function isInThePast(
   if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
   if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
 
-  // Ignore for Part 1
-  // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
-  // if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+  if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
+  if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
 
   return false;
 }
