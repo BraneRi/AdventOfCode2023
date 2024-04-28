@@ -1,16 +1,18 @@
-import * as readline from "readline";
 import * as fs from "fs";
+import * as readline from "readline";
 
 const INPUT_REGEX =
   /(\d+),\s*(\d+),\s*(\d+)\s*@\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)/;
 
-type Hailstone = {
-  px: number;
-  py: number;
-  pz: number;
-  vx: number;
-  vy: number;
-  vz: number;
+type Point = {
+  x: number;
+  y: number;
+  z: number;
+};
+
+type Line = {
+  point: Point;
+  velocity: Point;
 };
 
 async function processFile(filePath: string): Promise<void> {
@@ -24,7 +26,7 @@ async function processFile(filePath: string): Promise<void> {
   });
 
   // Hailstone position and velocity at time = 0
-  const hailstones: Hailstone[] = [];
+  const hailstones: Line[] = [];
   for await (const line of rl) {
     const match = line.match(INPUT_REGEX);
 
@@ -32,81 +34,17 @@ async function processFile(filePath: string): Promise<void> {
       // velocities represent change in axis each NANOSECOND
       const [_, px, py, pz, vx, vy, vz] = match;
       hailstones.push({
-        px: parseInt(px),
-        py: parseInt(py),
-        pz: parseInt(pz),
-        vx: parseInt(vx),
-        vy: parseInt(vy),
-        vz: parseInt(vz),
+        point: { x: parseInt(px), y: parseInt(py), z: parseInt(pz) },
+        velocity: {
+          x: parseInt(vx),
+          y: parseInt(vy),
+          z: parseInt(vz),
+        },
       });
     }
   }
 
-  var hailstone1: Hailstone;
-  var hailstone2: Hailstone;
-  for (let i = 0; i < hailstones.length - 1; i++) {
-    for (let j = i + 1; j < hailstones.length; j++) {
-      hailstone1 = hailstones[i];
-      hailstone2 = hailstones[j];
-
-      console.log("Checking two hailstones:");
-      console.log(hailstone1);
-      console.log(hailstone2);
-
-      const intersection = lineIntersection(hailstone1, hailstone2);
-      if (typeof intersection !== "string") {
-        console.log(intersection);
-      }
-    }
-  }
-}
-
-type Intersection = {
-  x: number;
-  y: number;
-  z: number;
-};
-
-// If there is no intersection, lines are parallel - we return undefined
-// Also, if intersection is in past - we return undefined
-function lineIntersection(
-  hailstone1: Hailstone,
-  hailstone2: Hailstone
-): Intersection | "past 1" | "past 2" | "parallel" {
-  const dx = hailstone2.px - hailstone1.px;
-  const dy = hailstone2.py - hailstone1.py;
-
-  const det = hailstone1.vx * hailstone2.vy - hailstone2.vx * hailstone1.vy;
-  if (det === 0) return "parallel";
-
-  const t = (dx * hailstone2.vy - dy * hailstone2.vx) / det;
-
-  const intersection = {
-    x: hailstone1.px + hailstone1.vx * t,
-    y: hailstone1.py + hailstone1.vy * t,
-    z: hailstone1.pz + hailstone1.vz * t,
-  };
-
-  if (isInThePast(intersection, hailstone1)) return "past 1";
-  if (isInThePast(intersection, hailstone2)) return "past 2";
-
-  return intersection;
-}
-
-function isInThePast(
-  intersection: Intersection,
-  hailstone: Hailstone
-): boolean {
-  if (intersection.x < hailstone.px && hailstone.vx > 0) return true;
-  if (intersection.x > hailstone.px && hailstone.vx < 0) return true;
-
-  if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
-  if (intersection.y < hailstone.py && hailstone.vy > 0) return true;
-
-  if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
-  if (intersection.z < hailstone.px && hailstone.vz > 0) return true;
-
-  return false;
+  solve(hailstones.slice(0, 3));
 }
 
 // Usage: node build/your-script.js your-text-file.txt
@@ -122,3 +60,61 @@ const filePath = args[0];
 processFile(filePath)
   .then(() => console.log("File processing completed."))
   .catch((error) => console.error("Error:", error));
+
+async function solve(hailstones: Line[]) {
+  const { init, killThreads } = require("z3-solver");
+  const api = await init();
+  const { Solver, Real } = new api.Context("main");
+  type R = typeof Real;
+
+  const solver = new Solver();
+
+  const px = Real.const("px");
+  const py = Real.const("py");
+  const pz = Real.const("pz");
+  const vx = Real.const("vx");
+  const vy = Real.const("vy");
+  const vz = Real.const("vz");
+
+  for (let i = 0; i < hailstones.length; i++) {
+    const t = Real.const(`t${i + 1}`);
+
+    const hp = hailstones[i].point;
+    const hv = hailstones[i].velocity;
+
+    const hpx = Real.val(hp.x);
+    const hpy = Real.val(hp.y);
+    const hpz = Real.val(hp.z);
+
+    const hvx = Real.val(hv.x);
+    const hvy = Real.val(hv.y);
+    const hvz = Real.val(hv.z);
+    solver.add(
+      px.eq(hpx.add(hvx.mul(t)).sub(vx.mul(t))),
+      py.eq(hpy.add(hvy.mul(t)).sub(vy.mul(t))),
+      pz.eq(hpz.add(hvz.mul(t)).sub(vz.mul(t)))
+    );
+  }
+
+  const result = await solver.check();
+  if (result === "sat") {
+    const model = solver.model();
+    console.log(`px: ${model.get(px)}`);
+    console.log(`py: ${model.get(py)}`);
+    console.log(`pz: ${model.get(pz)}`);
+    console.log(`vx: ${model.get(vx)}`);
+    console.log(`vy: ${model.get(vy)}`);
+    console.log(`vz: ${model.get(vz)}`);
+
+    const sum =
+      Number.parseInt(model.get(px)) +
+      Number.parseInt(model.get(py)) +
+      Number.parseInt(model.get(pz));
+
+    console.log("Sum of coordinates: ", sum);
+  } else {
+    console.log("No solution found.");
+  }
+
+  api.em.PThread.terminateAllThreads();
+}

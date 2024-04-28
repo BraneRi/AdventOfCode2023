@@ -43,13 +43,13 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var readline = require("readline");
 var fs = require("fs");
+var readline = require("readline");
 var INPUT_REGEX = /(\d+),\s*(\d+),\s*(\d+)\s*@\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)/;
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, hailstones, _d, rl_1, rl_1_1, line, match, _, px, py, pz, vx, vy, vz, e_1_1, hailstone1, hailstone2, i, j, intersection;
+        var fileStream, rl, hailstones, _d, rl_1, rl_1_1, line, match, _, px, py, pz, vx, vy, vz, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -74,12 +74,12 @@ function processFile(filePath) {
                     if (match) {
                         _ = match[0], px = match[1], py = match[2], pz = match[3], vx = match[4], vy = match[5], vz = match[6];
                         hailstones.push({
-                            px: parseInt(px),
-                            py: parseInt(py),
-                            pz: parseInt(pz),
-                            vx: parseInt(vx),
-                            vy: parseInt(vy),
-                            vz: parseInt(vz),
+                            point: { x: parseInt(px), y: parseInt(py), z: parseInt(pz) },
+                            velocity: {
+                                x: parseInt(vx),
+                                y: parseInt(vy),
+                                z: parseInt(vz),
+                            },
                         });
                     }
                     _e.label = 4;
@@ -104,58 +104,11 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    for (i = 0; i < hailstones.length - 1; i++) {
-                        for (j = i + 1; j < hailstones.length; j++) {
-                            hailstone1 = hailstones[i];
-                            hailstone2 = hailstones[j];
-                            console.log("Checking two hailstones:");
-                            console.log(hailstone1);
-                            console.log(hailstone2);
-                            intersection = lineIntersection(hailstone1, hailstone2);
-                            if (typeof intersection !== "string") {
-                                console.log(intersection);
-                            }
-                        }
-                    }
+                    solve(hailstones.slice(0, 3));
                     return [2 /*return*/];
             }
         });
     });
-}
-// If there is no intersection, lines are parallel - we return undefined
-// Also, if intersection is in past - we return undefined
-function lineIntersection(hailstone1, hailstone2) {
-    var dx = hailstone2.px - hailstone1.px;
-    var dy = hailstone2.py - hailstone1.py;
-    var det = hailstone1.vx * hailstone2.vy - hailstone2.vx * hailstone1.vy;
-    if (det === 0)
-        return "parallel";
-    var t = (dx * hailstone2.vy - dy * hailstone2.vx) / det;
-    var intersection = {
-        x: hailstone1.px + hailstone1.vx * t,
-        y: hailstone1.py + hailstone1.vy * t,
-        z: hailstone1.pz + hailstone1.vz * t,
-    };
-    if (isInThePast(intersection, hailstone1))
-        return "past 1";
-    if (isInThePast(intersection, hailstone2))
-        return "past 2";
-    return intersection;
-}
-function isInThePast(intersection, hailstone) {
-    if (intersection.x < hailstone.px && hailstone.vx > 0)
-        return true;
-    if (intersection.x > hailstone.px && hailstone.vx < 0)
-        return true;
-    if (intersection.y < hailstone.py && hailstone.vy > 0)
-        return true;
-    if (intersection.y < hailstone.py && hailstone.vy > 0)
-        return true;
-    if (intersection.z < hailstone.px && hailstone.vz > 0)
-        return true;
-    if (intersection.z < hailstone.px && hailstone.vz > 0)
-        return true;
-    return false;
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
@@ -167,3 +120,58 @@ var filePath = args[0];
 processFile(filePath)
     .then(function () { return console.log("File processing completed."); })
     .catch(function (error) { return console.error("Error:", error); });
+function solve(hailstones) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, init, killThreads, api, _b, Solver, Real, solver, px, py, pz, vx, vy, vz, i, t, hp, hv, hpx, hpy, hpz, hvx, hvy, hvz, result, model, sum;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _a = require("z3-solver"), init = _a.init, killThreads = _a.killThreads;
+                    return [4 /*yield*/, init()];
+                case 1:
+                    api = _c.sent();
+                    _b = new api.Context("main"), Solver = _b.Solver, Real = _b.Real;
+                    solver = new Solver();
+                    px = Real.const("px");
+                    py = Real.const("py");
+                    pz = Real.const("pz");
+                    vx = Real.const("vx");
+                    vy = Real.const("vy");
+                    vz = Real.const("vz");
+                    for (i = 0; i < hailstones.length; i++) {
+                        t = Real.const("t".concat(i + 1));
+                        hp = hailstones[i].point;
+                        hv = hailstones[i].velocity;
+                        hpx = Real.val(hp.x);
+                        hpy = Real.val(hp.y);
+                        hpz = Real.val(hp.z);
+                        hvx = Real.val(hv.x);
+                        hvy = Real.val(hv.y);
+                        hvz = Real.val(hv.z);
+                        solver.add(px.eq(hpx.add(hvx.mul(t)).sub(vx.mul(t))), py.eq(hpy.add(hvy.mul(t)).sub(vy.mul(t))), pz.eq(hpz.add(hvz.mul(t)).sub(vz.mul(t))));
+                    }
+                    return [4 /*yield*/, solver.check()];
+                case 2:
+                    result = _c.sent();
+                    if (result === "sat") {
+                        model = solver.model();
+                        console.log("px: ".concat(model.get(px)));
+                        console.log("py: ".concat(model.get(py)));
+                        console.log("pz: ".concat(model.get(pz)));
+                        console.log("vx: ".concat(model.get(vx)));
+                        console.log("vy: ".concat(model.get(vy)));
+                        console.log("vz: ".concat(model.get(vz)));
+                        sum = Number.parseInt(model.get(px)) +
+                            Number.parseInt(model.get(py)) +
+                            Number.parseInt(model.get(pz));
+                        console.log("Sum of coordinates: ", sum);
+                    }
+                    else {
+                        console.log("No solution found.");
+                    }
+                    api.em.PThread.terminateAllThreads();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
