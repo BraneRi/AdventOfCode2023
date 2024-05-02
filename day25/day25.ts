@@ -1,30 +1,10 @@
 import * as readline from "readline";
 import * as fs from "fs";
 
-class PriorityQueue {
-  items: { key: string; priority: number }[];
-
-  constructor() {
-    this.items = [];
-  }
-
-  enqueue(key: string, priority: number) {
-    this.items.push({ key, priority });
-    this.sort();
-  }
-
-  dequeue(): string | undefined {
-    return this.items.shift()?.key;
-  }
-
-  sort() {
-    this.items.sort((a, b) => a.priority - b.priority);
-  }
-
-  isEmpty(): boolean {
-    return this.items.length === 0;
-  }
-}
+type Connection = {
+  one: string;
+  two: string;
+};
 
 async function processFile(filePath: string): Promise<void> {
   // Create a readable stream from the file
@@ -36,132 +16,132 @@ async function processFile(filePath: string): Promise<void> {
     crlfDelay: Infinity, // Treats each line as a separate data event
   });
 
-  const componentMap = new Map<string, Set<string>>();
+  const connections = new Set<Connection>();
+  const keys = new Set<string>();
   for await (const line of rl) {
     const lineParts = line.split(":");
-    const node = lineParts[0].trim();
+    const key = lineParts[0].trim();
     const connectedNodes = lineParts[1].trim().split(/\s+/);
 
-    if (componentMap.has(node)) {
-      const set = componentMap.get(node);
-      connectedNodes.forEach((connection) => {
-        set?.add(connection);
-        if (componentMap.has(connection)) {
-          componentMap.get(connection)?.add(node);
-        } else {
-          componentMap.set(connection, new Set([node]));
-        }
-      });
-    } else {
-      const set = new Set(connectedNodes);
-      componentMap.set(node, set);
-      connectedNodes.forEach((connection) => {
-        if (componentMap.has(connection)) {
-          componentMap.get(connection)?.add(node);
-        } else {
-          componentMap.set(connection, new Set([node]));
-        }
-      });
-    }
+    connectedNodes.forEach((connectedNode) => {
+      keys.add(key);
+      keys.add(connectedNode);
+      connections.add({ one: key, two: connectedNode });
+    });
   }
 
-  countConnections(componentMap);
-  console.log(connectionCounter);
-
-  // console.log(extractTop3MaxValues(connectionCounter));
-  console.log(extractTop3MaxValues(connectionCounter));
   // hfx/pzl, bvb/cmg, nvd/jqt
+  findRemovals(keys, connections);
 }
 
-function extractTop3MaxValues(
-  connectionCounter: Map<string, number>
-): [string, number][] {
-  const entries = Array.from(connectionCounter.entries());
-  entries.sort((a, b) => b[1] - a[1]);
-  console.log(entries.length);
-  // const top3 = entries.slice(0, 3);
-  return entries;
+function filterConnections(
+  connections: Set<Connection>,
+  ...elementsToRemove: Connection[]
+): Set<Connection> {
+  const filteredConnections = new Set(connections); // Create a copy of the original set
+
+  elementsToRemove.forEach((element) => {
+    filteredConnections.delete(element);
+  });
+
+  return filteredConnections;
 }
 
-// key are two nodes and value is number of times we have to make that connnection
-// from any two nodes to reach each other - idea is to remove most "crowded" ones
-const connectionCounter = new Map<string, number>();
-
-// ignores order of keys
-function nodesToKey(node1: string, node2: string) {
-  const keyCandidate1 = node1 + "," + node2;
-  if (connectionCounter.has(keyCandidate1)) return keyCandidate1;
-  const keyCandidate2 = node2 + "," + node1;
-  if (connectionCounter.has(keyCandidate2)) return keyCandidate2;
-  else return keyCandidate1;
-}
-
-function updateConnectionCounter(node1: string, node2: string) {
-  const key = nodesToKey(node1, node2);
-  const counter = connectionCounter.get(key);
-  if (counter) {
-    connectionCounter.set(key, counter + 1);
-  } else {
-    connectionCounter.set(key, 1);
-  }
-}
-
-function countConnections(componentMap: Map<string, Set<string>>) {
-  const keys = Array.from(componentMap.keys());
-  for (let i = 0; i < keys.length - 1; i++) {
-    for (let j = i + 1; j < keys.length; j++) {
-      findConnections(keys[i], keys[j], componentMap);
-    }
-  }
-}
-
-function findConnections(
-  startNode: string,
-  targetNode: string,
-  componentMap: Map<string, Set<string>>
-) {
-  const visited = new Set<string>();
-  const parentMap = new Map<string, string>();
-  const queue: string[] = [startNode];
-
-  while (queue.length > 0) {
-    const currentNode = queue.shift()!;
-
-    if (currentNode === targetNode) {
-      return constructPath(parentMap, startNode, targetNode);
-    }
-
-    if (!visited.has(currentNode)) {
-      visited.add(currentNode);
-      const connections = componentMap.get(currentNode);
-      if (connections) {
-        connections.forEach((connection) => {
-          if (!visited.has(connection)) {
-            parentMap.set(connection, currentNode);
-            queue.push(connection);
-          }
-        });
+function findRemovals(keys: Set<string>, connections: Set<Connection>) {
+  let connectionArray = Array.from(connections);
+  for (let i = 0; i < connectionArray.length - 2; i++) {
+    const nodes = new Set<string>([
+      connectionArray[i].one,
+      connectionArray[i].two,
+    ]);
+    for (let j = i + 1; j < connectionArray.length - 1; j++) {
+      nodes.add(connectionArray[j].one);
+      nodes.add(connectionArray[j].two);
+      if (nodes.size < 4) {
+        // Iterate only if all six nodes are different -> nodes.size == 4
+        continue;
+      }
+      for (let k = j + 1; k < connectionArray.length; k++) {
+        nodes.add(connectionArray[k].one);
+        nodes.add(connectionArray[k].two);
+        if (nodes.size < 6) {
+          // Iterate only if all six nodes are different -> nodes.size == 6
+          continue;
+        }
+        let c1 = connectionArray[i];
+        let c2 = connectionArray[j];
+        let c3 = connectionArray[k];
+        // console.log("Removing: ", c1, c2, c3);
+        if (areTwoGroups(keys, filterConnections(connections, c1, c2, c3))) {
+          return [c1, c2, c3];
+        }
       }
     }
   }
 }
 
-function constructPath(
-  parentMap: Map<string, string>,
-  startNode: string,
-  targetNode: string
-) {
-  const path: string[] = [];
-  let currentNode: string | undefined = targetNode;
+function areTwoGroups(
+  keys: Set<string>,
+  connections: Set<Connection>
+): boolean {
+  // console.log("Initial connections:", connections);
+  var current = Array.from(keys)[0];
+  var passingKeys = [current];
+  let foundKeys = new Set<string>([current]);
+  while (passingKeys.length > 0) {
+    current = passingKeys.shift()!;
+    // console.log("Finding all connections of:", current);
+    const { newFoundKeys, newConnections } = getAllConnectionsForKey(
+      current,
+      connections
+    );
 
-  while (currentNode && currentNode != startNode) {
-    path.unshift(currentNode);
-    let parent = parentMap.get(currentNode);
-    if (parent) {
-      updateConnectionCounter(currentNode, parent);
-    }
-    currentNode = parent;
+    // console.log(newConnections);
+
+    newFoundKeys.forEach((k) => {
+      if (!foundKeys.has(k)) {
+        passingKeys.push(k);
+      }
+      foundKeys.add(k);
+    });
+    connections = newConnections;
   }
+
+  if (foundKeys.size < keys.size) {
+    console.log("Found two groups!");
+    console.log("Group 1:", Array.from(foundKeys).sort(), foundKeys.size);
+    let remainingKeys = new Set();
+    keys.forEach((k) => {
+      if (!foundKeys.has(k)) {
+        remainingKeys.add(k);
+      }
+    });
+    console.log(
+      "Group 2:",
+      Array.from(remainingKeys).sort(),
+      remainingKeys.size
+    );
+    console.log("Group 1 x Group 2:", foundKeys.size * remainingKeys.size);
+  } else {
+    // console.log("Still one group after removal");
+  }
+  return foundKeys.size < keys.size;
+}
+
+function getAllConnectionsForKey(key: string, connections: Set<Connection>) {
+  const newConnections = new Set(connections);
+  const newFoundKeys = new Set<string>();
+  connections.forEach((c) => {
+    if (c.one == key) {
+      newFoundKeys.add(c.two);
+      newConnections.delete(c);
+    } else if (c.two == key) {
+      newFoundKeys.add(c.one);
+      newConnections.delete(c);
+    }
+  });
+
+  return { newFoundKeys, newConnections };
 }
 
 // Usage: node build/your-script.js your-text-file.txt

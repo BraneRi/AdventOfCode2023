@@ -45,30 +45,10 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
-var PriorityQueue = /** @class */ (function () {
-    function PriorityQueue() {
-        this.items = [];
-    }
-    PriorityQueue.prototype.enqueue = function (key, priority) {
-        this.items.push({ key: key, priority: priority });
-        this.sort();
-    };
-    PriorityQueue.prototype.dequeue = function () {
-        var _a;
-        return (_a = this.items.shift()) === null || _a === void 0 ? void 0 : _a.key;
-    };
-    PriorityQueue.prototype.sort = function () {
-        this.items.sort(function (a, b) { return a.priority - b.priority; });
-    };
-    PriorityQueue.prototype.isEmpty = function () {
-        return this.items.length === 0;
-    };
-    return PriorityQueue;
-}());
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, componentMap, _loop_1, _d, rl_1, rl_1_1, e_1_1;
+        var fileStream, rl, connections, keys, _loop_1, _d, rl_1, rl_1_1, e_1_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -77,7 +57,8 @@ function processFile(filePath) {
                         input: fileStream,
                         crlfDelay: Infinity, // Treats each line as a separate data event
                     });
-                    componentMap = new Map();
+                    connections = new Set();
+                    keys = new Set();
                     _e.label = 1;
                 case 1:
                     _e.trys.push([1, 6, 7, 12]);
@@ -86,34 +67,13 @@ function processFile(filePath) {
                         _d = false;
                         var line = _c;
                         var lineParts = line.split(":");
-                        var node = lineParts[0].trim();
+                        var key = lineParts[0].trim();
                         var connectedNodes = lineParts[1].trim().split(/\s+/);
-                        if (componentMap.has(node)) {
-                            var set_1 = componentMap.get(node);
-                            connectedNodes.forEach(function (connection) {
-                                var _a;
-                                set_1 === null || set_1 === void 0 ? void 0 : set_1.add(connection);
-                                if (componentMap.has(connection)) {
-                                    (_a = componentMap.get(connection)) === null || _a === void 0 ? void 0 : _a.add(node);
-                                }
-                                else {
-                                    componentMap.set(connection, new Set([node]));
-                                }
-                            });
-                        }
-                        else {
-                            var set = new Set(connectedNodes);
-                            componentMap.set(node, set);
-                            connectedNodes.forEach(function (connection) {
-                                var _a;
-                                if (componentMap.has(connection)) {
-                                    (_a = componentMap.get(connection)) === null || _a === void 0 ? void 0 : _a.add(node);
-                                }
-                                else {
-                                    componentMap.set(connection, new Set([node]));
-                                }
-                            });
-                        }
+                        connectedNodes.forEach(function (connectedNode) {
+                            keys.add(key);
+                            keys.add(connectedNode);
+                            connections.add({ one: key, two: connectedNode });
+                        });
                     };
                     _d = true, rl_1 = __asyncValues(rl);
                     _e.label = 2;
@@ -143,93 +103,105 @@ function processFile(filePath) {
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    countConnections(componentMap);
-                    console.log(connectionCounter);
-                    // console.log(extractTop3MaxValues(connectionCounter));
-                    console.log(extractTop3MaxValues(connectionCounter));
+                    // hfx/pzl, bvb/cmg, nvd/jqt
+                    findRemovals(keys, connections);
                     return [2 /*return*/];
             }
         });
     });
 }
-function extractTop3MaxValues(connectionCounter) {
-    var entries = Array.from(connectionCounter.entries());
-    entries.sort(function (a, b) { return b[1] - a[1]; });
-    console.log(entries.length);
-    // const top3 = entries.slice(0, 3);
-    return entries;
-}
-// key are two nodes and value is number of times we have to make that connnection
-// from any two nodes to reach each other - idea is to remove most "crowded" ones
-var connectionCounter = new Map();
-// ignores order of keys
-function nodesToKey(node1, node2) {
-    var keyCandidate1 = node1 + "," + node2;
-    if (connectionCounter.has(keyCandidate1))
-        return keyCandidate1;
-    var keyCandidate2 = node2 + "," + node1;
-    if (connectionCounter.has(keyCandidate2))
-        return keyCandidate2;
-    else
-        return keyCandidate1;
-}
-function updateConnectionCounter(node1, node2) {
-    var key = nodesToKey(node1, node2);
-    var counter = connectionCounter.get(key);
-    if (counter) {
-        connectionCounter.set(key, counter + 1);
+function filterConnections(connections) {
+    var elementsToRemove = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        elementsToRemove[_i - 1] = arguments[_i];
     }
-    else {
-        connectionCounter.set(key, 1);
-    }
+    var filteredConnections = new Set(connections); // Create a copy of the original set
+    elementsToRemove.forEach(function (element) {
+        filteredConnections.delete(element);
+    });
+    return filteredConnections;
 }
-function countConnections(componentMap) {
-    var keys = Array.from(componentMap.keys());
-    for (var i = 0; i < keys.length - 1; i++) {
-        for (var j = i + 1; j < keys.length; j++) {
-            findConnections(keys[i], keys[j], componentMap);
-        }
-    }
-}
-function findConnections(startNode, targetNode, componentMap) {
-    var visited = new Set();
-    var parentMap = new Map();
-    var queue = [startNode];
-    var _loop_2 = function () {
-        var currentNode = queue.shift();
-        if (currentNode === targetNode) {
-            return { value: constructPath(parentMap, startNode, targetNode) };
-        }
-        if (!visited.has(currentNode)) {
-            visited.add(currentNode);
-            var connections = componentMap.get(currentNode);
-            if (connections) {
-                connections.forEach(function (connection) {
-                    if (!visited.has(connection)) {
-                        parentMap.set(connection, currentNode);
-                        queue.push(connection);
-                    }
-                });
+function findRemovals(keys, connections) {
+    var connectionArray = Array.from(connections);
+    for (var i = 0; i < connectionArray.length - 2; i++) {
+        var nodes = new Set([
+            connectionArray[i].one,
+            connectionArray[i].two,
+        ]);
+        for (var j = i + 1; j < connectionArray.length - 1; j++) {
+            nodes.add(connectionArray[j].one);
+            nodes.add(connectionArray[j].two);
+            if (nodes.size < 4) {
+                // Iterate only if all six nodes are different -> nodes.size == 4
+                continue;
+            }
+            for (var k = j + 1; k < connectionArray.length; k++) {
+                nodes.add(connectionArray[k].one);
+                nodes.add(connectionArray[k].two);
+                if (nodes.size < 6) {
+                    // Iterate only if all six nodes are different -> nodes.size == 6
+                    continue;
+                }
+                var c1 = connectionArray[i];
+                var c2 = connectionArray[j];
+                var c3 = connectionArray[k];
+                // console.log("Removing: ", c1, c2, c3);
+                if (areTwoGroups(keys, filterConnections(connections, c1, c2, c3))) {
+                    return [c1, c2, c3];
+                }
             }
         }
-    };
-    while (queue.length > 0) {
-        var state_1 = _loop_2();
-        if (typeof state_1 === "object")
-            return state_1.value;
     }
 }
-function constructPath(parentMap, startNode, targetNode) {
-    var path = [];
-    var currentNode = targetNode;
-    while (currentNode && currentNode != startNode) {
-        path.unshift(currentNode);
-        var parent_1 = parentMap.get(currentNode);
-        if (parent_1) {
-            updateConnectionCounter(currentNode, parent_1);
-        }
-        currentNode = parent_1;
+function areTwoGroups(keys, connections) {
+    // console.log("Initial connections:", connections);
+    var current = Array.from(keys)[0];
+    var passingKeys = [current];
+    var foundKeys = new Set([current]);
+    while (passingKeys.length > 0) {
+        current = passingKeys.shift();
+        // console.log("Finding all connections of:", current);
+        var _a = getAllConnectionsForKey(current, connections), newFoundKeys = _a.newFoundKeys, newConnections = _a.newConnections;
+        // console.log(newConnections);
+        newFoundKeys.forEach(function (k) {
+            if (!foundKeys.has(k)) {
+                passingKeys.push(k);
+            }
+            foundKeys.add(k);
+        });
+        connections = newConnections;
     }
+    if (foundKeys.size < keys.size) {
+        console.log("Found two groups!");
+        console.log("Group 1:", Array.from(foundKeys).sort(), foundKeys.size);
+        var remainingKeys_1 = new Set();
+        keys.forEach(function (k) {
+            if (!foundKeys.has(k)) {
+                remainingKeys_1.add(k);
+            }
+        });
+        console.log("Group 2:", Array.from(remainingKeys_1).sort(), remainingKeys_1.size);
+        console.log("Group 1 x Group 2:", foundKeys.size * remainingKeys_1.size);
+    }
+    else {
+        // console.log("Still one group after removal");
+    }
+    return foundKeys.size < keys.size;
+}
+function getAllConnectionsForKey(key, connections) {
+    var newConnections = new Set(connections);
+    var newFoundKeys = new Set();
+    connections.forEach(function (c) {
+        if (c.one == key) {
+            newFoundKeys.add(c.two);
+            newConnections.delete(c);
+        }
+        else if (c.two == key) {
+            newFoundKeys.add(c.one);
+            newConnections.delete(c);
+        }
+    });
+    return { newFoundKeys: newFoundKeys, newConnections: newConnections };
 }
 // Usage: node build/your-script.js your-text-file.txt
 var args = process.argv.slice(2);
