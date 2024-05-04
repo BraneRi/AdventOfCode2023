@@ -13,7 +13,7 @@ async function processFile(filePath: string): Promise<void> {
   // Create an interface to read lines from the stream
   const rl = readline.createInterface({
     input: fileStream,
-    crlfDelay: Infinity, // Treats each line as a separate data event
+    crlfDelay: Infinity,
   });
 
   const connections = new Set<Connection>();
@@ -30,9 +30,6 @@ async function processFile(filePath: string): Promise<void> {
       connections.add({ one: sortedKeys[0], two: sortedKeys[1] });
     });
   }
-
-  // hfx/pzl, bvb/cmg, nvd/jqt
-  // findRemovals(keys, connections);
 
   const graph = getConnectionGraph(connections);
   const connCount = new Map<string, number>();
