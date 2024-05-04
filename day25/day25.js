@@ -42,15 +42,24 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
 var fs = require("fs");
 function processFile(filePath) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var fileStream, rl, connections, keys, _loop_1, _d, rl_1, rl_1_1, e_1_1;
-        return __generator(this, function (_e) {
-            switch (_e.label) {
+        var fileStream, rl, connections, keys, _loop_1, _d, rl_1, rl_1_1, e_1_1, graph, connCount, _i, _e, key, paths, _f, _g, _h, key_1, keyPaths, pathValues, i, one, two, countKey, count, keysToRemove, c1Parts, c1, c2Parts, c2, c3Parts, c3;
+        return __generator(this, function (_j) {
+            switch (_j.label) {
                 case 0:
                     fileStream = fs.createReadStream(filePath);
                     rl = readline.createInterface({
@@ -59,9 +68,9 @@ function processFile(filePath) {
                     });
                     connections = new Set();
                     keys = new Set();
-                    _e.label = 1;
+                    _j.label = 1;
                 case 1:
-                    _e.trys.push([1, 6, 7, 12]);
+                    _j.trys.push([1, 6, 7, 12]);
                     _loop_1 = function () {
                         _c = rl_1_1.value;
                         _d = false;
@@ -72,43 +81,124 @@ function processFile(filePath) {
                         connectedNodes.forEach(function (connectedNode) {
                             keys.add(key);
                             keys.add(connectedNode);
-                            connections.add({ one: key, two: connectedNode });
+                            var sortedKeys = [key, connectedNode].sort();
+                            connections.add({ one: sortedKeys[0], two: sortedKeys[1] });
                         });
                     };
                     _d = true, rl_1 = __asyncValues(rl);
-                    _e.label = 2;
+                    _j.label = 2;
                 case 2: return [4 /*yield*/, rl_1.next()];
                 case 3:
-                    if (!(rl_1_1 = _e.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
+                    if (!(rl_1_1 = _j.sent(), _a = rl_1_1.done, !_a)) return [3 /*break*/, 5];
                     _loop_1();
-                    _e.label = 4;
+                    _j.label = 4;
                 case 4:
                     _d = true;
                     return [3 /*break*/, 2];
                 case 5: return [3 /*break*/, 12];
                 case 6:
-                    e_1_1 = _e.sent();
+                    e_1_1 = _j.sent();
                     e_1 = { error: e_1_1 };
                     return [3 /*break*/, 12];
                 case 7:
-                    _e.trys.push([7, , 10, 11]);
+                    _j.trys.push([7, , 10, 11]);
                     if (!(!_d && !_a && (_b = rl_1.return))) return [3 /*break*/, 9];
                     return [4 /*yield*/, _b.call(rl_1)];
                 case 8:
-                    _e.sent();
-                    _e.label = 9;
+                    _j.sent();
+                    _j.label = 9;
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     if (e_1) throw e_1.error;
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
                 case 12:
-                    // hfx/pzl, bvb/cmg, nvd/jqt
-                    findRemovals(keys, connections);
+                    graph = getConnectionGraph(connections);
+                    connCount = new Map();
+                    for (_i = 0, _e = Array.from(keys); _i < _e.length; _i++) {
+                        key = _e[_i];
+                        paths = dijkstra(key, graph);
+                        for (_f = 0, _g = Array.from(paths.entries()); _f < _g.length; _f++) {
+                            _h = _g[_f], key_1 = _h[0], keyPaths = _h[1];
+                            pathValues = Array.from(keyPaths);
+                            for (i = 0; i < pathValues.length - 1; i++) {
+                                one = pathValues[i];
+                                two = pathValues[i + 1];
+                                countKey = getConnKey(one, two);
+                                count = connCount.get(countKey);
+                                if (count) {
+                                    connCount.set(countKey, count + 1);
+                                }
+                                else {
+                                    connCount.set(countKey, 1);
+                                }
+                            }
+                        }
+                    }
+                    keysToRemove = getTopThree(connCount);
+                    c1Parts = keysToRemove[0][0].toString().split(",");
+                    c1 = { one: c1Parts[0], two: c1Parts[1] };
+                    c2Parts = keysToRemove[1][0].toString().split(",");
+                    c2 = { one: c2Parts[0], two: c2Parts[1] };
+                    c3Parts = keysToRemove[2][0].toString().split(",");
+                    c3 = { one: c3Parts[0], two: c3Parts[1] };
+                    console.log(c1, c2, c3);
+                    areTwoGroups(keys, filterConnections(connections, c1, c2, c3));
                     return [2 /*return*/];
             }
         });
     });
+}
+function getTopThree(connCount) {
+    var sortedEntries = Array.from(connCount.entries()).sort(function (a, b) { return b[1] - a[1]; });
+    var topThree = sortedEntries.slice(0, 3);
+    return topThree;
+}
+function dijkstra(key, graph) {
+    var paths = new Map();
+    var visited = new Set();
+    var queue = [];
+    queue.push([key, [key]]);
+    while (queue.length > 0) {
+        var _a = queue.shift(), currentNode = _a[0], currentPath = _a[1];
+        visited.add(currentNode);
+        for (var _i = 0, _b = Array.from(graph.get(currentNode)); _i < _b.length; _i++) {
+            var neighbor = _b[_i];
+            var newPath = __spreadArray(__spreadArray([], currentPath, true), [neighbor], false);
+            if (neighbor == key || currentPath.includes(neighbor))
+                continue;
+            if (!paths.has(neighbor)) {
+                paths.set(neighbor, [newPath]);
+            }
+            else {
+                paths.get(neighbor).push(newPath);
+            }
+            if (!visited.has(neighbor)) {
+                queue.push([neighbor, newPath]);
+            }
+        }
+    }
+    var shortestPaths = new Map();
+    for (var _c = 0, _d = Array.from(paths); _c < _d.length; _c++) {
+        var _e = _d[_c], key_2 = _e[0], path = _e[1];
+        shortestPaths.set(key_2, path[0]);
+    }
+    return shortestPaths;
+}
+function getConnectionGraph(connections) {
+    var graph = new Map();
+    for (var _i = 0, _a = Array.from(connections); _i < _a.length; _i++) {
+        var connection = _a[_i];
+        if (!graph.has(connection.one)) {
+            graph.set(connection.one, new Set());
+        }
+        if (!graph.has(connection.two)) {
+            graph.set(connection.two, new Set());
+        }
+        graph.get(connection.one).add(connection.two);
+        graph.get(connection.two).add(connection.one);
+    }
+    return graph;
 }
 function filterConnections(connections) {
     var elementsToRemove = [];
@@ -116,42 +206,18 @@ function filterConnections(connections) {
         elementsToRemove[_i - 1] = arguments[_i];
     }
     var filteredConnections = new Set(connections); // Create a copy of the original set
-    elementsToRemove.forEach(function (element) {
-        filteredConnections.delete(element);
+    Array.from(filteredConnections).forEach(function (c) {
+        Array.from(elementsToRemove).forEach(function (e) {
+            if (c.one == e.one && c.two == e.two) {
+                filteredConnections.delete(c);
+            }
+        });
     });
     return filteredConnections;
 }
-function findRemovals(keys, connections) {
-    var connectionArray = Array.from(connections);
-    for (var i = 0; i < connectionArray.length - 2; i++) {
-        var nodes = new Set([
-            connectionArray[i].one,
-            connectionArray[i].two,
-        ]);
-        for (var j = i + 1; j < connectionArray.length - 1; j++) {
-            nodes.add(connectionArray[j].one);
-            nodes.add(connectionArray[j].two);
-            if (nodes.size < 4) {
-                // Iterate only if all six nodes are different -> nodes.size == 4
-                continue;
-            }
-            for (var k = j + 1; k < connectionArray.length; k++) {
-                nodes.add(connectionArray[k].one);
-                nodes.add(connectionArray[k].two);
-                if (nodes.size < 6) {
-                    // Iterate only if all six nodes are different -> nodes.size == 6
-                    continue;
-                }
-                var c1 = connectionArray[i];
-                var c2 = connectionArray[j];
-                var c3 = connectionArray[k];
-                // console.log("Removing: ", c1, c2, c3);
-                if (areTwoGroups(keys, filterConnections(connections, c1, c2, c3))) {
-                    return [c1, c2, c3];
-                }
-            }
-        }
-    }
+function getConnKey(key1, key2) {
+    var sortedKeys = [key1, key2].sort();
+    return sortedKeys.join(",");
 }
 function areTwoGroups(keys, connections) {
     // console.log("Initial connections:", connections);

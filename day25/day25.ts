@@ -26,12 +26,112 @@ async function processFile(filePath: string): Promise<void> {
     connectedNodes.forEach((connectedNode) => {
       keys.add(key);
       keys.add(connectedNode);
-      connections.add({ one: key, two: connectedNode });
+      const sortedKeys = [key, connectedNode].sort();
+      connections.add({ one: sortedKeys[0], two: sortedKeys[1] });
     });
   }
 
   // hfx/pzl, bvb/cmg, nvd/jqt
-  findRemovals(keys, connections);
+  // findRemovals(keys, connections);
+
+  const graph = getConnectionGraph(connections);
+  const connCount = new Map<string, number>();
+
+  for (let key of Array.from(keys)) {
+    const paths = dijkstra(key, graph);
+    for (let [key, keyPaths] of Array.from(paths.entries())) {
+      const pathValues = Array.from(keyPaths);
+      for (let i = 0; i < pathValues.length - 1; i++) {
+        const one = pathValues[i];
+        const two = pathValues[i + 1];
+
+        const countKey = getConnKey(one, two);
+        const count = connCount.get(countKey);
+        if (count) {
+          connCount.set(countKey, count + 1);
+        } else {
+          connCount.set(countKey, 1);
+        }
+      }
+    }
+  }
+
+  const keysToRemove = getTopThree(connCount);
+  const c1Parts = keysToRemove[0][0].toString().split(",");
+  const c1 = { one: c1Parts[0], two: c1Parts[1] };
+
+  const c2Parts = keysToRemove[1][0].toString().split(",");
+  const c2 = { one: c2Parts[0], two: c2Parts[1] };
+
+  const c3Parts = keysToRemove[2][0].toString().split(",");
+  const c3 = { one: c3Parts[0], two: c3Parts[1] };
+
+  console.log(c1, c2, c3);
+  areTwoGroups(keys, filterConnections(connections, c1, c2, c3));
+}
+
+function getTopThree(connCount: Map<string, number>) {
+  const sortedEntries = Array.from(connCount.entries()).sort(
+    (a, b) => b[1] - a[1]
+  );
+  const topThree = sortedEntries.slice(0, 3);
+  return topThree;
+}
+
+function dijkstra(
+  key: string,
+  graph: Map<string, Set<string>>
+): Map<string, string[]> {
+  const paths = new Map<string, string[][]>();
+  const visited = new Set<string>();
+  const queue: [string, string[]][] = [];
+
+  queue.push([key, [key]]);
+
+  while (queue.length > 0) {
+    const [currentNode, currentPath] = queue.shift()!;
+
+    visited.add(currentNode);
+
+    for (const neighbor of Array.from(graph.get(currentNode)!)) {
+      const newPath = [...currentPath, neighbor];
+
+      if (neighbor == key || currentPath.includes(neighbor)) continue;
+
+      if (!paths.has(neighbor)) {
+        paths.set(neighbor, [newPath]);
+      } else {
+        paths.get(neighbor)!.push(newPath);
+      }
+
+      if (!visited.has(neighbor)) {
+        queue.push([neighbor, newPath]);
+      }
+    }
+  }
+
+  const shortestPaths = new Map<string, string[]>();
+  for (let [key, path] of Array.from(paths)) {
+    shortestPaths.set(key, path[0]);
+  }
+  return shortestPaths;
+}
+
+function getConnectionGraph(
+  connections: Set<Connection>
+): Map<string, Set<string>> {
+  const graph = new Map<string, Set<string>>();
+  for (const connection of Array.from(connections)) {
+    if (!graph.has(connection.one)) {
+      graph.set(connection.one, new Set());
+    }
+    if (!graph.has(connection.two)) {
+      graph.set(connection.two, new Set());
+    }
+    graph.get(connection.one)!.add(connection.two);
+    graph.get(connection.two)!.add(connection.one);
+  }
+  return graph;
 }
 
 function filterConnections(
@@ -40,44 +140,20 @@ function filterConnections(
 ): Set<Connection> {
   const filteredConnections = new Set(connections); // Create a copy of the original set
 
-  elementsToRemove.forEach((element) => {
-    filteredConnections.delete(element);
+  Array.from(filteredConnections).forEach((c) => {
+    Array.from(elementsToRemove).forEach((e) => {
+      if (c.one == e.one && c.two == e.two) {
+        filteredConnections.delete(c);
+      }
+    });
   });
 
   return filteredConnections;
 }
 
-function findRemovals(keys: Set<string>, connections: Set<Connection>) {
-  let connectionArray = Array.from(connections);
-  for (let i = 0; i < connectionArray.length - 2; i++) {
-    const nodes = new Set<string>([
-      connectionArray[i].one,
-      connectionArray[i].two,
-    ]);
-    for (let j = i + 1; j < connectionArray.length - 1; j++) {
-      nodes.add(connectionArray[j].one);
-      nodes.add(connectionArray[j].two);
-      if (nodes.size < 4) {
-        // Iterate only if all six nodes are different -> nodes.size == 4
-        continue;
-      }
-      for (let k = j + 1; k < connectionArray.length; k++) {
-        nodes.add(connectionArray[k].one);
-        nodes.add(connectionArray[k].two);
-        if (nodes.size < 6) {
-          // Iterate only if all six nodes are different -> nodes.size == 6
-          continue;
-        }
-        let c1 = connectionArray[i];
-        let c2 = connectionArray[j];
-        let c3 = connectionArray[k];
-        // console.log("Removing: ", c1, c2, c3);
-        if (areTwoGroups(keys, filterConnections(connections, c1, c2, c3))) {
-          return [c1, c2, c3];
-        }
-      }
-    }
-  }
+function getConnKey(key1: string, key2: string): string {
+  const sortedKeys = [key1, key2].sort();
+  return sortedKeys.join(",");
 }
 
 function areTwoGroups(

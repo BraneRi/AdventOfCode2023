@@ -1,0 +1,36 @@
+{ one: 'cbl', two: 'vmq' } { one: 'klk', two: 'xgz' } { one: 'bvz', two: 'nvf' }
+Found two groups!
+Group 1: [
+  'bbb', 'bbc', 'bbd', 'bbj', 'bch', 'bcr', 'bcv', 'bcz',
+  'bdg', 'bdl', 'bdn', 'bdp', 'bfq', 'bgh', 'bgk', 'bhl',
+  'bjt', 'blf', 'bmg', 'bnf', 'bnn', 'bpj', 'bpk', 'bpl',
+  'bqs', 'bqv', 'brn', 'brx', 'btk', 'btl', 'bvr', 'bvt',
+  'bvz', 'bxb', 'bxc', 'cbp', 'cbv', 'cdb', 'cdd', 'cfd',
+  'cfp', 'cgz', 'chf', 'cjz', 'ckd', 'clm', 'clp', 'cls',
+  'cmb', 'cnm', 'cns', 'cnt', 'cpc', 'cpt', 'crc', 'crg',
+  'crr', 'csm', 'ctd', 'ctf', 'ctl', 'ctn', 'ctx', 'cvk',
+  'cvl', 'cvm', 'cxd', 'cxg', 'czm', 'czn', 'dbd', 'dbl',
+  'dbv', 'dcl', 'dcm', 'dcq', 'ddg', 'dds', 'dff', 'dfn',
+  'dgb', 'dgd', 'dhb', 'dhc', 'dhj', 'dhk', 'dhp', 'dhs',
+  'djf', 'djk', 'dkn', 'dlg', 'dlv', 'dnk', 'dnx', 'dpb',
+  'dpj', 'dpv', 'dqk', 'drd',
+  ... 672 more items
+] 772
+Group 2: [
+  'bbg', 'bbp', 'bbq', 'bdc', 'bdm', 'bfb', 'bgb', 'bgz',
+  'bhb', 'bhg', 'bjd', 'bjn', 'bjp', 'bkb', 'bkc', 'bkd',
+  'bkv', 'bkz', 'bld', 'blj', 'bnc', 'bng', 'bnm', 'bnt',
+  'bnv', 'bph', 'bpn', 'bqk', 'bqx', 'brb', 'brd', 'brh',
+  'brr', 'bsh', 'bsp', 'bst', 'bvs', 'bxf', 'bxh', 'bxr',
+  'bxt', 'bxv', 'bzd', 'bzq', 'cbc', 'cbl', 'cbq', 'cbr',
+  'ccf', 'ccg', 'cdc', 'cdp', 'cfk', 'chl', 'clb', 'clf',
+  'clt', 'cmh', 'cmr', 'cnf', 'cnh', 'cpx', 'cqn', 'cqp',
+  'cqt', 'crk', 'crn', 'crq', 'csb', 'ctv', 'cvr', 'cvv',
+  'cxj', 'cxz', 'czh', 'dbb', 'dbn', 'dbr', 'dcj', 'dcs',
+  'ddc', 'ddf', 'ddh', 'ddq', 'ddz', 'dfv', 'dgf', 'dgs',
+  'dhg', 'dhz', 'djh', 'djm', 'djp', 'dkt', 'dlc', 'dlh',
+  'dll', 'dlp', 'dlq', 'dlr',
+  ... 656 more items
+] 756
+Group 1 x Group 2: 583632
+File processing completed.
